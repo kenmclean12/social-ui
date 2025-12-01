@@ -65,13 +65,14 @@ export function RegisterPage() {
 
   const handleRegister = async () => {
     const newErrors: FormErrors = {};
+    const age = Number(ageInput)
+    if (!ageInput || isNaN(age) || age <= 0) newErrors.age = "A valid age is required";
     if (!form.userName) newErrors.userName = "Username is required";
     if (!form.email) newErrors.email = "Email is required";
     if (!form.password) newErrors.password = "Password is required";
-    if (!age) newErrors.age = "Age is required";
     setErrors(newErrors);
+
     if (Object.keys(newErrors).length > 0) return;
-    if (!age) return;
 
     const payload: UserCreateDto = { ...form, age };
     Object.keys(payload).forEach(k => {
