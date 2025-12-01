@@ -1,33 +1,26 @@
 import { useState } from "react";
-import { api } from "../lib/api";
-import { Link } from "react-router-dom";
-import type { LoginDto, TokenResponseDto } from "../types";
-import { useAuth } from "../context";
+import { Link, useNavigate } from "react-router-dom";
+import type { LoginDto } from "../types";
+import { useAuthLogin } from "../hooks/auth";
 
 export function LoginPage() {
-  const { login } = useAuth();
+  const navigate = useNavigate();
   const [form, setForm] = useState<LoginDto>({
     email: "",
     password: "",
-  })
+  });
 
-async function submit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
+  const { mutateAsync: login } = useAuthLogin();
+
+  async function submit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
-
-    const { email, password } = form;
-    const res = await api("/auth/login", {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-    });
-
-    if (res?.ok) {
-        const tokens: TokenResponseDto = await res?.json();
-        login(tokens.access_token, tokens.refresh_token, tokens.user);
-        window.location.href = "/";
-    } else {
-        alert("Login failed");
+    try {
+      await login(form);
+      navigate("/", { replace: true });
+    } catch {
+      console.log("Error, Login Failed", e);
     }
-}
+  }
 
   return (
     <div>
@@ -37,19 +30,22 @@ async function submit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
           type="text"
           placeholder="Email"
           value={form.email}
-          onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
+          onChange={(e) =>
+            setForm((prev) => ({ ...prev, email: e.target.value }))
+          }
         />
         <input
           type="password"
           placeholder="Password"
           value={form.password}
-          onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
+          onChange={(e) =>
+            setForm((prev) => ({ ...prev, password: e.target.value }))
+          }
         />
         <button>Login</button>
       </form>
       <p>
-        Not a user?{" "}
-        <Link to="/register">Register</Link>
+        Not a user? <Link to="/register">Register</Link>
       </p>
     </div>
   );
