@@ -70,6 +70,8 @@ export function LoginPage() {
                 ...inputStyles,
                 border: errors.email ? "1px solid red" : "1px solid #ccc",
                 color: "white",
+                width: "100%",
+                boxSizing: "border-box",
               }}
             />
             <Typography fontSize={11} color="red" visibility={errors.email ? "visible" : "hidden"}>

@@ -17,7 +17,7 @@ interface FormErrors {
 export function RegisterPage() {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
-  const [age, setAge] = useState<number | undefined>(undefined);
+  const [ageInput, setAgeInput] = useState<string>('');
   const [form, setForm] = useState<Omit<UserCreateDto, "age">>({
     firstName: "",
     lastName: "",
@@ -26,7 +26,6 @@ export function RegisterPage() {
     password: "",
     phoneNumber: "",
     description: "",
-    avatarUrl: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const { mutateAsync: register } = useAuthRegister();
@@ -46,16 +45,20 @@ export function RegisterPage() {
 
   const handleNext = () => {
     const newErrors: FormErrors = {};
+
     if (step === 0) {
+      const age = Number(ageInput);
+      if (!ageInput || isNaN(age) || age <= 0) newErrors.age = "A valid age is required";
       if (!form.firstName) newErrors.firstName = "First name is required";
       if (!form.lastName) newErrors.lastName = "Last name is required";
-      if (!age) newErrors.age = "Age is required";
     }
+  
     if (step === 1) {
       if (!form.userName) newErrors.userName = "Username is required";
       if (!form.email) newErrors.email = "Email is required";
       if (!form.password) newErrors.password = "Password is required";
     }
+
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) setStep(step + 1);
   };
@@ -146,10 +149,9 @@ export function RegisterPage() {
               <Stack spacing={0.5}>
                 <Input
                   disableUnderline
-                  type="number"
                   placeholder="Age"
-                  value={age ?? ""}
-                  onChange={e => setAge(Number(e.target.value))}
+                  value={ageInput}
+                  onChange={e => setAgeInput(e.target.value)}
                   sx={{
                     ...inputStyles,
                     border: errors.age ? "1px solid red" : "1px solid #ccc",
@@ -230,17 +232,6 @@ export function RegisterPage() {
                   sx={{ ...inputStyles, border: "1px solid #ccc", color: "white" }}
                 />
               </Stack>
-
-              <Stack spacing={0.5}>
-                <Input
-                  disableUnderline
-                  placeholder="Avatar URL (optional)"
-                  value={form.avatarUrl}
-                  onChange={e => update("avatarUrl", e.target.value)}
-                  sx={{ ...inputStyles, border: "1px solid #ccc", color: "white" }}
-                />
-              </Stack>
-
               <Stack spacing={0.5}>
                 <Input
                   disableUnderline
