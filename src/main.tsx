@@ -4,6 +4,7 @@ import App from "./App";
 import { AuthProvider } from "./context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SnackbarProvider } from "notistack";
+import './index.css'
 
 const queryClient = new QueryClient();
 

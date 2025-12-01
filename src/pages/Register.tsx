@@ -1,7 +1,17 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Stack, Input, Button, Typography } from "@mui/material";
+import { useNavigate, Link } from "react-router-dom";
 import type { UserCreateDto } from "../types";
 import { useAuthRegister } from "../hooks/auth";
+
+interface FormErrors {
+  firstName?: string;
+  lastName?: string;
+  userName?: string;
+  email?: string;
+  password?: string;
+  age?: string;
+};
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -19,15 +29,32 @@ export function RegisterPage() {
     avatarUrl: "",
   });
 
-  function update<K extends keyof UserCreateDto>(
-    key: K,
-    value: UserCreateDto[K]
-  ) {
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  function update<K extends keyof UserCreateDto>(key: K, value: UserCreateDto[K]) {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
+  const inputStyles = {
+    height: 40,
+    padding: "0 12px",
+    fontSize: 14,
+    lineHeight: "40px",
+    borderRadius: 2,
+    "&::placeholder": { opacity: 0.7 },
+  };
+
+  const handleRegister = async () => {
+    const newErrors: typeof errors = {};
+    if (!form.firstName) newErrors.firstName = "First name is required";
+    if (!form.lastName) newErrors.lastName = "Last name is required";
+    if (!form.userName) newErrors.userName = "Username is required";
+    if (!form.email) newErrors.email = "Email is required";
+    if (!form.password) newErrors.password = "Password is required";
+    if (!age) newErrors.age = "Age is required";
+
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
     if (!age) return;
 
     const payload: UserCreateDto = { ...form, age };
@@ -39,80 +66,183 @@ export function RegisterPage() {
     try {
       await register(payload);
       navigate("/", { replace: true });
-    } catch (e) {
-      console.log("Error, Registration Failed", e);
+    } catch {
+      setErrors({ password: "Registration failed" });
     }
-  }
+  };
 
   return (
-    <div>
-      <h1>Register</h1>
-      <form onSubmit={submit}>
-        <input
-          placeholder="First Name"
-          value={form.firstName}
-          onChange={(e) => update("firstName", e.target.value)}
-        />
-        <input
-          placeholder="Last Name"
-          value={form.lastName}
-          onChange={(e) => update("lastName", e.target.value)}
-        />
-        <input
-          placeholder="Username"
-          value={form.userName}
-          onChange={(e) => update("userName", e.target.value)}
-        />
-        <input
-          placeholder="Age"
-          type="number"
-          value={age}
-          onChange={(e) => setAge(Number(e.target.value))}
-        />
-        <input
-          placeholder="Phone Number"
-          value={form.phoneNumber}
-          onChange={(e) => update("phoneNumber", e.target.value)}
-        />
-        <input
-          placeholder="Email"
-          value={form.email}
-          onChange={(e) => update("email", e.target.value)}
-        />
-        <input
-          placeholder="Password"
-          type="password"
-          value={form.password}
-          onChange={(e) => update("password", e.target.value)}
-        />
-        <input
-          placeholder="Avatar URL (optional)"
-          value={form.avatarUrl}
-          onChange={(e) => update("avatarUrl", e.target.value)}
-        />
-        <input
-          placeholder="Description (optional)"
-          value={form.description}
-          onChange={(e) => update("description", e.target.value)}
-        />
-        <button>Register</button>
-      </form>
-      <p style={{ marginTop: "1rem" }}>
-        Already a user?{" "}
-        <button
-          type="button"
-          onClick={() => navigate("/login")}
-          style={{
-            textDecoration: "underline",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            color: "blue",
-          }}
-        >
-          Login
-        </button>
-      </p>
-    </div>
+    <Stack
+      alignItems="center"
+      justifyContent="center"
+      height="100vh"
+      width="100vw"
+      sx={{ backgroundColor: "rgba(205, 223, 255, 0.8)" }}
+    >
+      <Stack
+        minHeight="400px"
+        width="100%"
+        maxWidth="400px"
+        minWidth="400px"
+        spacing={3}
+        padding={4}
+        color="white"
+        borderRadius="16px"
+        sx={{ backgroundColor: "black" }}
+      >
+        <Typography align="center" fontSize={22}>
+          Register
+        </Typography>
+
+        <Stack spacing={2}>
+          <Stack spacing={0.5}>
+            <Input
+              disableUnderline
+              placeholder="First Name"
+              value={form.firstName}
+              onChange={(e) => update("firstName", e.target.value)}
+              sx={{
+                ...inputStyles,
+                border: errors.firstName ? "1px solid red" : "1px solid #ccc",
+                color: "white",
+              }}
+            />
+            <Typography fontSize={11} color="red" visibility={errors.firstName ? "visible" : "hidden"}>
+              {errors.firstName}
+            </Typography>
+          </Stack>
+
+          <Stack spacing={0.5}>
+            <Input
+              disableUnderline
+              placeholder="Last Name"
+              value={form.lastName}
+              onChange={(e) => update("lastName", e.target.value)}
+              sx={{
+                ...inputStyles,
+                border: errors.lastName ? "1px solid red" : "1px solid #ccc",
+                color: "white",
+              }}
+            />
+            <Typography fontSize={11} color="red" visibility={errors.lastName ? "visible" : "hidden"}>
+              {errors.lastName}
+            </Typography>
+          </Stack>
+
+          <Stack spacing={0.5}>
+            <Input
+              disableUnderline
+              placeholder="Username"
+              value={form.userName}
+              onChange={(e) => update("userName", e.target.value)}
+              sx={{
+                ...inputStyles,
+                border: errors.userName ? "1px solid red" : "1px solid #ccc",
+                color: "white",
+              }}
+            />
+            <Typography fontSize={11} color="red" visibility={errors.userName ? "visible" : "hidden"}>
+              {errors.userName}
+            </Typography>
+          </Stack>
+
+          <Stack spacing={0.5}>
+            <Input
+              disableUnderline
+              type="number"
+              placeholder="Age"
+              value={age ?? ""}
+              onChange={(e) => setAge(Number(e.target.value))}
+              sx={{
+                ...inputStyles,
+                border: errors.age ? "1px solid red" : "1px solid #ccc",
+                color: "white",
+              }}
+            />
+            <Typography fontSize={11} color="red" visibility={errors.age ? "visible" : "hidden"}>
+              {errors.age}
+            </Typography>
+          </Stack>
+
+          <Stack spacing={0.5}>
+            <Input
+              disableUnderline
+              placeholder="Phone Number"
+              value={form.phoneNumber}
+              onChange={(e) => update("phoneNumber", e.target.value)}
+              sx={{
+                ...inputStyles,
+                border: "1px solid #ccc",
+                color: "white",
+              }}
+            />
+          </Stack>
+
+          <Stack spacing={0.5}>
+            <Input
+              disableUnderline
+              placeholder="Email"
+              value={form.email}
+              onChange={(e) => update("email", e.target.value)}
+              sx={{
+                ...inputStyles,
+                border: errors.email ? "1px solid red" : "1px solid #ccc",
+                color: "white",
+              }}
+            />
+            <Typography fontSize={11} color="red" visibility={errors.email ? "visible" : "hidden"}>
+              {errors.email}
+            </Typography>
+          </Stack>
+
+          <Stack spacing={0.5}>
+            <Input
+              disableUnderline
+              type="password"
+              placeholder="Password"
+              value={form.password}
+              onChange={(e) => update("password", e.target.value)}
+              sx={{
+                ...inputStyles,
+                border: errors.password ? "1px solid red" : "1px solid #ccc",
+                color: "white",
+              }}
+            />
+            <Typography fontSize={11} color="red" visibility={errors.password ? "visible" : "hidden"}>
+              {errors.password}
+            </Typography>
+          </Stack>
+
+          <Stack spacing={0.5}>
+            <Input
+              disableUnderline
+              placeholder="Avatar URL (optional)"
+              value={form.avatarUrl}
+              onChange={(e) => update("avatarUrl", e.target.value)}
+              sx={{ ...inputStyles, border: "1px solid #ccc", color: "white" }}
+            />
+          </Stack>
+
+          <Stack spacing={0.5}>
+            <Input
+              disableUnderline
+              placeholder="Description (optional)"
+              value={form.description}
+              onChange={(e) => update("description", e.target.value)}
+              sx={{ ...inputStyles, border: "1px solid #ccc", color: "white" }}
+            />
+          </Stack>
+        </Stack>
+
+        <Stack alignSelf="center" width="100%" spacing={3} mt={1}>
+          <Button variant="contained" onClick={handleRegister}>
+            Register
+          </Button>
+          <Typography align="center" fontSize={12}>
+            Already a user? <Link to="/login" style={{ color: '#1976D2' }}>Login</Link>
+          </Typography>
+        </Stack>
+      </Stack>
+    </Stack>
   );
 }
