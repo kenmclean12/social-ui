@@ -3,6 +3,7 @@ import { Stack, Input, Button, Typography } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import type { LoginDto } from "../types";
 import { useAuthLogin } from "../hooks/auth";
+import { Login } from "@mui/icons-material";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -94,7 +95,7 @@ export function LoginPage() {
           </Stack>
         </Stack>
         <Stack alignSelf="center" width="100%" spacing={4} mt={1}>
-          <Button variant="contained" onClick={handleLogin}>
+          <Button variant="contained" onClick={handleLogin} endIcon={<Login style={{ height: 16 }} />}>
             Login
           </Button>
           <Typography align="center" fontSize={12}>
