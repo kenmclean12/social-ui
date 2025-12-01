@@ -1,29 +1,33 @@
 import { useState } from "react";
 import { api } from "../lib/api";
-import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
+import type { LoginDto, TokenResponseDto } from "../types";
+import { useAuth } from "../context";
 
 export function LoginPage() {
   const { login } = useAuth();
+  const [form, setForm] = useState<LoginDto>({
+    email: "",
+    password: "",
+  })
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  async function submit(e) {
+async function submit(e: React.FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
 
+    const { email, password } = form;
     const res = await api("/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
+        method: "POST",
+        body: JSON.stringify({ email, password }),
     });
 
-    if (res.ok) {
-      const tokens = await res.json();
-      login(tokens.access_token, tokens.refresh_token);
-      window.location.href = "/";
+    if (res?.ok) {
+        const tokens: TokenResponseDto = await res?.json();
+        login(tokens.access_token, tokens.refresh_token, tokens.user);
+        window.location.href = "/";
     } else {
-      alert("Login failed");
+        alert("Login failed");
     }
-  }
+}
 
   return (
     <div>
@@ -32,17 +36,21 @@ export function LoginPage() {
         <input
           type="text"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={form.email}
+          onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
         />
         <input
           type="password"
           placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={form.password}
+          onChange={(e) => setForm((prev) => ({ ...prev, password: e.target.value }))}
         />
         <button>Login</button>
       </form>
+      <p>
+        Not a user?{" "}
+        <Link to="/register">Register</Link>
+      </p>
     </div>
   );
 }
