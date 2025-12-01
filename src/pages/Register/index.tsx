@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { Stack, Input, Button, Typography } from "@mui/material";
-import { ArrowForwardIos, ArrowBackIos, Check } from "@mui/icons-material";
+import {
+  ArrowForwardIos,
+  ArrowBackIos,
+  Check,
+  NightsStay,
+} from "@mui/icons-material";
 import { useNavigate, Link } from "react-router-dom";
 import type { UserCreateDto } from "../../types";
 import { useAuthRegister } from "../../hooks/auth";
@@ -28,7 +33,6 @@ export function RegisterPage() {
     description: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
-  const [submitError, setSubmitError] = useState<string | null>(null);
   const { mutateAsync: register } = useAuthRegister();
 
   function update<K extends keyof UserCreateDto>(
@@ -61,6 +65,9 @@ export function RegisterPage() {
     if (step === 1) {
       if (!form.userName) newErrors.userName = "Username is required";
       if (!form.email) newErrors.email = "Email is required";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+        newErrors.email = "Please enter a valid email address";
+      }
       if (!form.password) newErrors.password = "Password is required";
     }
 
@@ -91,12 +98,8 @@ export function RegisterPage() {
       if (payload[key] === "" || payload[key] === 0) delete payload[key];
     });
 
-    try {
-      await register(payload);
-      navigate("/", { replace: true });
-    } catch {
-      setSubmitError("Login failed, invalid credentials provided");
-    }
+    await register(payload);
+    navigate("/", { replace: true });
   };
 
   return (
@@ -105,7 +108,7 @@ export function RegisterPage() {
       justifyContent="center"
       height="100vh"
       width="100vw"
-      sx={{ backgroundColor: "rgba(0, 20, 57, 0.4)" }}
+      sx={{ backgroundColor: "lightblue" }}
     >
       <Stack
         width="100%"
@@ -115,12 +118,22 @@ export function RegisterPage() {
         color="white"
         border="1px solid #ccc"
         borderRadius="16px"
-        sx={{ backgroundColor: "black" }}
+        sx={{
+          backgroundColor: "black",
+          opacity: 0.9,
+        }}
       >
-        <Typography align="center" fontSize={22}>
-          Register
-        </Typography>
-
+        <Stack
+          direction="row"
+          alignSelf="center"
+          alignItems="center"
+          spacing={1}
+        >
+          <Typography align="center" fontSize={22}>
+            Register
+          </Typography>
+          <NightsStay sx={{ color: "lightblue" }} />
+        </Stack>
         <Stack spacing={2} mt={5}>
           {step === 0 && (
             <>
@@ -133,14 +146,14 @@ export function RegisterPage() {
                   sx={{
                     ...inputStyles,
                     border: errors.firstName
-                      ? "1px solid red"
+                      ? "2px solid lightblue"
                       : "1px solid #ccc",
                     color: "white",
                   }}
                 />
                 <Typography
                   fontSize={11}
-                  color="red"
+                  color="lightblue"
                   visibility={errors.firstName ? "visible" : "hidden"}
                 >
                   {errors.firstName}
@@ -156,14 +169,14 @@ export function RegisterPage() {
                   sx={{
                     ...inputStyles,
                     border: errors.lastName
-                      ? "1px solid red"
+                      ? "2px solid lightblue"
                       : "1px solid #ccc",
                     color: "white",
                   }}
                 />
                 <Typography
                   fontSize={11}
-                  color="red"
+                  color="lightblue"
                   visibility={errors.lastName ? "visible" : "hidden"}
                 >
                   {errors.lastName}
@@ -178,13 +191,15 @@ export function RegisterPage() {
                   onChange={(e) => setAgeInput(e.target.value)}
                   sx={{
                     ...inputStyles,
-                    border: errors.age ? "1px solid red" : "1px solid #ccc",
+                    border: errors.age
+                      ? "2px solid lightblue"
+                      : "1px solid #ccc",
                     color: "white",
                   }}
                 />
                 <Typography
                   fontSize={11}
-                  color="red"
+                  color="lightblue"
                   visibility={errors.age ? "visible" : "hidden"}
                 >
                   {errors.age}
@@ -204,14 +219,14 @@ export function RegisterPage() {
                   sx={{
                     ...inputStyles,
                     border: errors.userName
-                      ? "1px solid red"
+                      ? "2px solid lightblue"
                       : "1px solid #ccc",
                     color: "white",
                   }}
                 />
                 <Typography
                   fontSize={11}
-                  color="red"
+                  color="lightblue"
                   visibility={errors.userName ? "visible" : "hidden"}
                 >
                   {errors.userName}
@@ -226,13 +241,15 @@ export function RegisterPage() {
                   onChange={(e) => update("email", e.target.value)}
                   sx={{
                     ...inputStyles,
-                    border: errors.email ? "1px solid red" : "1px solid #ccc",
+                    border: errors.email
+                      ? "2px solid lightblue"
+                      : "1px solid #ccc",
                     color: "white",
                   }}
                 />
                 <Typography
                   fontSize={11}
-                  color="red"
+                  color="lightblue"
                   visibility={errors.email ? "visible" : "hidden"}
                 >
                   {errors.email}
@@ -249,14 +266,14 @@ export function RegisterPage() {
                   sx={{
                     ...inputStyles,
                     border: errors.password
-                      ? "1px solid red"
+                      ? "2px solid lightblue"
                       : "1px solid #ccc",
                     color: "white",
                   }}
                 />
                 <Typography
                   fontSize={11}
-                  color="red"
+                  color="lightblue"
                   visibility={errors.password ? "visible" : "hidden"}
                 >
                   {errors.password}
@@ -270,7 +287,7 @@ export function RegisterPage() {
               <Stack spacing={0.5}>
                 <Input
                   disableUnderline
-                  placeholder="Phone Number"
+                  placeholder="Phone Number (optional)"
                   value={form.phoneNumber}
                   onChange={(e) => update("phoneNumber", e.target.value)}
                   sx={{
@@ -295,25 +312,24 @@ export function RegisterPage() {
               </Stack>
             </>
           )}
-          <Typography
-            align="center"
-            fontSize={11}
-            color="red"
-            visibility={submitError ? "visible" : "hidden"}
-            mt={1.5}
-          >
-            {submitError}*
-          </Typography>
         </Stack>
 
-        <Stack alignSelf="center" width="100%" spacing={3} mt={2}>
-          <Stack direction="row" spacing={3} justifyContent="space-between">
+        <Stack alignSelf="center" width="100%" spacing={3} mt={5}>
+          <Stack direction="row" spacing={1.5} justifyContent="space-between">
             {step > 0 && (
               <Button
                 variant="contained"
                 onClick={() => setStep(step - 1)}
                 fullWidth
-                startIcon={<ArrowBackIos style={{ height: 16 }} />}
+                startIcon={
+                  <ArrowBackIos style={{ marginRight: "-5px", height: 16 }} />
+                }
+                sx={{
+                  backgroundColor: "black",
+                  color: "lightblue",
+                  border: "1.5px solid lightblue",
+                  borderRadius: 2,
+                }}
               >
                 Back
               </Button>
@@ -323,7 +339,15 @@ export function RegisterPage() {
                 variant="contained"
                 onClick={handleNext}
                 fullWidth
-                endIcon={<ArrowForwardIos style={{ height: 16 }} />}
+                endIcon={
+                  <ArrowForwardIos style={{ marginLeft: "-5px", height: 16 }} />
+                }
+                sx={{
+                  backgroundColor: "black",
+                  color: "lightblue",
+                  border: "1.5px solid lightblue",
+                  borderRadius: 2,
+                }}
               >
                 Next
               </Button>
@@ -333,7 +357,13 @@ export function RegisterPage() {
                 variant="contained"
                 onClick={handleRegister}
                 fullWidth
-                endIcon={<Check style={{ height: 16 }} />}
+                endIcon={<Check style={{ marginLeft: "-2px", height: 20 }} />}
+                sx={{
+                  backgroundColor: "black",
+                  color: "lightblue",
+                  border: "1.5px solid lightblue",
+                  borderRadius: 2,
+                }}
               >
                 Register
               </Button>
@@ -341,7 +371,7 @@ export function RegisterPage() {
           </Stack>
           <Typography align="center" fontSize={12}>
             Already a user?{" "}
-            <Link to="/login" style={{ color: "#1976D2" }}>
+            <Link to="/login" style={{ color: "lightblue" }}>
               Login
             </Link>
           </Typography>

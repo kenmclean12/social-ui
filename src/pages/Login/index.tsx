@@ -3,12 +3,11 @@ import { Stack, Input, Button, Typography } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import type { LoginDto } from "../../types";
 import { useAuthLogin } from "../../hooks/auth";
-import { Login } from "@mui/icons-material";
+import { Login, NightsStay } from "@mui/icons-material";
 
 export function LoginPage() {
   const navigate = useNavigate();
   const [errors, setErrors] = useState<Partial<LoginDto>>({});
-  const [submitError, setSubmitError] = useState<string | null>(null);
   const [form, setForm] = useState<LoginDto>({ email: "", password: "" });
   const { mutateAsync: login } = useAuthLogin();
 
@@ -24,12 +23,8 @@ export function LoginPage() {
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
-    try {
-      await login(form);
-      navigate("/", { replace: true });
-    } catch {
-      setSubmitError("Login failed, invalid credentials provided");
-    }
+    await login(form);
+    navigate("/", { replace: true });
   };
 
   const inputStyles = {
@@ -48,7 +43,7 @@ export function LoginPage() {
       height="100vh"
       width="100vw"
       sx={{
-        backgroundColor: "rgba(0, 20, 57, 0.4)",
+        backgroundColor: "lightblue",
       }}
     >
       <Stack
@@ -60,12 +55,18 @@ export function LoginPage() {
         color="white"
         border="1px solid #ccc"
         borderRadius="16px"
-        sx={{ backgroundColor: "black" }}
+        sx={{ 
+          backgroundColor: "black",
+          opacity: 0.9, 
+        }}
       >
-        <Typography align="center" fontSize={22}>
-          Login
-        </Typography>
-        <Stack spacing={2} mt={4.5}>
+        <Stack direction="row" alignSelf="center" alignItems="center" spacing={1}>
+          <Typography align="center" fontSize={22}>
+            Login
+          </Typography>
+          <NightsStay sx={{ color: "lightblue" }} />
+        </Stack>
+        <Stack spacing={.75} mt={4.5}>
           <Stack spacing={0.5}>
             <Input
               disableUnderline
@@ -76,7 +77,7 @@ export function LoginPage() {
               }
               sx={{
                 ...inputStyles,
-                border: errors.email ? "1px solid red" : "1px solid #ccc",
+                border: errors.email ? "2px solid lightblue" : "1px solid #ccc",
                 color: "white",
                 width: "100%",
                 boxSizing: "border-box",
@@ -84,10 +85,10 @@ export function LoginPage() {
             />
             <Typography
               fontSize={11}
-              color="red"
+              color="lightblue"
               visibility={errors.email ? "visible" : "hidden"}
             >
-              {errors.email}
+              {errors.email}*
             </Typography>
           </Stack>
           <Stack spacing={0.5}>
@@ -101,39 +102,36 @@ export function LoginPage() {
               }
               sx={{
                 ...inputStyles,
-                border: errors.password ? "1px solid red" : "1px solid #ccc",
+                border: errors.password ? "2px solid lightblue" : "1px solid #ccc",
                 color: "white",
               }}
             />
             <Typography
               fontSize={11}
-              color="red"
+              color="lightblue"
               visibility={errors.password ? "visible" : "hidden"}
             >
-              {errors.password}
+              {errors.password}*
             </Typography>
           </Stack>
         </Stack>
-        <Typography
-          align="center"
-          fontSize={11}
-          color="red"
-          visibility={submitError ? "visible" : "hidden"}
-          mt={2}
-        >
-          {submitError}*
-        </Typography>
-        <Stack alignSelf="center" width="100%" spacing={3} mt={2}>
+        <Stack alignSelf="center" width="100%" spacing={3} mt={3}>
           <Button
             variant="contained"
             onClick={handleLogin}
-            endIcon={<Login style={{ height: 16 }} />}
+            endIcon={<Login style={{ marginLeft: "-5px", height: 16 }} />}
+            sx={{
+              backgroundColor: "black",
+              color: "lightblue",
+              border: "1.5px solid lightblue",
+              borderRadius: 2,
+            }}
           >
             Login
           </Button>
           <Typography align="center" fontSize={12}>
             Don't have an account?{" "}
-            <Link to="/register" style={{ color: "#1976D2" }}>
+            <Link to="/register" style={{ color: "lightblue" }}>
               Register
             </Link>
           </Typography>
