@@ -19,27 +19,14 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
         flex: 1,
         alignItems: "center",
         height: "100%",
+        maxWidth: "600px",
         p: 2,
         backgroundColor: "#1e1e1e",
         color: "#fff",
         gap: 2,
-        overflowX: "auto",
-        "&::-webkit-scrollbar": {
-          height: "4px",
-        },
-        "&::-webkit-scrollbar-track": {
-          background: "#1e1e1e",
-        },
-        "&::-webkit-scrollbar-thumb": {
-          backgroundColor: "#fff",
-          borderRadius: "4px",
-        },
-        "&::-webkit-scrollbar-thumb:hover": {
-          backgroundColor: "#ccc",
-        },
       }}
     >
-      <Stack flex="1 1 45%" spacing={0.5}>
+      <Stack flex="1 1 25%" spacing={isOwnUser ? 0 : .5}>
         <EditableField
           label="Username"
           value={user.userName}
@@ -64,7 +51,7 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
         flexItem
         sx={{ backgroundColor: "white" }}
       />
-      <Stack flex="1 1 45%" spacing={0.5}>
+      <Stack flex="1 1 25%" spacing={isOwnUser ? 0 : .5}>
         <EditableField
           label="Email"
           value={user.email}

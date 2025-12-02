@@ -69,8 +69,12 @@ export function EditableField({
   return (
     <Stack
       direction="row"
+      alignSelf="center"
       alignItems="center"
       spacing={1}
+      padding={editing ? 1 : 0}
+      border={editing ? '1px solid #ccc' : 'none'}
+      borderRadius={2}
       overflow="hidden"
       textOverflow="ellipsis"
       whiteSpace="nowrap"
@@ -108,7 +112,7 @@ export function EditableField({
             variant="outlined"
             size="small"
             sx={{
-              input: { color: "white" },
+              input: { height: "10px", color: "white" },
               "& .MuiOutlinedInput-root": {
                 "& fieldset": { borderColor: error ? "red" : "#6BB6FF" },
                 "&:hover fieldset": { borderColor: error ? "red" : "#6BB6FF" },
