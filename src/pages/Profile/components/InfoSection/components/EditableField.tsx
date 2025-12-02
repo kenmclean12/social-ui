@@ -8,6 +8,7 @@ interface EditableFieldProps {
   label: string;
   value: string;
   onSave: (v: string) => void;
+  isOwnUser: boolean;
   isPhone?: boolean;
   isNumber?: boolean;
   isEmail?: boolean;
@@ -17,6 +18,7 @@ export function EditableField({
   label,
   value,
   onSave,
+  isOwnUser,
   isPhone = false,
   isNumber = false,
   isEmail = false,
@@ -77,11 +79,24 @@ export function EditableField({
         {label}:
       </Typography>
       {!editing ? (
-        <Box sx={{ display: "flex", alignItems: "center", color: "#6BB6FF", fontSize: 16 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            color: "#6BB6FF",
+            fontSize: 16,
+          }}
+        >
           <Typography sx={{ mr: 1 }}>{value || "—"}</Typography>
-          <IconButton size="small" onClick={() => setEditing(true)} sx={{ color: "#6BB6FF" }}>
-            <EditIcon fontSize="small" />
-          </IconButton>
+          {isOwnUser && (
+            <IconButton
+              size="small"
+              onClick={() => setEditing(true)}
+              sx={{ color: "#6BB6FF" }}
+            >
+              <EditIcon fontSize="small" />
+            </IconButton>
+          )}
         </Box>
       ) : (
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -97,11 +112,21 @@ export function EditableField({
               "& .MuiOutlinedInput-root": {
                 "& fieldset": { borderColor: error ? "red" : "#6BB6FF" },
                 "&:hover fieldset": { borderColor: error ? "red" : "#6BB6FF" },
-                "&.Mui-focused fieldset": { borderColor: error ? "red" : "#6BB6FF" },
+                "&.Mui-focused fieldset": {
+                  borderColor: error ? "red" : "#6BB6FF",
+                },
               },
             }}
           />
-          <IconButton size="small" onClick={handleSave} disabled={!dirty || error} sx={{ color: dirty && !error ? "#6BB6FF" : "#555", "&:disabled": { color: "#555" } }}>
+          <IconButton
+            size="small"
+            onClick={handleSave}
+            disabled={!dirty || error}
+            sx={{
+              color: dirty && !error ? "#6BB6FF" : "#555",
+              "&:disabled": { color: "#555" },
+            }}
+          >
             <CheckIcon fontSize="small" />
           </IconButton>
           <IconButton size="small" onClick={handleCancel} sx={{ color: "red" }}>

@@ -74,7 +74,7 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
                   currentUrl={user.avatarUrl}
                   isOwnUser={user.id === self?.id}
                 />
-                <InfoSection user={user} />
+                <InfoSection user={user} isOwnUser={user.id === self?.id} />
                 <Stack
                   spacing={1}
                   alignItems="center"
