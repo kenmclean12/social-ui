@@ -1,4 +1,4 @@
-import { Paper, Stack } from "@mui/material";
+import { Divider, Paper, Stack } from "@mui/material";
 import type { UserWithCountsResponseDto } from "../../../../../../types";
 import { useUserUpdate } from "../../../../../../hooks";
 import { EditableField } from "./components";
@@ -24,14 +24,7 @@ export function InfoSection({ user }: InfoSectionProps) {
         gap: 2, 
       }}
     >
-      <Stack
-        sx={{
-          flex: "1 1 45%",
-          gap: 1.5,
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+      <Stack flex="1 1 45%" spacing={1}>
         <EditableField
           label="Username"
           value={user.userName}
@@ -48,14 +41,8 @@ export function InfoSection({ user }: InfoSectionProps) {
           onSave={(v: string) => updateUser({ lastName: v })}
         />
       </Stack>
-      <Stack
-        sx={{
-          flex: "1 1 45%",
-          gap: 1.5,
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+      <Divider orientation="vertical" flexItem sx={{ backgroundColor: 'white' }} />
+      <Stack flex="1 1 45%" spacing={1}>
         <EditableField
           label="Email"
           value={user.email}

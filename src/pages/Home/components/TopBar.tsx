@@ -15,12 +15,14 @@ import {
 import { useAuth } from "../../../context";
 import { NightsStay } from "@mui/icons-material";
 import { ProfileDialog } from "./ProfileDialog";
+import { useUserFindOne } from "../../../hooks";
 
 export function TopBar() {
   const { logout, user } = useAuth();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [profileOpen, setProfileOpen] = useState<boolean>(false);
+  const { data: activeUser } = useUserFindOne(Number(user?.id));
 
   return (
     <>
@@ -51,7 +53,7 @@ export function TopBar() {
           <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
             <Avatar
               sx={{ width: 36, height: 36 }}
-              src={user?.avatarUrl || ""}
+              src={activeUser?.avatarUrl || ""}
             />
           </IconButton>
           <Popover
@@ -61,7 +63,7 @@ export function TopBar() {
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
             transformOrigin={{ vertical: "top", horizontal: "right" }}
           >
-            <MenuList>
+            <MenuList style={{ width: "175px" }}>
               <MenuItem
                 onClick={() => {
                   setProfileOpen(true);
