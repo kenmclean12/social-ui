@@ -1,28 +1,14 @@
-// components/TopBar.tsx
 import { useState } from "react";
-import {
-  AppBar,
-  Toolbar,
-  Box,
-  IconButton,
-  Avatar,
-  Popover,
-  MenuList,
-  MenuItem,
-  Typography,
-  Input,
-} from "@mui/material";
+import { AppBar, Toolbar, Box, Input } from "@mui/material";
 import { useAuth } from "../../../../context";
 import { NightsStay } from "@mui/icons-material";
 import { ProfileDialog } from "../../../Profile";
-import { useUserFindOne } from "../../../../hooks";
+import { Notifications, ProfileMenu } from "./components";
 
 export function TopBar() {
-  const { logout, user } = useAuth();
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [profileOpen, setProfileOpen] = useState<boolean>(false);
-  const { data: activeUser } = useUserFindOne(Number(user?.id));
 
   return (
     <>
@@ -50,33 +36,10 @@ export function TopBar() {
               }}
             />
           </Box>
-          <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-            <Avatar
-              sx={{ width: 36, height: 36 }}
-              src={activeUser?.avatarUrl || ""}
-            />
-          </IconButton>
-          <Popover
-            open={!!anchorEl}
-            onClose={() => setAnchorEl(null)}
-            anchorEl={anchorEl}
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
-          >
-            <MenuList style={{ width: "175px" }}>
-              <MenuItem
-                onClick={() => {
-                  setProfileOpen(true);
-                  setAnchorEl(null);
-                }}
-              >
-                <Typography>Profile</Typography>
-              </MenuItem>
-              <MenuItem onClick={logout}>
-                <Typography>Logout</Typography>
-              </MenuItem>
-            </MenuList>
-          </Popover>
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <Notifications />
+            <ProfileMenu />
+          </Box>
         </Toolbar>
       </AppBar>
       {profileOpen && (
