@@ -3,7 +3,7 @@ import { AppBar, Toolbar, Box, Input } from "@mui/material";
 import { useAuth } from "../../../../context";
 import { NightsStay } from "@mui/icons-material";
 import { ProfileDialog } from "../../../Profile";
-import { Notifications, ProfileMenu } from "./components";
+import { CreatePost, Notifications, ProfileMenu } from "./components";
 
 export function TopBar() {
   const { user } = useAuth();
@@ -37,6 +37,7 @@ export function TopBar() {
             />
           </Box>
           <Box sx={{ display: "flex", gap: 1 }}>
+            <CreatePost />
             <Notifications />
             <ProfileMenu />
           </Box>
