@@ -3,14 +3,13 @@ import {
   DialogTitle,
   DialogContent,
   Stack,
-  Avatar,
   Paper,
   Typography,
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useUserFindOne } from "../../../../hooks";
-import { DescriptionSection, InfoSection } from "./components";
+import { AvatarUpload, DescriptionSection, InfoSection } from "./components";
 import { useAuth } from "../../../../context";
 
 interface ProfileDialogProps {
@@ -57,10 +56,8 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-
       <DialogContent sx={{ padding: 0 }}>
         {isLoading && <Typography sx={{ p: 2 }}>Loading...</Typography>}
-
         {user && (
           <Stack spacing={3} sx={{ p: 3 }}>
             <Stack
@@ -69,7 +66,10 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
               spacing={3}
               height="150px"
             >
-              <Avatar src={user.avatarUrl} sx={{ width: 80, height: 80 }} />
+              <AvatarUpload
+                currentUrl={user.avatarUrl}
+                isOwnUser={user.id === self?.id}
+              />
               <InfoSection user={user} />
               <Stack
                 spacing={1}
@@ -120,7 +120,6 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
                 </Paper>
               </Stack>
             </Stack>
-
             <DescriptionSection
               description={user.description || ""}
               isOwnUser={user.id === self?.id}

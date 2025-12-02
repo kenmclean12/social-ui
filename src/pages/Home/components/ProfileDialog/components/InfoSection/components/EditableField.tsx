@@ -39,7 +39,6 @@ export function EditableField({ label, value, onSave }: EditableFieldProps) {
       <Typography sx={{ color: "white", fontSize: 14, mb: 0.5 }}>
         {label}:
       </Typography>
-
       {!editing ? (
         <Box
           sx={{

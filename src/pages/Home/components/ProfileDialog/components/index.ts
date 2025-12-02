@@ -1,2 +1,3 @@
-export { DescriptionSection } from './DescriptionSection';
-export { InfoSection } from './InfoSection';
+export * from './DescriptionSection';
+export * from './InfoSection';
+export * from './AvatarUpload';

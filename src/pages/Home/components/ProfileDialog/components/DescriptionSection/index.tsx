@@ -11,7 +11,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
-import { useUserUpdate } from "../../../../../hooks";
+import { useUserUpdate } from "../../../../../../hooks";
 
 interface DescriptionSectionProps {
   description: string;
@@ -48,7 +48,6 @@ export function DescriptionSection({
   return (
     <>
       <Divider sx={{ borderColor: "#333" }} />
-
       <Paper
         elevation={1}
         sx={{
@@ -67,7 +66,6 @@ export function DescriptionSection({
             <EditIcon />
           </IconButton>
         )}
-
         {editing ? (
           <Stack spacing={2}>
             <TextField
@@ -105,7 +103,6 @@ export function DescriptionSection({
               >
                 Cancel
               </Button>
-
               <Button
                 onClick={handleSave}
                 variant="contained"
@@ -133,7 +130,6 @@ export function DescriptionSection({
           </Typography>
         )}
       </Paper>
-
       <Divider sx={{ borderColor: "#333" }} />
     </>
   );
