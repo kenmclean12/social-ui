@@ -28,9 +28,11 @@ export function TopBar() {
             placeholder="Search users…"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            sx={{ 
+            sx={{
+              height: "35px",
               width: "60%",
               padding: "2px 16px",
+              fontSize: "14px",
               color: "white",
               border: "1px solid lightblue", 
               borderRadius: 4,

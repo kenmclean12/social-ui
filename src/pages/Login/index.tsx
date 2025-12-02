@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Stack, Input, Button, Typography } from "@mui/material";
 import { useNavigate, Link } from "react-router-dom";
 import type { LoginDto } from "../../types";
-import { useAuthLogin } from "../../hooks/auth";
 import { Login, NightsStay } from "@mui/icons-material";
+import { useAuthLogin } from "../../hooks";
 
 export function LoginPage() {
   const navigate = useNavigate();

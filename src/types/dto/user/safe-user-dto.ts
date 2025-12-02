@@ -4,11 +4,12 @@ export interface SafeUserDto {
   lastName: string;
   userName: string;
   age: number;
-  phoneNumber: string;
+  phoneNumber?: string;
   email: string;
 
   description?: string;
   avatarUrl?: string;
-  following?: SafeUserDto;
-  followers?: SafeUserDto;
+
+  following?: SafeUserDto[];
+  followers?: SafeUserDto[];
 }

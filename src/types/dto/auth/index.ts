@@ -1,2 +1,2 @@
-export * from './LoginDto';
-export * from './TokenResponseDto';
+export * from './login-dto';
+export * from './token-response-dto';

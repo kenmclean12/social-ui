@@ -8,7 +8,7 @@ import {
 } from "@mui/icons-material";
 import { useNavigate, Link } from "react-router-dom";
 import type { UserCreateDto } from "../../types";
-import { useAuthRegister } from "../../hooks/auth";
+import { useAuthRegister } from "../../hooks";
 
 interface FormErrors {
   firstName?: string;
