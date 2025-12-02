@@ -11,7 +11,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
-import { useUserUpdate } from "../../../../../../../hooks";
+import { useUserUpdate } from "../../../../hooks";
 
 interface DescriptionSectionProps {
   description: string;

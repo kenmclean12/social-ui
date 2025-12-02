@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Avatar, Box } from "@mui/material";
-import { useUserUpdate } from "../../../../../../../hooks";
+import { useUserUpdate } from "../../../../hooks";
 import { CameraAlt } from "@mui/icons-material";
 
 interface AvatarUploadProps {

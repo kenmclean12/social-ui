@@ -8,9 +8,9 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useUserFindOne } from "../../../../../hooks";
+import { useUserFindOne } from "../../hooks";
 import { AvatarUpload, DescriptionSection, InfoSection } from "./components";
-import { useAuth } from "../../../../../context";
+import { useAuth } from "../../context";
 import { DeleteAccount } from "./components/DeleteAccount";
 import { ResetPassword } from "./components/ResetPassword";
 

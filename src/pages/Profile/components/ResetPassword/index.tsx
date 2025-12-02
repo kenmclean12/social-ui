@@ -9,8 +9,8 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useUserResetPassword } from "../../../../../../../hooks";
-import type { PasswordResetDto } from "../../../../../../../types";
+import { useUserResetPassword } from "../../../../hooks";
+import type { PasswordResetDto } from "../../../../types";
 
 export function ResetPassword() {
   const [open, setOpen] = useState<boolean>(false);

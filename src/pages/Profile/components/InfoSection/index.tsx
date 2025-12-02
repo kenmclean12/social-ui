@@ -1,6 +1,6 @@
 import { Divider, Paper, Stack } from "@mui/material";
-import type { UserWithCountsResponseDto } from "../../../../../../../types";
-import { useUserUpdate } from "../../../../../../../hooks";
+import type { UserWithCountsResponseDto } from "../../../../types";
+import { useUserUpdate } from "../../../../hooks";
 import { EditableField } from "./components";
 
 interface InfoSectionProps {

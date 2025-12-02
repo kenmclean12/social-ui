@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { useAuth } from "../../../../context";
 import { NightsStay } from "@mui/icons-material";
-import { ProfileDialog } from "./ProfileDialog";
+import { ProfileDialog } from "../../../Profile";
 import { useUserFindOne } from "../../../../hooks";
 
 export function TopBar() {
