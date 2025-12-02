@@ -42,7 +42,7 @@ export function AvatarUpload({ currentUrl, isOwnUser }: AvatarUploadProps) {
     >
       <Avatar
         src={preview}
-        sx={{ width: 80, height: 80, border: "2px solid #6BB6FF" }}
+        sx={{ width: 110, height: 110, border: "2px solid #6BB6FF" }}
       />
       {isOwnUser && (
         <Box

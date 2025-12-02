@@ -22,7 +22,8 @@ export function TopBar() {
             position: "relative",
             display: "flex", 
             alignItems: "center", 
-            justifyContent: "space-between", 
+            justifyContent: "space-between",
+            minWidth: "500px", 
             gap: 2, 
             backgroundColor: "black", 
           }}

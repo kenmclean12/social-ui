@@ -33,13 +33,13 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
 
   return (
     <>
-      <Dialog 
+      <Dialog
         open={open}
         onClose={undefined}
         maxWidth="md"
         fullWidth
         PaperProps={{
-          sx: { backgroundColor: "#121212", color: "#fff" },
+          sx: { minWidth: "700px", backgroundColor: "#121212", color: "#fff" },
         }}
       >
         <DialogTitle
@@ -69,6 +69,23 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
                 alignItems="center"
                 spacing={3}
                 height="150px"
+                sx={{
+                  overflowX: "auto",
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "white transparent",
+
+                  "&::-webkit-scrollbar": {
+                    display: "block",
+                    height: "1px",
+                  },
+                  "&::-webkit-scrollbar-track": {
+                    background: "transparent",
+                  },
+                  "&::-webkit-scrollbar-thumb": {
+                    backgroundColor: "white",
+                    borderRadius: "10px",
+                  },
+                }}
               >
                 <AvatarUpload
                   currentUrl={user.avatarUrl}
