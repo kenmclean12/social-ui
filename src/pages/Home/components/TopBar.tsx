@@ -20,7 +20,7 @@ export function TopBar() {
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   return (
-    <AppBar position="static" color="default" elevation={1}>
+    <AppBar position="static" color="default" elevation={1} style={{ borderBottom: "1px solid lightblue" }}>
       <Toolbar sx={{ display: "flex", gap: 2, backgroundColor: "black" }}>
         <NightsStay sx={{ height: "40px", color: "lightblue" }} />
         <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
@@ -30,7 +30,7 @@ export function TopBar() {
             onChange={(e) => setSearchTerm(e.target.value)}
             sx={{ 
               width: "60%",
-              padding: "2px 8px",
+              padding: "2px 16px",
               color: "white",
               border: "1px solid lightblue", 
               borderRadius: 4,
