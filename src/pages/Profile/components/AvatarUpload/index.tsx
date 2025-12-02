@@ -21,7 +21,7 @@ export function AvatarUpload({ currentUrl, isOwnUser }: AvatarUploadProps) {
     reader.onloadend = () => {
       const base64String = reader.result as string;
       setPreview(base64String);
-      updateUser({ avatarUrl: base64String }); // update backend
+      updateUser({ avatarUrl: base64String });
     };
     reader.readAsDataURL(file);
   };
