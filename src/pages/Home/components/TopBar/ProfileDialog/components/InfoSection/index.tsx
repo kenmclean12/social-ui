@@ -1,6 +1,6 @@
 import { Divider, Paper, Stack } from "@mui/material";
-import type { UserWithCountsResponseDto } from "../../../../../../types";
-import { useUserUpdate } from "../../../../../../hooks";
+import type { UserWithCountsResponseDto } from "../../../../../../../types";
+import { useUserUpdate } from "../../../../../../../hooks";
 import { EditableField } from "./components";
 
 interface InfoSectionProps {
@@ -65,16 +65,19 @@ export function InfoSection({ user }: InfoSectionProps) {
           label="Email"
           value={user.email}
           onSave={(v: string) => updateUser({ email: v })}
+          isEmail
         />
         <EditableField
           label="Phone"
           value={user.phoneNumber || ""}
           onSave={(v: string) => updateUser({ phoneNumber: v })}
+          isPhone
         />
         <EditableField
           label="Age"
           value={user.age?.toString()}
           onSave={(v: string) => updateUser({ age: Number(v) })}
+          isNumber
         />
       </Stack>
     </Paper>

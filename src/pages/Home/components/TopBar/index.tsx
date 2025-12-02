@@ -12,10 +12,10 @@ import {
   Typography,
   Input,
 } from "@mui/material";
-import { useAuth } from "../../../context";
+import { useAuth } from "../../../../context";
 import { NightsStay } from "@mui/icons-material";
 import { ProfileDialog } from "./ProfileDialog";
-import { useUserFindOne } from "../../../hooks";
+import { useUserFindOne } from "../../../../hooks";
 
 export function TopBar() {
   const { logout, user } = useAuth();

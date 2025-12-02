@@ -6,9 +6,10 @@ import {
   Check,
   NightsStay,
 } from "@mui/icons-material";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, Navigate } from "react-router-dom";
 import type { UserCreateDto } from "../../types";
 import { useAuthRegister } from "../../hooks";
+import { useAuth } from "../../context";
 
 interface FormErrors {
   firstName?: string;
@@ -21,6 +22,7 @@ interface FormErrors {
 
 export function RegisterPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [step, setStep] = useState(0);
   const [ageInput, setAgeInput] = useState<string>("");
   const [form, setForm] = useState<Omit<UserCreateDto, "age">>({
@@ -101,6 +103,18 @@ export function RegisterPage() {
     await register(payload);
     navigate("/", { replace: true });
   };
+
+  function formatPhoneNumber(input: string): string {
+    const digits = input.replace(/\D/g, "");
+
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+    return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+  }
+
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <Stack
@@ -289,7 +303,7 @@ export function RegisterPage() {
                   disableUnderline
                   placeholder="Phone Number (optional)"
                   value={form.phoneNumber}
-                  onChange={(e) => update("phoneNumber", e.target.value)}
+                  onChange={(e) => update("phoneNumber", formatPhoneNumber(e.target.value))}
                   sx={{
                     ...inputStyles,
                     border: "1px solid #ccc",

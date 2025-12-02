@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Dialog, DialogTitle, DialogContent, Stack, Typography, Button } from "@mui/material";
-import { useUserDelete } from "../../../../../../hooks";
-import { useAuth } from "../../../../../../context";
+import { Dialog, DialogTitle, DialogContent, Stack, Typography, Button, IconButton } from "@mui/material";
+import { useUserDelete } from "../../../../../../../hooks";
+import { useAuth } from "../../../../../../../context";
+import { Close } from "@mui/icons-material";
 
 export function DeleteAccount() {
   const { logout } = useAuth();
@@ -30,7 +31,12 @@ export function DeleteAccount() {
         </Button>
       </Stack>
       <Dialog open={confirmDelete} onClose={() => setConfirmDelete(false)}>
-        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          Confirm Account Deletion
+          <IconButton onClick={() => setConfirmDelete(false)} sx={{ color: "red" }}>
+            <Close />
+          </IconButton>
+        </DialogTitle>
         <DialogContent>
           <Typography>
             Are you sure you want to delete your account? This action cannot be undone.

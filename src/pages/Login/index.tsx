@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Stack, Input, Button, Typography } from "@mui/material";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, Navigate } from "react-router-dom";
 import type { LoginDto } from "../../types";
 import { Login, NightsStay } from "@mui/icons-material";
 import { useAuthLogin } from "../../hooks";
+import { useAuth } from "../../context";
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [errors, setErrors] = useState<Partial<LoginDto>>({});
   const [form, setForm] = useState<LoginDto>({ email: "", password: "" });
   const { mutateAsync: login } = useAuthLogin();
@@ -35,6 +37,10 @@ export function LoginPage() {
     borderRadius: 2,
     "&::placeholder": { opacity: 0.7 },
   };
+
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <Stack
