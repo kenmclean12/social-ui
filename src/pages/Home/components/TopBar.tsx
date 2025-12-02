@@ -20,7 +20,7 @@ export function TopBar() {
   const { logout, user } = useAuth();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [profileOpen, setProfileOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState<boolean>(false);
 
   return (
     <>

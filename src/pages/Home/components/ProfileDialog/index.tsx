@@ -5,12 +5,13 @@ import {
   Stack,
   Avatar,
   Paper,
-  Divider,
   Typography,
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useUserFindOne } from "../../../../hooks";
+import { DescriptionSection, InfoSection } from "./components";
+import { useAuth } from "../../../../context";
 
 interface ProfileDialogProps {
   open: boolean;
@@ -18,10 +19,16 @@ interface ProfileDialogProps {
   onClose: () => void;
 }
 
-const longString = "vable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.vable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.vable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.vable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.vable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.vable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.vable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.vable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc."
-
 export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
+  const { user: self } = useAuth();
   const { data: user, isLoading } = useUserFindOne(userId);
+
+  function formatNumber(num: number): string {
+    if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1) + "B";
+    if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + "M";
+    if (num >= 1_000) return (num / 1_000).toFixed(1) + "K";
+    return num.toString();
+  }
 
   return (
     <Dialog
@@ -31,7 +38,7 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
       fullWidth
       PaperProps={{
         sx: {
-          backgroundColor: '#121212',
+          backgroundColor: "#121212",
           color: "#fff",
         },
       }}
@@ -56,37 +63,28 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
 
         {user && (
           <Stack spacing={3} sx={{ p: 3 }}>
-            <Stack direction="row" spacing={3} alignItems="flex-start">
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={3}
+              height="150px"
+            >
               <Avatar src={user.avatarUrl} sx={{ width: 80, height: 80 }} />
-              <Stack spacing={1} flex={1}>
-                <Typography variant="h6" sx={{ color: 'lightblue' }}>
-                  {user.userName}
-                </Typography>
-                <Stack spacing={0.5}>
-                  <Typography variant="body2">
-                    <strong style={{ color: "#fff" }}>Name: </strong>
-                    <span style={{ color: 'lightblue' }}>
-                      {user.firstName} {user.lastName}
-                    </span>
-                  </Typography>
-                  <Typography variant="body2">
-                    <strong style={{ color: "#fff" }}>Email: </strong>
-                    <span style={{ color: 'lightblue' }}>{user.email}</span>
-                  </Typography>
-                  <Typography variant="body2">
-                    <strong style={{ color: "#fff" }}>Age: </strong>
-                    <span style={{ color: 'lightblue' }}>{user.age || "N/A"}</span>
-                  </Typography>
-                  <Typography variant="body2">
-                    <strong style={{ color: "#fff" }}>Phone: </strong>
-                    <span style={{ color: 'lightblue' }}>{user.phoneNumber || "N/A"}</span>
-                  </Typography>
-                </Stack>
-              </Stack>
-              <Stack spacing={1} alignItems="center">
+              <InfoSection user={user} />
+              <Stack
+                spacing={1}
+                alignItems="center"
+                height="100%"
+                marginLeft="auto"
+              >
                 <Paper
                   elevation={1}
                   sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "96px",
                     p: 1,
                     textAlign: "center",
                     width: 80,
@@ -96,13 +94,17 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
                   <Typography variant="subtitle2" sx={{ color: "#fff" }}>
                     Followers
                   </Typography>
-                  <Typography variant="h6" sx={{ color: 'lightblue' }}>
-                    {user.followerCount}
+                  <Typography variant="h6" sx={{ color: "lightblue" }}>
+                    {formatNumber(user.followerCount)}
                   </Typography>
                 </Paper>
                 <Paper
                   elevation={1}
                   sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
                     p: 1,
                     textAlign: "center",
                     width: 80,
@@ -112,21 +114,17 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
                   <Typography variant="subtitle2" sx={{ color: "#fff" }}>
                     Following
                   </Typography>
-                  <Typography variant="h6" sx={{ color: 'lightblue' }}>
-                    {user.followingCount}
+                  <Typography variant="h6" sx={{ color: "lightblue" }}>
+                    {formatNumber(user.followingCount)}
                   </Typography>
                 </Paper>
               </Stack>
             </Stack>
 
-            <Divider sx={{ borderColor: "#333" }} />
-            <Paper elevation={1} sx={{ maxHeight: "150px", p: 2, backgroundColor: "#1e1e1e", overflowY: "auto" }}>
-              <Typography>
-                <strong style={{ color: "#fff" }}>Description: </strong>
-                <span style={{ color: 'lightblue' }}>{user.description || longString}</span>
-              </Typography>
-            </Paper>
-            <Divider sx={{ borderColor: "#333" }} />
+            <DescriptionSection
+              description={user.description || ""}
+              isOwnUser={user.id === self?.id}
+            />
           </Stack>
         )}
       </DialogContent>
