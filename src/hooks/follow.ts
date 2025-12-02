@@ -43,21 +43,6 @@ export function useFollowGetFollowing(id: number) {
   });
 }
 
-export function useIsFollowing(followerId: number, followingId: number) {
-  return useQuery({
-    queryKey: followKeys.isFollowing(followerId, followingId),
-    enabled: !!followerId && !!followingId,
-    queryFn: async () => {
-      const res = await api(`/follow/is-following/${followingId}`);
-      if (!res?.ok)
-        throw new Error(
-          ((await res?.json()) ?? {}).message || "Failed to check follow status"
-        );
-      return res.json() as Promise<boolean>;
-    },
-  });
-}
-
 export function useFollowCreate() {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();

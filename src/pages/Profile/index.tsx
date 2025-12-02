@@ -14,7 +14,7 @@ import { AvatarUpload, DescriptionSection, InfoSection } from "./components";
 import { useAuth } from "../../context";
 import { DeleteAccount } from "./components/DeleteAccount";
 import { ResetPassword } from "./components/ResetPassword";
-import { useFollowCreate, useFollowGetFollowing, useFollowRemove, useIsFollowing } from "../../hooks/follow";
+import { useFollowCreate, useFollowGetFollowing, useFollowRemove } from "../../hooks/follow";
 
 interface ProfileDialogProps {
   open: boolean;
@@ -28,24 +28,19 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
 
   const followCreate = useFollowCreate();
   const followRemove = useFollowRemove();
-  const { data: isFollowing, refetch: refetchIsFollowing } = useIsFollowing(self?.id || 0, userId);
   const { data: followingList } = useFollowGetFollowing(self?.id || 0);
   const followRecord = followingList?.find(f => f.following.id === userId);
+  const isFollowing = !!followRecord;
 
 
   const handleFollowToggle = () => {
     if (!user || !self) return;
 
     if (isFollowing) {
-      followRemove.mutate(followRecord?.id as number, {
-        onSuccess: () => refetchIsFollowing(),
-      });
+      followRemove.mutate(followRecord?.id as number);
     } else {
       followCreate.mutate(
         { followerId: self.id, followingId: user.id },
-        {
-          onSuccess: () => refetchIsFollowing(),
-        }
       );
     }
   };
