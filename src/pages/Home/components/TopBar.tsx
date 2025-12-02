@@ -49,7 +49,10 @@ export function TopBar() {
             />
           </Box>
           <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-            <Avatar sx={{ width: 36, height: 36 }} src={user?.avatarUrl || ""} />
+            <Avatar
+              sx={{ width: 36, height: 36 }}
+              src={user?.avatarUrl || ""}
+            />
           </IconButton>
           <Popover
             open={!!anchorEl}
@@ -74,11 +77,13 @@ export function TopBar() {
           </Popover>
         </Toolbar>
       </AppBar>
-      <ProfileDialog
-        open={profileOpen}
-        userId={user?.id as number}
-        onClose={() => setProfileOpen(false)}
-      />
+      {profileOpen && (
+        <ProfileDialog
+          open={profileOpen}
+          userId={user?.id as number}
+          onClose={() => setProfileOpen(false)}
+        />
+      )}
     </>
   );
 }
