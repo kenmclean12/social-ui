@@ -81,13 +81,13 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
                   elevation={1}
                   sx={{
                     display: "flex",
+                    flex: 1,
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
-                    height: "96px",
+                    width: "100px",
                     p: 1,
                     textAlign: "center",
-                    width: 80,
                     backgroundColor: "#1e1e1e",
                   }}
                 >
@@ -102,12 +102,13 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
                   elevation={1}
                   sx={{
                     display: "flex",
+                    flex: 1,
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
+                    width: "100px",
                     p: 1,
                     textAlign: "center",
-                    width: 80,
                     backgroundColor: "#1e1e1e",
                   }}
                 >

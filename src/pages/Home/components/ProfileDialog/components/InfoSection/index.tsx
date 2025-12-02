@@ -21,10 +21,24 @@ export function InfoSection({ user }: InfoSectionProps) {
         p: 2,
         backgroundColor: "#1e1e1e",
         color: "#fff",
-        gap: 2, 
+        gap: 2,
+        overflowX: "auto",
+        "&::-webkit-scrollbar": {
+          height: "4px",
+        },
+        "&::-webkit-scrollbar-track": {
+          background: "#1e1e1e",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "#fff",
+          borderRadius: "4px",
+        },
+        "&::-webkit-scrollbar-thumb:hover": {
+          backgroundColor: "#ccc",
+        },
       }}
     >
-      <Stack flex="1 1 45%" spacing={1}>
+      <Stack flex="1 1 45%" spacing={0.5}>
         <EditableField
           label="Username"
           value={user.userName}
@@ -41,8 +55,12 @@ export function InfoSection({ user }: InfoSectionProps) {
           onSave={(v: string) => updateUser({ lastName: v })}
         />
       </Stack>
-      <Divider orientation="vertical" flexItem sx={{ backgroundColor: 'white' }} />
-      <Stack flex="1 1 45%" spacing={1}>
+      <Divider
+        orientation="vertical"
+        flexItem
+        sx={{ backgroundColor: "white" }}
+      />
+      <Stack flex="1 1 45%" spacing={0.5}>
         <EditableField
           label="Email"
           value={user.email}

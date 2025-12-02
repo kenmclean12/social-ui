@@ -35,7 +35,7 @@ export function EditableField({ label, value, onSave }: EditableFieldProps) {
   };
 
   return (
-    <Stack direction="row" alignItems="center" spacing={1}>
+    <Stack direction="row" alignItems="center" spacing={1} overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
       <Typography sx={{ color: "white", fontSize: 14, mb: 0.5 }}>
         {label}:
       </Typography>
