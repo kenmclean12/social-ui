@@ -4,6 +4,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { api } from "../lib/api";
 import type { NotificationCreateDto, NotificationUpdateDto, SafeNotificationDto } from "../types";
+import { useEffect } from "react";
+import { io } from "socket.io-client";
 
 export const notificationKeys = {
   all: ["notifications"] as const,
@@ -80,4 +82,29 @@ export function useNotificationUpdate(id: number) {
       enqueueSnackbar(err.message, { variant: "error" });
     },
   });
+}
+
+export function useNotificationStream(userId: number) {
+  const qc = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    if (!userId) return;
+
+    const socket = io(`${import.meta.env.VITE_API_URL}/notifications`, {
+      auth: { userId },
+    });
+
+    socket.on("notification", (notif) => {
+      qc.setQueryData<SafeNotificationDto[]>(["notifications"], (old) => {
+      return [notif, ...(old ?? [])];
+    });
+
+      enqueueSnackbar("New notification", { variant: "info" });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [userId, qc, enqueueSnackbar]);
 }

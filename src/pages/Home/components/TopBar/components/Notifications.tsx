@@ -7,9 +7,13 @@ import {
   Stack,
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import { useAuth } from "../../../../../context";
+import { useNotificationStream } from "../../../../../hooks/notification";
 
 export function Notifications() {
+  const { user } = useAuth();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  useNotificationStream(user?.id as number);
 
   return (
     <>
