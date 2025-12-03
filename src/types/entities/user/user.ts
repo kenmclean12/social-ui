@@ -1,5 +1,5 @@
-import type { Conversation } from "../conversation/conversation";
-import type { Follow } from "../follow/follow";
+import type { Conversation } from "../conversation";
+import type { Follow } from "../follow";
 import type { Message } from "../message";
 import type { UserPost } from "../user-post";
 

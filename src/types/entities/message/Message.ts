@@ -1,5 +1,5 @@
 import type { Content } from "../content";
-import type { Conversation } from "../conversation/conversation";
+import type { Conversation } from "../conversation";
 import type { Like } from "../like";
 import type { Reaction } from "../reaction";
 import type { User } from "../user";
