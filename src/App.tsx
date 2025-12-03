@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ProtectedRoute } from "./components/ProtectedRoute";
 import { HomePage, LoginPage, RegisterPage } from "./pages";
+import { ProtectedRoute } from "./components";
 
 export default function App() {
   return (

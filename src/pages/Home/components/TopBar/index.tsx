@@ -4,11 +4,11 @@ import { useAuth } from "../../../../context";
 import { NightsStay } from "@mui/icons-material";
 import { ProfileDialog } from "../../../Profile";
 import {
-  CreatePost,
   Notifications,
   ProfileMenu,
   UserSearch,
 } from "./components";
+import { CreatePost } from "../../../../components";
 
 export function TopBar() {
   const { user } = useAuth();
