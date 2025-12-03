@@ -32,7 +32,7 @@ export function ProfileMenu() {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <MenuList style={{ width: "175px" }}>
+        <MenuList style={{ width: "175px", backgroundColor: "#1e1e1e", color: "#fff" }}>
           <MenuItem
             onClick={() => {
               setProfileOpen(true);

@@ -75,7 +75,7 @@ export function Notifications() {
     <>
       <IconButton
         onClick={(e) => setAnchorEl(e.currentTarget)}
-        sx={{ color: "#6BB6FF" }}
+        sx={{ color: "lightblue" }}
       >
         <Badge
           badgeContent={notifications.filter((n) => !n.read).length}
@@ -91,7 +91,7 @@ export function Notifications() {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         PaperProps={{
-          sx: { width: 300, backgroundColor: "#1e1e1e", color: "#fff", p: 1 },
+          sx: { width: 300, overflowY: "auto", backgroundColor: "#1e1e1e", color: "#fff", p: 1 },
         }}
       >
         <Stack spacing={1} sx={{ maxHeight: 400, overflowY: "auto" }}>
@@ -118,7 +118,7 @@ export function Notifications() {
                 <Avatar
                   src={notif.actionUser.avatarUrl}
                   alt={notif.actionUser.userName}
-                  sx={{ width: 32, height: 32 }}
+                  sx={{ width: 25, height: 25 }}
                 />
                 <Typography sx={{ fontSize: 13, lineHeight: 1.2 }}>
                   {renderNotificationText(notif)}
