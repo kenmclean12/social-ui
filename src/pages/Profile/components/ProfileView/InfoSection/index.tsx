@@ -19,7 +19,6 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
         flex: 1,
         alignItems: "flex-start",
         height: "100%",
-        maxWidth: "700px",
         p: 3,
         backgroundColor: "#1e1e1e",
         color: "#fff",

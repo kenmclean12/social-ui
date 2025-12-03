@@ -32,11 +32,22 @@ export function ProfileView({
 
   return (
     <Stack spacing={3} sx={{ p: 3 }}>
-      <Stack direction="row" alignItems="center" spacing={3}>
-        <AvatarUpload
-          currentUrl={user.avatarUrl}
-          isOwnUser={user.id === self?.id}
-        />
+      <Stack direction="row" alignItems="center" spacing={3} height="300px">
+        <Stack 
+          alignItems="center" 
+          justifyContent="center" 
+          height="100%" 
+          border="1px solid #ccc"
+          paddingInline="12px"
+          sx={{
+            backgroundColor: "black",
+          }}
+        >
+          <AvatarUpload
+            currentUrl={user.avatarUrl}
+            isOwnUser={user.id === self?.id}
+          />
+        </Stack>
         <InfoSection user={user} isOwnUser={user.id === self?.id} />
         <Stack spacing={1} alignItems="center" height="100%" marginLeft="auto">
           <Paper

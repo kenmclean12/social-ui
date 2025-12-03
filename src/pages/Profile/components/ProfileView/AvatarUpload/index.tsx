@@ -42,7 +42,7 @@ export function AvatarUpload({ currentUrl, isOwnUser }: AvatarUploadProps) {
     >
       <Avatar
         src={preview}
-        sx={{ width: 110, height: 110, border: "2px solid #6BB6FF" }}
+        sx={{ width: 110, height: 110, border: "2px solid lightblue" }}
       />
       {isOwnUser && (
         <Box
@@ -53,7 +53,7 @@ export function AvatarUpload({ currentUrl, isOwnUser }: AvatarUploadProps) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "#6BB6FF",
+            backgroundColor: "lightblue",
             borderRadius: "50%",
             p: 0.5,
           }}
