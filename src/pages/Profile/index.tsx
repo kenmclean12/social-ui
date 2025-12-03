@@ -39,18 +39,28 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
   const { user: self } = useAuth();
   const [resetOpen, setResetOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [stack, setStack] = useState<StackItem[]>([
     { type: "profile", userId },
   ]);
   const top = stack[stack.length - 1];
 
-  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const { data: followingList } = useFollowGetFollowing(self?.id || 0);
   const { data: user } = useUserFindOne(userId);
   const followCreate = useFollowCreate();
   const followRemove = useFollowRemove();
   const followRecord = followingList?.find((f) => f.following.id === userId);
   const isFollowing = !!followRecord;
+  const push = (item: StackItem) => setStack((prev) => [...prev, item]);
+  const pop = () =>
+    setStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
+  const isOwnProfile = top.type === "profile" && top.userId === self?.id;
+  const title =
+    top.type === "profile"
+      ? "Profile"
+      : top.listType === "followers"
+      ? "Followers"
+      : "Following";
 
   const handleFollowToggle = () => {
     if (!user || !self) return;
@@ -58,20 +68,7 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
     else followCreate.mutate({ followerId: self.id, followingId: user.id });
   };
 
-  const push = (item: StackItem) => setStack((prev) => [...prev, item]);
-  const pop = () =>
-    setStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
-
   if (!top) return null;
-
-  const isOwnProfile = top.type === "profile" && top.userId === self?.id;
-
-  const title =
-    top.type === "profile"
-      ? "Profile"
-      : top.listType === "followers"
-      ? "Followers"
-      : "Following";
 
   return (
     <Dialog

@@ -1,9 +1,10 @@
-import { Avatar, IconButton, Paper, Stack, Typography } from "@mui/material";
+import { Avatar, IconButton, Paper, Stack, Typography, Box, Input, InputAdornment } from "@mui/material";
 import {
   useFollowGetFollowers,
   useFollowGetFollowing,
 } from "../../../../hooks";
-import { Visibility } from "@mui/icons-material";
+import { Close, Visibility } from "@mui/icons-material";
+import { useState, useMemo } from "react";
 
 interface FollowListViewProps {
   userId: number;
@@ -16,56 +17,131 @@ export function FollowListView({
   listType,
   onClickUser,
 }: FollowListViewProps) {
+  const [search, setSearch] = useState<string>("");
   const followersQuery = useFollowGetFollowers(userId, {
     enabled: listType === "followers",
   });
   const followingQuery = useFollowGetFollowing(userId, {
     enabled: listType === "following",
   });
-
   const query = listType === "followers" ? followersQuery : followingQuery;
   const { data: list, isLoading } = query;
 
-  console.log(list)
+  const normalize = (val: string) =>
+    (val ?? "")
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "");
+
+  const filtered = useMemo(() => {
+    if (!list) return [];
+
+    const s = normalize(search);
+
+    if (!s) return list;
+
+    return list.filter((f) => {
+      const u = f.following ?? f.follower;
+
+      const fields = [
+        u?.firstName,
+        u?.lastName,
+        u?.userName,
+        u?.email,
+      ];
+
+      return fields.some((field) => normalize(field).includes(s));
+    });
+  }, [list, search]);
 
   if (isLoading) return <Typography sx={{ p: 2 }}>Loading...</Typography>;
   if (!list || list.length === 0)
     return <Typography sx={{ p: 2 }}>No users</Typography>;
 
   return (
-    <Stack spacing={1} sx={{ height: "400px", p: 2, overflowY: "auto" }}>
-      {list.map((f) => (
-        <Paper
-          key={f.id}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            p: 1,
-            backgroundColor: "black",
-            cursor: "pointer",
-          }}
-          onClick={() => onClickUser(f.following?.id ?? f.follower?.id)}
-        >
-          <Avatar
-            src={f.following?.avatarUrl ?? f.follower?.avatarUrl}
-            style={{ width: 40, height: 40, borderRadius: "50%" }}
-          />
-          <Stack direction="row" alignItems="center" spacing={0.5} ml={2}>
-            <Typography color="white" sx={{ ml: 2 }}>
-              {f.following?.firstName ?? f.follower?.firstName}{" "}
-            </Typography>
-            <Typography color="white" sx={{ ml: 2 }}>
-              {f.following?.lastName ?? f.follower?.lastName}{" "}
-            </Typography>
-            <Typography color="white" sx={{ ml: 2 }}>
-              (@{f.following?.userName ?? f.follower?.userName})
-            </Typography>
-          </Stack>
-          <IconButton sx={{ marginLeft: "auto", cursor: "pointer" }}>
-            <Visibility sx={{ color: "white" }} />
-          </IconButton>
-        </Paper>
-      ))}
-    </Stack>
+    <Box sx={{ p: 2 }}>
+      <Input
+        fullWidth
+        placeholder="Search users..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        endAdornment={
+          search && (
+            <InputAdornment position="end">
+              <IconButton
+                size="small"
+                onClick={() => setSearch("")}
+                sx={{ color: "#aaa" }}
+              >
+                <Close />
+              </IconButton>
+            </InputAdornment>
+          )
+        }
+        sx={{
+          padding: 1,
+          mb: 2,
+          border: "1px solid #ccc",
+          borderRadius: 2,
+          input: { color: "white" },
+          "& .MuiOutlinedInput-root": {
+            "& fieldset": { borderColor: "#ccc" },
+            "&:hover fieldset": { borderColor: "#ccc" },
+            "&.Mui-focused fieldset": { borderColor: "#ccc" },
+          },
+        }}
+      />
+      <Stack
+        spacing={1}
+        sx={{
+          height: "400px",
+          overflowY: "auto",
+          border: "1px solid #ccc",
+          borderRadius: "8px",
+          p: 1,
+        }}
+      >
+        {filtered.length === 0 && (
+          <Typography align="center" sx={{ p: 3 }}>No matching users</Typography>
+        )}
+        {filtered.map((f) => {
+          const user = f.following ?? f.follower;
+
+          return (
+            <Paper
+              key={f.id}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                p: 1,
+                backgroundColor: "black",
+                cursor: "pointer",
+              }}
+              onClick={() => onClickUser(user.id)}
+            >
+              <Avatar
+                src={user.avatarUrl}
+                style={{ width: 40, height: 40, borderRadius: "50%" }}
+              />
+              <Stack direction="row" alignItems="center" spacing={0.5} ml={2}>
+                <Typography color="white" sx={{ ml: 2 }}>
+                  {user.firstName}
+                </Typography>
+                <Typography color="white" sx={{ ml: 2 }}>
+                  {user.lastName}
+                </Typography>
+                <Typography color="white" sx={{ ml: 2 }}>
+                  (@{user.userName})
+                </Typography>
+              </Stack>
+              <IconButton sx={{ marginLeft: "auto", cursor: "pointer" }}>
+                <Visibility sx={{ color: "white" }} />
+              </IconButton>
+            </Paper>
+          );
+        })}
+      </Stack>
+    </Box>
   );
 }
