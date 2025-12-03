@@ -4,9 +4,9 @@ import {
   DialogTitle,
   DialogContent,
   Stack,
-  TextField,
   Button,
   IconButton,
+  Input,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useUserResetPassword } from "../../../../../hooks";
@@ -18,8 +18,8 @@ interface ResetPasswordProps {
 }
 
 export function ResetPassword({ open, setOpen }: ResetPasswordProps) {
-  const [oldPassword, setOldPassword] = useState<string>("");
-  const [newPassword, setNewPassword] = useState<string>("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const { mutateAsync: resetPassword } = useUserResetPassword();
 
   const handleSubmit = async () => {
@@ -36,12 +36,23 @@ export function ResetPassword({ open, setOpen }: ResetPasswordProps) {
   };
 
   return (
-    <Dialog open={open} onClose={() => setOpen(false)}>
+    <Dialog
+      open={open}
+      onClose={() => setOpen(false)}
+      PaperProps={{
+        sx: {
+          bgcolor: "#1e1e1e",
+          color: "white",
+          border: "1px solid #444",
+        },
+      }}
+    >
       <DialogTitle
         sx={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          color: "white",
         }}
       >
         Reset Password
@@ -49,25 +60,56 @@ export function ResetPassword({ open, setOpen }: ResetPasswordProps) {
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent>
-        <Stack spacing={2} mt={1} width="400px">
-          <TextField
-            label="Current Password"
+      <DialogContent sx={{ color: "white" }}>
+        <Stack mt={1} width="400px">
+          <Input
+            placeholder="Current Password"
             type="password"
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
+            sx={{
+              padding: 0.5,
+              paddingInline: 1,
+              color: "white",
+              bgcolor: "#2a2a2a",
+              border: "1px solid #444",
+              borderRadius: 1,
+              height: 38,
+            }}
+            disableUnderline
             fullWidth
           />
-          <TextField
-            label="New Password"
+          <Input
+            placeholder="New Password"
             type="password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             fullWidth
+            sx={{
+              mt: 2,
+              padding: 0.5,
+              paddingInline: 1,
+              color: "white",
+              bgcolor: "#2a2a2a",
+              border: "1px solid #444",
+              borderRadius: 1,
+              height: 38,
+            }}
+            disableUnderline
           />
-          <Stack direction="row" spacing={2} justifyContent="flex-end">
-            <Button onClick={() => setOpen(false)}>Cancel</Button>
-            <Button variant="contained" onClick={handleSubmit}>
+          <Stack direction="row" spacing={2} justifyContent="flex-end" mt={3}>
+            <Button onClick={() => setOpen(false)} sx={{ color: "#ccc" }}>
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              sx={{
+                bgcolor: "lightblue",
+                color: "black",
+                "&:hover": { bgcolor: "#9fd8ff" },
+              }}
+            >
               Reset
             </Button>
           </Stack>

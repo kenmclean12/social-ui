@@ -6,6 +6,7 @@ import {
   Stack,
   Button,
   Popover,
+  MenuItem,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
@@ -21,7 +22,7 @@ import {
 } from "../../hooks";
 import { ResetPassword } from "./components/ProfileView/ResetPassword";
 import { DeleteAccount } from "./components/ProfileView/DeleteAccount";
-import { Check, PersonAdd } from "@mui/icons-material";
+import { Check, Delete, Password, PersonAdd } from "@mui/icons-material";
 
 interface StackItem {
   type: "profile" | "followList";
@@ -58,7 +59,7 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
   const pop = () =>
     setStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
   const isOwnProfile = top.type === "profile" && top.userId === self?.id;
-  
+
   const getTitle = (item: StackItem) => {
     if (item.type === "profile") return "Profile";
     if (item.listType === "followers") return "Followers";
@@ -82,7 +83,12 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
       maxWidth="lg"
       fullWidth
       PaperProps={{
-        sx: { minWidth: "730px", backgroundColor: "#090909ff", color: "#fff", border: "1px solid lightblue" },
+        sx: {
+          minWidth: "730px",
+          backgroundColor: "#090909ff",
+          color: "#fff",
+          border: "1px solid lightblue",
+        },
       }}
     >
       <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 2 }}>
@@ -113,34 +119,41 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
                 transformOrigin={{ vertical: "top", horizontal: "right" }}
                 PaperProps={{
                   sx: {
-                    backgroundColor: "black",
-                    minWidth: 150,
-                    padding: "10px",
+                    backgroundColor: "#1e1e1e",
+                    minWidth: 200,
+                    padding: "5px 0",
                   },
                 }}
               >
-                <Stack p={1} spacing={1}>
-                  <Button
-                    variant="outlined"
-                    color="info"
+                <Stack spacing={1}>
+                  <MenuItem
                     onClick={() => {
                       setResetOpen(true);
                       setMenuAnchor(null);
                     }}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      color: "white",
+                    }}
                   >
                     Reset Password
-                  </Button>
-
-                  <Button
-                    variant="outlined"
-                    color="error"
+                    <Password sx={{ color: "lightblue", height: 20 }} />
+                  </MenuItem>
+                  <MenuItem
                     onClick={() => {
                       setDeleteOpen(true);
                       setMenuAnchor(null);
                     }}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      color: "white",
+                    }}
                   >
-                    Delete Account
-                  </Button>
+                    <span>Delete Account</span>
+                    <Delete sx={{ color: "red", height: 20 }} />
+                  </MenuItem>
                 </Stack>
               </Popover>
             </>

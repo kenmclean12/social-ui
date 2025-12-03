@@ -81,6 +81,7 @@ export function FollowListView({
           )
         }
         sx={{
+          height: 40,
           padding: "2px 8px",
           mb: 2,
           border: "1px solid black",

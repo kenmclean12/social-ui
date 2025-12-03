@@ -30,12 +30,23 @@ export function DeleteAccount({ open, setOpen }: DeleteAccountProps) {
   };
 
   return (
-    <Dialog open={open} onClose={() => setOpen(false)}>
+    <Dialog
+      open={open}
+      onClose={() => setOpen(false)}
+      PaperProps={{
+        sx: {
+          bgcolor: "#1e1e1e",
+          color: "white",
+          border: "1px solid #444",
+        },
+      }}
+    >
       <DialogTitle
         sx={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          color: "white",
         }}
       >
         Delete Account
@@ -43,14 +54,24 @@ export function DeleteAccount({ open, setOpen }: DeleteAccountProps) {
           <Close />
         </IconButton>
       </DialogTitle>
-      <DialogContent>
-        <Stack spacing={2} width="400px" mt={1}>
-          <Typography>
+      <DialogContent sx={{ color: "white" }}>
+        <Stack spacing={4} width="400px" mt={1}>
+          <Typography sx={{ color: "#ddd" }}>
             This action is permanent. All data will be deleted.
           </Typography>
           <Stack direction="row" justifyContent="flex-end" spacing={2}>
-            <Button onClick={() => setOpen(false)}>Cancel</Button>
-            <Button variant="contained" color="error" onClick={handleDelete}>
+            <Button sx={{ color: "#ccc" }} onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleDelete}
+              sx={{
+                bgcolor: "#b00020",
+                "&:hover": { bgcolor: "#d00028" },
+              }}
+            >
               Delete
             </Button>
           </Stack>
