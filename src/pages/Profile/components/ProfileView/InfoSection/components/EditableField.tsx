@@ -1,5 +1,6 @@
+// EditableField.tsx - Updated
 import { useState, useEffect } from "react";
-import { Box, TextField, Typography, IconButton, Stack } from "@mui/material";
+import { Box, TextField, Typography, IconButton, Tooltip } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
@@ -66,78 +67,146 @@ export function EditableField({
     setError(false);
   };
 
-  return (
-    <Stack
-      direction="row"
-      alignSelf="center"
-      alignItems="center"
-      spacing={1}
-      padding={editing ? 1 : 0}
-      border={editing ? '1px solid #ccc' : 'none'}
-      borderRadius={2}
-      overflow="hidden"
-      textOverflow="ellipsis"
-      whiteSpace="nowrap"
-    >
-      <Typography sx={{ color: "white", fontSize: 14, mb: 0.5 }}>
-        {label}:
-      </Typography>
-      {!editing ? (
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            color: "#6BB6FF",
-            fontSize: 16,
-          }}
-        >
-          <Typography sx={{ mr: 1 }}>{value || "—"}</Typography>
-          {isOwnUser && (
+  if (!editing) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          p: 1,
+          borderRadius: 1,
+          "&:hover": {
+            backgroundColor: isOwnUser
+              ? "rgba(255, 255, 255, 0.05)"
+              : "transparent",
+          },
+        }}
+      >
+        <Box sx={{ minWidth: 0, flex: 1 }}>
+          <Typography
+            variant="caption"
+            sx={{
+              display: "block",
+              color: "#888",
+              fontSize: 12,
+              textTransform: "uppercase",
+              letterSpacing: 0.5,
+              mb: 0.5,
+            }}
+          >
+            {label}
+          </Typography>
+          <Typography
+            sx={{
+              color: "lightblue",
+              fontSize: 14,
+              fontWeight: 500,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {value || "—"}
+          </Typography>
+        </Box>
+        {isOwnUser && (
+          <Tooltip title="Edit">
             <IconButton
               size="small"
               onClick={() => setEditing(true)}
-              sx={{ color: "#6BB6FF" }}
+              sx={{
+                ml: 1,
+                color: "#666",
+                "&:hover": { color: "#6BB6FF" },
+              }}
             >
               <EditIcon fontSize="small" />
             </IconButton>
-          )}
-        </Box>
-      ) : (
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <TextField
-            type={isNumber ? "number" : "text"}
-            value={temp}
-            onChange={(e) => handleChange(e.target.value)}
-            error={error}
-            variant="outlined"
-            size="small"
-            sx={{
-              input: { height: "10px", color: "white" },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": { borderColor: error ? "red" : "#6BB6FF" },
-                "&:hover fieldset": { borderColor: error ? "red" : "#6BB6FF" },
-                "&.Mui-focused fieldset": {
-                  borderColor: error ? "red" : "#6BB6FF",
-                },
+          </Tooltip>
+        )}
+      </Box>
+    );
+  }
+
+  return (
+    <Box
+      sx={{
+        p: 1.5,
+        borderRadius: 1,
+        backgroundColor: "rgba(255, 255, 255, 0.05)",
+        border: "1px solid rgba(107, 182, 255, 0.3)",
+      }}
+    >
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <TextField
+          type={isNumber ? "number" : "text"}
+          value={temp}
+          onChange={(e) => handleChange(e.target.value)}
+          error={error}
+          variant="outlined"
+          size="small"
+          fullWidth
+          autoFocus
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "& input": {
+                color: "white",
+                py: 0.75,
+                fontSize: 14,
               },
-            }}
-          />
+              "& fieldset": {
+                borderColor: error
+                  ? "rgba(244, 67, 54, 0.5)"
+                  : "rgba(107, 182, 255, 0.3)",
+              },
+              "&:hover fieldset": {
+                borderColor: error
+                  ? "rgba(244, 67, 54, 0.8)"
+                  : "rgba(107, 182, 255, 0.5)",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: error ? "#f44336" : "#6BB6FF",
+              },
+            },
+          }}
+        />
+        <Tooltip title="Save">
           <IconButton
             size="small"
             onClick={handleSave}
             disabled={!dirty || error}
             sx={{
               color: dirty && !error ? "#6BB6FF" : "#555",
-              "&:disabled": { color: "#555" },
+              "&:disabled": { color: "#555", opacity: 0.5 },
             }}
           >
             <CheckIcon fontSize="small" />
           </IconButton>
-          <IconButton size="small" onClick={handleCancel} sx={{ color: "red" }}>
+        </Tooltip>
+        <Tooltip title="Cancel">
+          <IconButton
+            size="small"
+            onClick={handleCancel}
+            sx={{ color: "#888" }}
+          >
             <CloseIcon fontSize="small" />
           </IconButton>
-        </Box>
+        </Tooltip>
+      </Box>
+      {error && (
+        <Typography
+          variant="caption"
+          sx={{
+            display: "block",
+            color: "#f44336",
+            mt: 0.5,
+            fontSize: 11,
+          }}
+        >
+          Please enter a valid email address
+        </Typography>
       )}
-    </Stack>
+    </Box>
   );
 }

@@ -27,17 +27,43 @@ export function ProfileView({ userId, self, onClickFollowers, onClickFollowing }
 
   return (
     <Stack spacing={3} sx={{ p: 3 }}>
-      <Stack direction="row" alignItems="center" spacing={3} height="150px">
+      <Stack direction="row" alignItems="center" spacing={3} >
         <AvatarUpload currentUrl={user.avatarUrl} isOwnUser={user.id === self?.id} />
         <InfoSection user={user} isOwnUser={user.id === self?.id} />
         <Stack spacing={1} alignItems="center" height="100%" marginLeft="auto">
-          <Paper onClick={user.followerCount ? onClickFollowers : () => {}} sx={{ backgroundColor: "#1e1e1e", cursor: "pointer", p: 1, textAlign: "center" }}>
+          <Paper 
+            onClick={user.followerCount ? onClickFollowers : () => {}} 
+            sx={{ 
+              display: "flex", 
+              flexDirection: "column", 
+              alignItems: "center", 
+              justifyContent: "center", 
+              height: "145px", 
+              backgroundColor: "#1e1e1e", 
+              cursor: "pointer", 
+              p: 1, 
+              textAlign: "center" 
+            }}
+    >
             <Typography color="white">Followers</Typography>
             <Typography variant="h6" sx={{ color: "lightblue" }}>
               {formatNumber(user.followerCount)}
             </Typography>
           </Paper>
-          <Paper onClick={user.followingCount ? onClickFollowing : () => {}} sx={{ backgroundColor: "#1e1e1e", cursor: "pointer", p: 1, textAlign: "center" }}>
+          <Paper 
+            onClick={user.followingCount ? onClickFollowing : () => {}}
+            sx={{ 
+              display: "flex", 
+              flexDirection: "column", 
+              alignItems: "center", 
+              justifyContent: "center", 
+              height: "145px", 
+              backgroundColor: "#1e1e1e", 
+              cursor: "pointer", 
+              p: 1, 
+              textAlign: "center" 
+            }}
+          >
             <Typography color="white">Following</Typography>
             <Typography variant="h6" sx={{ color: "lightblue" }}>
               {formatNumber(user.followingCount)}

@@ -15,8 +15,8 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <SnackbarProvider maxSnack={3}>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>       
-          <CssBaseline />                   
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
           <AuthProvider>
             <App />
           </AuthProvider>
