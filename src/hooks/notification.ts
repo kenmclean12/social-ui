@@ -1,5 +1,3 @@
-// src/hooks/useNotification.ts
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { api } from "../lib/api";
