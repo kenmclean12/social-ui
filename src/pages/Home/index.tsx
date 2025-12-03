@@ -21,7 +21,7 @@ export function HomePage() {
   };
 
   return (
-    <Stack height="100vh" width="100vw" sx={{ backgroundColor: "black" }}>
+    <Stack height="100vh" width="100vw" minWidth="550px" sx={{ backgroundColor: "black" }}>
       <TopBar />
       <Tabs
         value={tab}

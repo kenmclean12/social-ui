@@ -1,6 +1,5 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 import {
-  Box,
   Input,
   Paper,
   List,
@@ -68,12 +67,12 @@ export function UserSearch() {
 
   return (
     <>
-      <Box
+      <Stack
         sx={{
-          width: "100%",
-          maxWidth: 500,
-          alignSelf: "center",
-          position: "relative",
+          flex: 1,
+          maxWidth: 600,
+          minWidth: 300,
+          px: 2,
         }}
       >
         <Input
@@ -86,6 +85,7 @@ export function UserSearch() {
           sx={{
             height: "35px",
             width: "100%",
+            minWidth: "300px",
             padding: "2px 16px",
             fontSize: "14px",
             color: "white",
@@ -93,30 +93,28 @@ export function UserSearch() {
             borderRadius: 4,
           }}
         />
-
         <Popper
           open={isOpen}
           anchorEl={anchorEl}
           placement="bottom-start"
           modifiers={[
             {
-              name: "widthMatch",
               enabled: true,
               phase: "beforeWrite",
               requires: ["computeStyles"],
               fn: ({ state }) => {
-                state.styles.popper.width = `${state.rects.reference.width}px`;
+                state.styles.popper.width = `${state.rects.reference.width + 16}px`;
               },
             },
           ]}
-          style={{ zIndex: 30 }}
+          style={{ width: "100%", zIndex: 30 }}
         >
-          <Stack direction="row" ref={popperRef}>
+          <Stack direction="row" ref={popperRef} width="100%">
             <Paper
               sx={{
                 marginTop: "4px",
                 marginLeft: "-10px",
-                width: "calc(100% + 24px)",
+                width: "100%",
                 maxHeight: 250,
                 overflowY: "auto",
                 background: "#1e1e1e",
@@ -150,7 +148,7 @@ export function UserSearch() {
             </Paper>
           </Stack>
         </Popper>
-      </Box>
+      </Stack>
       {selectedUserId !== null && (
         <ProfileDialog
           open={true}

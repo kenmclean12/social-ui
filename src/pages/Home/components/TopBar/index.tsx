@@ -27,15 +27,18 @@ export function TopBar() {
             position: "relative",
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
-            minWidth: "500px",
-            gap: 2,
+            justifyContent: "center",
             backgroundColor: "black",
+            gap: 2,
           }}
         >
-          <NightsStay sx={{ height: "40px", color: "lightblue" }} />
-          <UserSearch />
-          <Box sx={{ display: "flex", gap: 1 }}>
+          <Box sx={{ display: "flex", flexShrink: 0 }}>
+            <NightsStay sx={{ height: "40px", color: "lightblue" }} />
+          </Box>
+          <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
+            <UserSearch />
+          </Box>
+          <Box sx={{ display: "flex", flexShrink: 0, gap: 1 }}>
             <CreatePost />
             <Notifications />
             <ProfileMenu />
