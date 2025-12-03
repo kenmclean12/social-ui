@@ -114,6 +114,11 @@ export function FollowListView({
                 p: 1,
                 backgroundColor: "black",
                 cursor: "pointer",
+                transition: "background-color 0.15s ease, border-color 0.15s ease",
+                "&:hover": {
+                  backgroundColor: "#252525",
+                  borderColor: "lightblue",
+                },
               }}
               onClick={() => onClickUser(user.id)}
             >
