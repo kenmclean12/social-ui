@@ -141,7 +141,9 @@ export function UserSearch() {
                     }}
                   >
                     <Avatar src={user.avatarUrl} />
-                    <span>{user.firstName} {user.lastName} — @{user.userName}</span>
+                    <span>
+                      {user.firstName} {user.lastName} — @{user.userName}
+                    </span>
                   </ListItem>
                 ))}
               </List>
