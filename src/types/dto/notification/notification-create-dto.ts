@@ -6,7 +6,8 @@ export const NotificationType = {
   MESSAGE: "MESSAGE",
 } as const;
 
-export type NotificationType = typeof NotificationType[keyof typeof NotificationType];
+export type NotificationType =
+  (typeof NotificationType)[keyof typeof NotificationType];
 
 export interface NotificationCreateDto {
   recipientId: number;
