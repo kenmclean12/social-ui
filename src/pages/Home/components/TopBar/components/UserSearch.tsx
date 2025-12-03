@@ -7,22 +7,24 @@ import {
   ListItem,
   Avatar,
   Popper,
+  Stack,
 } from "@mui/material";
 import { useUserFindAll } from "../../../../../hooks";
 import type { SafeUserDto } from "../../../../../types";
 import { ProfileDialog } from "../../../../Profile";
+import { useAuth } from "../../../../../context";
 
 export function UserSearch() {
-  const [search, setSearch] = useState("");
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [isFocused, setIsFocused] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-
+  const { user } = useAuth();
   const popperRef = useRef<HTMLDivElement | null>(null);
+  const [search, setSearch] = useState<string>("");
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const { data: users } = useUserFindAll();
 
   const filtered = useMemo(() => {
-    if (!users || !search.trim()) return [];
+    if (!users || !search.trim() || !user) return [];
 
     const q = search.toLowerCase();
     const priority = (user: SafeUserDto) => {
@@ -34,13 +36,14 @@ export function UserSearch() {
     };
 
     return users
+      .filter((u) => u.id !== user.id)
       .filter((u) =>
         [u.firstName, u.lastName, u.userName, u.email]
           .filter(Boolean)
           .some((x) => x!.toLowerCase().includes(q))
       )
       .sort((a, b) => priority(a) - priority(b));
-  }, [users, search]);
+  }, [users, search, user]);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -108,7 +111,7 @@ export function UserSearch() {
           ]}
           style={{ zIndex: 30 }}
         >
-          <div ref={popperRef}>
+          <Stack direction="row" ref={popperRef}>
             <Paper
               sx={{
                 marginTop: "4px",
@@ -126,9 +129,9 @@ export function UserSearch() {
                   <ListItem
                     key={user.id}
                     sx={{
-                      color: "white",
                       display: "flex",
-                      gap: 1,
+                      gap: 2,
+                      color: "white",
                       cursor: "pointer",
                       "&:hover": { background: "#333" },
                     }}
@@ -138,12 +141,12 @@ export function UserSearch() {
                     }}
                   >
                     <Avatar src={user.avatarUrl} />
-                    {user.firstName} {user.lastName} — @{user.userName}
+                    <span>{user.firstName} {user.lastName} — @{user.userName}</span>
                   </ListItem>
                 ))}
               </List>
             </Paper>
-          </div>
+          </Stack>
         </Popper>
       </Box>
       {selectedUserId !== null && (
