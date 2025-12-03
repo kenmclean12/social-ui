@@ -1,6 +1,6 @@
 import type { ContentResponseDto } from "../content";
 
-export interface PostResponse {
+export interface PostResponseDto {
   id: number;
   title: string;
   createdAt: Date;
