@@ -81,11 +81,12 @@ export function FollowListView({
           )
         }
         sx={{
-          padding: 1,
+          padding: "2px 8px",
           mb: 2,
           border: "1px solid lightblue",
           borderRadius: 2,
           color: "white",
+          fontSize: 14,
         }}
       />
       <Stack
