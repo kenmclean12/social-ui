@@ -66,6 +66,7 @@ export function FollowListView({
         placeholder="Search users..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
+        disableUnderline
         endAdornment={
           search && (
             <InputAdornment position="end">
@@ -82,14 +83,9 @@ export function FollowListView({
         sx={{
           padding: 1,
           mb: 2,
-          border: "1px solid #ccc",
+          border: "1px solid lightblue",
           borderRadius: 2,
-          input: { color: "white" },
-          "& .MuiOutlinedInput-root": {
-            "& fieldset": { borderColor: "#ccc" },
-            "&:hover fieldset": { borderColor: "#ccc" },
-            "&.Mui-focused fieldset": { borderColor: "#ccc" },
-          },
+          color: "white",
         }}
       />
       <Stack
@@ -97,7 +93,7 @@ export function FollowListView({
         sx={{
           height: "400px",
           overflowY: "auto",
-          border: "1px solid #ccc",
+          border: "1px solid lightblue",
           borderRadius: "8px",
           p: 1,
         }}
@@ -109,7 +105,6 @@ export function FollowListView({
         )}
         {filtered.map((f) => {
           const user = f.following ?? f.follower;
-
           return (
             <Paper
               key={f.id}
@@ -138,7 +133,7 @@ export function FollowListView({
                 </Typography>
               </Stack>
               <IconButton sx={{ marginLeft: "auto", cursor: "pointer" }}>
-                <Visibility sx={{ color: "white" }} />
+                <Visibility sx={{ color: "lightblue" }} />
               </IconButton>
             </Paper>
           );
