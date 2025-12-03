@@ -3,12 +3,24 @@ import {
   DialogTitle,
   DialogContent,
   IconButton,
+  Stack,
+  Button,
+  Popover,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
+import SettingsIcon from "@mui/icons-material/Settings";
 import { useState } from "react";
 import { useAuth } from "../../context";
 import { FollowListView, ProfileView } from "./components";
+import {
+  useFollowCreate,
+  useFollowGetFollowing,
+  useFollowRemove,
+  useUserFindOne,
+} from "../../hooks";
+import { ResetPassword } from "./components/ProfileView/ResetPassword";
+import { DeleteAccount } from "./components/ProfileView/DeleteAccount";
 
 interface StackItem {
   type: "profile" | "followList";
@@ -24,10 +36,34 @@ interface ProfileDialogProps {
 
 export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
   const { user: self } = useAuth();
-  const [stack, setStack] = useState<StackItem[]>([{ type: "profile", userId }]);
+  const [resetOpen, setResetOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+  const [stack, setStack] = useState<StackItem[]>([
+    { type: "profile", userId },
+  ]);
   const top = stack[stack.length - 1];
+
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+  const { data: followingList } = useFollowGetFollowing(self?.id || 0);
+  const { data: user } = useUserFindOne(userId);
+  const followCreate = useFollowCreate();
+  const followRemove = useFollowRemove();
+  const followRecord = followingList?.find((f) => f.following.id === userId);
+  const isFollowing = !!followRecord;
+
+  const handleFollowToggle = () => {
+    if (!user || !self) return;
+    if (isFollowing) followRemove.mutate(followRecord?.id as number);
+    else followCreate.mutate({ followerId: self.id, followingId: user.id });
+  };
+
   const push = (item: StackItem) => setStack((prev) => [...prev, item]);
-  const pop = () => setStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
+  const pop = () =>
+    setStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
+
+  if (!top) return null;
+
+  const isOwnProfile = top.type === "profile" && top.userId === self?.id;
 
   const title =
     top.type === "profile"
@@ -36,15 +72,15 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
       ? "Followers"
       : "Following";
 
-  if (!top) return null;
-
   return (
     <Dialog
       open={open}
       onClose={onClose}
       maxWidth="md"
       fullWidth
-      PaperProps={{ sx: { minWidth: "730px", backgroundColor: "#121212", color: "#fff" } }}
+      PaperProps={{
+        sx: { minWidth: "730px", backgroundColor: "#121212", color: "#fff" },
+      }}
     >
       <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 2 }}>
         {stack.length > 1 && (
@@ -52,10 +88,71 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
             <ArrowBackIcon />
           </IconButton>
         )}
-        {title}
-        <IconButton onClick={onClose} sx={{ marginLeft: "auto", color: "red" }}>
-          <CloseIcon />
-        </IconButton>
+        <Stack direction="row" alignItems="center" spacing={2.5}>
+          <span>{title}</span>
+          {top.type === "profile" && !isOwnProfile && (
+            <Button variant={"outlined"} onClick={handleFollowToggle}>
+              {isFollowing ? "Following" : "Follow"}
+            </Button>
+          )}
+        </Stack>
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{ marginLeft: "auto", alignItems: "center" }}
+        >
+          {isOwnProfile && (
+            <>
+              <IconButton
+                sx={{ color: "lightblue" }}
+                onClick={(e) => setMenuAnchor(e.currentTarget)}
+              >
+                <SettingsIcon />
+              </IconButton>
+              <Popover
+                anchorEl={menuAnchor}
+                open={Boolean(menuAnchor)}
+                onClose={() => setMenuAnchor(null)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+                PaperProps={{
+                  sx: {
+                    backgroundColor: "black",
+                    minWidth: 150,
+                    padding: "10px",
+                  },
+                }}
+              >
+                <Stack p={1} spacing={1}>
+                  <Button
+                    variant="outlined"
+                    color="info"
+                    onClick={() => {
+                      setResetOpen(true);
+                      setMenuAnchor(null);
+                    }}
+                  >
+                    Reset Password
+                  </Button>
+
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={() => {
+                      setDeleteOpen(true);
+                      setMenuAnchor(null);
+                    }}
+                  >
+                    Delete Account
+                  </Button>
+                </Stack>
+              </Popover>
+            </>
+          )}
+          <IconButton onClick={onClose} sx={{ color: "red" }}>
+            <CloseIcon />
+          </IconButton>
+        </Stack>
       </DialogTitle>
       <DialogContent sx={{ padding: 0 }}>
         {top.type === "profile" ? (
@@ -63,10 +160,18 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
             userId={top.userId}
             self={self}
             onClickFollowers={() =>
-              push({ type: "followList", userId: top.userId, listType: "followers" })
+              push({
+                type: "followList",
+                userId: top.userId,
+                listType: "followers",
+              })
             }
             onClickFollowing={() =>
-              push({ type: "followList", userId: top.userId, listType: "following" })
+              push({
+                type: "followList",
+                userId: top.userId,
+                listType: "following",
+              })
             }
           />
         ) : (
@@ -77,6 +182,8 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
           />
         )}
       </DialogContent>
+      <ResetPassword open={resetOpen} setOpen={setResetOpen} />
+      <DeleteAccount open={deleteOpen} setOpen={setDeleteOpen} />
     </Dialog>
   );
 }

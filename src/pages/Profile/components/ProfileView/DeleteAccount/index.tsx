@@ -1,18 +1,28 @@
-import { useState } from "react";
-import { Dialog, DialogTitle, DialogContent, Stack, Typography, Button, IconButton } from "@mui/material";
-import { Close } from "@mui/icons-material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Stack,
+  Button,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import { useAuth } from "../../../../../context";
 import { useUserDelete } from "../../../../../hooks";
+import { Close } from "@mui/icons-material";
 
-export function DeleteAccount() {
+interface DeleteAccountProps {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export function DeleteAccount({ open, setOpen }: DeleteAccountProps) {
   const { logout } = useAuth();
-  const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
   const { mutateAsync: deleteUser } = useUserDelete();
 
   const handleDelete = async () => {
     try {
       await deleteUser();
-      setConfirmDelete(false);
       logout();
     } catch (err) {
       console.error("Failed to delete user:", err);
@@ -20,35 +30,32 @@ export function DeleteAccount() {
   };
 
   return (
-    <>
-      <Stack mt={2} alignItems="center">
-        <Button
-          variant="contained"
-          color="error"
-          onClick={() => setConfirmDelete(true)}
-        >
-          Delete Account
-        </Button>
-      </Stack>
-      <Dialog open={confirmDelete} onClose={() => setConfirmDelete(false)}>
-        <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          Confirm Account Deletion
-          <IconButton onClick={() => setConfirmDelete(false)} sx={{ color: "red" }}>
-            <Close />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
+    <Dialog open={open} onClose={() => setOpen(false)}>
+      <DialogTitle
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        Delete Account
+        <IconButton onClick={() => setOpen(false)} sx={{ color: "red" }}>
+          <Close />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent>
+        <Stack spacing={2} width="400px" mt={1}>
           <Typography>
-            Are you sure you want to delete your account? This action cannot be undone.
+            This action is permanent. All data will be deleted.
           </Typography>
-          <Stack direction="row" spacing={2} mt={2} justifyContent="flex-end">
-            <Button onClick={() => setConfirmDelete(false)}>Cancel</Button>
-            <Button color="error" onClick={handleDelete}>
+          <Stack direction="row" justifyContent="flex-end" spacing={2}>
+            <Button onClick={() => setOpen(false)}>Cancel</Button>
+            <Button variant="contained" color="error" onClick={handleDelete}>
               Delete
             </Button>
           </Stack>
-        </DialogContent>
-      </Dialog>
-    </>
+        </Stack>
+      </DialogContent>
+    </Dialog>
   );
 }
