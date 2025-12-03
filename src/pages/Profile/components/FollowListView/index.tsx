@@ -91,7 +91,7 @@ export function FollowListView({
       <Stack
         spacing={1}
         sx={{
-          height: "400px",
+          height: "380px",
           overflowY: "auto",
           border: "1px solid lightblue",
           borderRadius: "8px",
