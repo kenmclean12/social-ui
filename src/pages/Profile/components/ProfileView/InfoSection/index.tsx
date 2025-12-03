@@ -31,16 +31,20 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
         <Box sx={{ mb: 2 }}>
           <Box
             sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               fontSize: 12,
               color: "#999",
               textTransform: "uppercase",
               letterSpacing: 1,
-              mb: 1,
+              mb: 2,
             }}
           >
             Basic Information
           </Box>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+          <Divider sx={{ backgroundColor: "#ccc" }} />
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mt: 1 }}>
             <EditableField
               label="Username"
               value={user.userName}
@@ -76,16 +80,20 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
         <Box sx={{ mb: 2 }}>
           <Box
             sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               fontSize: 12,
               color: "#999",
               textTransform: "uppercase",
               letterSpacing: 1,
-              mb: 1,
+              mb: 2,
             }}
           >
             Contact & Details
           </Box>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+          <Divider sx={{ backgroundColor: "#ccc" }} />
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mt: 1 }}>
             <EditableField
               label="Email"
               value={user.email}
