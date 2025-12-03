@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { api } from "../lib/api";
-import type { NotificationCreateDto, NotificationUpdateDto, SafeNotificationDto } from "../types";
+import type { NotificationCreateDto, SafeNotificationDto } from "../types";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 
@@ -54,29 +54,27 @@ export function useNotificationCreate() {
   });
 }
 
-export function useNotificationUpdate(id: number) {
+export function useNotificationUpdate() {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
-    mutationFn: async (dto: NotificationUpdateDto) => {
+    mutationFn: async ({ id, read }: { id: number; read: boolean }) => {
       const res = await api(`/notification/${id}`, {
         method: "PATCH",
-        body: JSON.stringify(dto),
+        body: JSON.stringify({ read }),
       });
 
       if (!res?.ok) {
         const err = await res?.json();
         throw new Error(err.message || "Failed to update notification");
       }
-
       return res.json() as Promise<SafeNotificationDto>;
     },
     onSuccess: () => {
-      enqueueSnackbar("Notification updated!", { variant: "success" });
       queryClient.invalidateQueries({ queryKey: notificationKeys.all });
     },
-    onError: (err) => {
+    onError: (err: Error) => {
       enqueueSnackbar(err.message, { variant: "error" });
     },
   });

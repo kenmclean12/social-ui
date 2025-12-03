@@ -49,7 +49,7 @@ export function LoginPage() {
       height="100vh"
       width="100vw"
       sx={{
-        backgroundColor: "lightblue",
+        backgroundColor: "black",
       }}
     >
       <Stack
@@ -59,7 +59,7 @@ export function LoginPage() {
         minWidth="400px"
         padding={4}
         color="white"
-        border="1px solid #ccc"
+        border="2px solid lightblue"
         borderRadius="16px"
         sx={{ 
           backgroundColor: "black",

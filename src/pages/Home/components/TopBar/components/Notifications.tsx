@@ -9,16 +9,42 @@ import {
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useAuth } from "../../../../../context";
-import { useNotificationStream, useNotificationFindAll } from "../../../../../hooks/notification";
-import { type SafeNotificationDto, NotificationType } from "../../../../../types";
+import {
+  useNotificationStream,
+  useNotificationFindAll,
+  useNotificationUpdate,
+} from "../../../../../hooks/notification";
+import {
+  type SafeNotificationDto,
+  NotificationType,
+} from "../../../../../types";
+import { ProfileDialog } from "../../../../Profile";
 
 export function Notifications() {
   const { user } = useAuth();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [profileDialogOpen, setProfileDialogOpen] = useState<boolean>(false);
+  const [profileUserId, setProfileUserId] = useState<number | null>(null);
 
   useNotificationStream(user?.id as number);
-
   const { data: notifications = [] } = useNotificationFindAll();
+  const updateNotification = useNotificationUpdate();
+
+  const handleOpenProfile = (userId: number) => {
+    setProfileUserId(userId);
+    setProfileDialogOpen(true);
+  };
+
+  const handleNotificationClick = (notif: SafeNotificationDto) => {
+    if (!notif.read) {
+      updateNotification.mutate({ id: notif.id, read: true });
+    }
+
+    if (notif.type === NotificationType.FOLLOW && notif.actionUser) {
+      handleOpenProfile(notif.actionUser.id);
+      setAnchorEl(null);
+    }
+  };
 
   const renderNotificationText = (notif: SafeNotificationDto) => {
     const actorName = `${notif.actionUser.firstName} ${notif.actionUser.lastName}`;
@@ -58,7 +84,6 @@ export function Notifications() {
           <NotificationsIcon />
         </Badge>
       </IconButton>
-
       <Popover
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
@@ -71,7 +96,12 @@ export function Notifications() {
       >
         <Stack spacing={1} sx={{ maxHeight: 400, overflowY: "auto" }}>
           {notifications.length === 0 ? (
-            <Typography pt={2} pb={2} sx={{ fontSize: 14, textAlign: "center" }}>
+            <Typography
+              align="center"
+              pt={2}
+              pb={2}
+              sx={{ fontSize: 14 }}
+            >
               No notifications found
             </Typography>
           ) : (
@@ -88,6 +118,7 @@ export function Notifications() {
                   cursor: "pointer",
                   "&:hover": { backgroundColor: "#444" },
                 }}
+                onClick={() => handleNotificationClick(notif)}
               >
                 <Avatar
                   src={notif.actionUser.avatarUrl}
@@ -102,6 +133,13 @@ export function Notifications() {
           )}
         </Stack>
       </Popover>
+      {profileUserId !== null && (
+        <ProfileDialog
+          open={profileDialogOpen}
+          userId={profileUserId}
+          onClose={() => setProfileDialogOpen(false)}
+        />
+      )}
     </>
   );
 }

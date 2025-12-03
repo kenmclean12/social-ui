@@ -122,7 +122,7 @@ export function RegisterPage() {
       justifyContent="center"
       height="100vh"
       width="100vw"
-      sx={{ backgroundColor: "lightblue" }}
+      sx={{ backgroundColor: "black" }}
     >
       <Stack
         width="100%"
@@ -130,7 +130,7 @@ export function RegisterPage() {
         minWidth="400px"
         padding={4}
         color="white"
-        border="1px solid #ccc"
+        border="2px solid lightblue"
         borderRadius="16px"
         sx={{
           backgroundColor: "black",
