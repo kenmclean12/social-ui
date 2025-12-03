@@ -75,7 +75,7 @@ export function FollowListView({
                 onClick={() => setSearch("")}
                 sx={{ color: "#aaa" }}
               >
-                <Close />
+                <Close sx={{ height: 20 }} />
               </IconButton>
             </InputAdornment>
           )
@@ -83,7 +83,8 @@ export function FollowListView({
         sx={{
           padding: "2px 8px",
           mb: 2,
-          border: "1px solid lightblue",
+          border: "1px solid black",
+          backgroundColor: "#232222ff",
           borderRadius: 2,
           color: "white",
           fontSize: 14,
@@ -94,9 +95,7 @@ export function FollowListView({
         sx={{
           height: "380px",
           overflowY: "auto",
-          border: "1px solid lightblue",
           borderRadius: "8px",
-          p: 1,
         }}
       >
         {filtered.length === 0 && (
