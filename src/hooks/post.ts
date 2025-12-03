@@ -7,15 +7,9 @@ import {
 } from "../types";
 import { api } from "../lib/api";
 
-export const postKeys = {
-  all: ["posts"] as const,
-  byUser: (userId: number) => ["posts", "user", userId] as const,
-  detail: (id: number) => ["posts", id] as const,
-};
-
 export function usePostFindByUserId(userId: number) {
   return useQuery({
-    queryKey: postKeys.byUser(userId),
+    queryKey: ["posts_user", userId],
     enabled: !!userId,
     queryFn: async () => {
       const res = await api(`/post/posts/${userId}`);
@@ -29,7 +23,7 @@ export function usePostFindByUserId(userId: number) {
 }
 
 export function usePostCreate() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
@@ -38,26 +32,22 @@ export function usePostCreate() {
         method: "POST",
         body: JSON.stringify(dto),
       });
-
       if (!res?.ok) {
         const err = await res?.json();
         throw new Error(err.message || "Failed to create post");
       }
-
       return res.json() as Promise<PostResponseDto>;
     },
     onSuccess: (post) => {
       enqueueSnackbar("Post created!", { variant: "success" });
-      queryClient.invalidateQueries({ queryKey: postKeys.byUser(post.creatorId) });
+      qc.invalidateQueries({ queryKey: ["posts_user", post.creatorId] });
     },
-    onError: (err) => {
-      enqueueSnackbar(err.message, { variant: "error" });
-    },
+    onError: (err: Error) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
 
 export function usePostUpdate(postId: number, userId: number) {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
@@ -66,27 +56,23 @@ export function usePostUpdate(postId: number, userId: number) {
         method: "PATCH",
         body: JSON.stringify(dto),
       });
-
       if (!res?.ok) {
         const err = await res?.json();
         throw new Error(err.message || "Failed to update post");
       }
-
       return res.json() as Promise<PostResponseDto>;
     },
     onSuccess: () => {
       enqueueSnackbar("Post updated!", { variant: "success" });
-      queryClient.invalidateQueries({ queryKey: postKeys.byUser(userId) });
-      queryClient.invalidateQueries({ queryKey: postKeys.detail(postId) });
+      qc.invalidateQueries({ queryKey: ["posts_user", userId] });
+      qc.invalidateQueries({ queryKey: ["post_detail", postId] });
     },
-    onError: (err) => {
-      enqueueSnackbar(err.message, { variant: "error" });
-    },
+    onError: (err: Error) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
 
 export function usePostDelete(postId: number, userId: number) {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
@@ -94,21 +80,17 @@ export function usePostDelete(postId: number, userId: number) {
       const res = await api(`/post/${postId}`, {
         method: "DELETE",
       });
-
       if (!res?.ok) {
         const err = await res?.json();
         throw new Error(err.message || "Failed to delete post");
       }
-
       return res.json() as Promise<PostResponseDto>;
     },
     onSuccess: () => {
       enqueueSnackbar("Post deleted!", { variant: "success" });
-      queryClient.invalidateQueries({ queryKey: postKeys.byUser(userId) });
-      queryClient.invalidateQueries({ queryKey: postKeys.detail(postId) });
+      qc.invalidateQueries({ queryKey: ["posts_user", userId] });
+      qc.invalidateQueries({ queryKey: ["post_detail", postId] });
     },
-    onError: (err) => {
-      enqueueSnackbar(err.message, { variant: "error" });
-    },
+    onError: (err: Error) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }

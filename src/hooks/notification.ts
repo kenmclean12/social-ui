@@ -5,29 +5,22 @@ import type { NotificationCreateDto, SafeNotificationDto } from "../types";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 
-export const notificationKeys = {
-  all: ["notifications"] as const,
-  detail: (id: number) => ["notifications", id] as const,
-};
-
 export function useNotificationFindAll() {
   return useQuery({
-    queryKey: notificationKeys.all,
+    queryKey: ["notifications"],
     queryFn: async () => {
       const res = await api("/notification");
-
       if (!res?.ok) {
         const err = await res?.json();
         throw new Error(err.message || "Failed to fetch notifications");
       }
-
       return res.json() as Promise<SafeNotificationDto[]>;
     },
   });
 }
 
 export function useNotificationCreate() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
@@ -36,26 +29,22 @@ export function useNotificationCreate() {
         method: "POST",
         body: JSON.stringify(dto),
       });
-
       if (!res?.ok) {
         const err = await res?.json();
         throw new Error(err.message || "Failed to create notification");
       }
-
       return res.json() as Promise<SafeNotificationDto>;
     },
     onSuccess: () => {
       enqueueSnackbar("Notification created!", { variant: "success" });
-      queryClient.invalidateQueries({ queryKey: notificationKeys.all });
+      qc.invalidateQueries({ queryKey: ["notifications"] });
     },
-    onError: (err) => {
-      enqueueSnackbar(err.message, { variant: "error" });
-    },
+    onError: (err: Error) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
 
 export function useNotificationUpdate() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
@@ -64,7 +53,6 @@ export function useNotificationUpdate() {
         method: "PATCH",
         body: JSON.stringify({ read }),
       });
-
       if (!res?.ok) {
         const err = await res?.json();
         throw new Error(err.message || "Failed to update notification");
@@ -72,11 +60,9 @@ export function useNotificationUpdate() {
       return res.json() as Promise<SafeNotificationDto>;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: notificationKeys.all });
+      qc.invalidateQueries({ queryKey: ["notifications"] });
     },
-    onError: (err: Error) => {
-      enqueueSnackbar(err.message, { variant: "error" });
-    },
+    onError: (err: Error) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
 
@@ -95,7 +81,6 @@ export function useNotificationStream(userId: number) {
       qc.setQueryData<SafeNotificationDto[]>(["notifications"], (old) => {
         return [notif, ...(old ?? [])];
       });
-
       enqueueSnackbar("New notification", { variant: "info" });
     });
 
