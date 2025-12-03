@@ -10,8 +10,8 @@ import {
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useAuth } from "../../../../../context";
 import {
-  useNotificationStream,
   useNotificationFindAll,
+  useNotificationStream,
   useNotificationUpdate,
 } from "../../../../../hooks/notification";
 import {

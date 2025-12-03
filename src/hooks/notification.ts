@@ -93,8 +93,8 @@ export function useNotificationStream(userId: number) {
 
     socket.on("notification", (notif) => {
       qc.setQueryData<SafeNotificationDto[]>(["notifications"], (old) => {
-      return [notif, ...(old ?? [])];
-    });
+        return [notif, ...(old ?? [])];
+      });
 
       enqueueSnackbar("New notification", { variant: "info" });
     });

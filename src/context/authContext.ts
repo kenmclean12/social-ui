@@ -4,7 +4,11 @@ import type { SafeUserDto } from "../types";
 export interface AuthContextType {
   isAuthenticated: boolean;
   user: SafeUserDto | null;
-  login: (access_token: string, refresh_token: string, user: SafeUserDto) => void;
+  login: (
+    access_token: string,
+    refresh_token: string,
+    user: SafeUserDto
+  ) => void;
   logout: () => void;
 }
 

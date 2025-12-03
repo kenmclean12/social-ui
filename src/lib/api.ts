@@ -29,7 +29,10 @@ export async function api(path: string, options: RequestInit = {}) {
         Authorization: `Bearer ${tokens.access_token}`,
       };
 
-      res = await fetch(`${API_URL}${path}`, { ...options, headers: retryHeaders });
+      res = await fetch(`${API_URL}${path}`, {
+        ...options,
+        headers: retryHeaders,
+      });
     } else {
       localStorage.removeItem("access_token");
       localStorage.removeItem("refresh_token");

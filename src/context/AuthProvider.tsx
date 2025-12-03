@@ -3,17 +3,23 @@ import type { SafeUserDto } from "../types";
 import { AuthContext } from "./authContext";
 
 interface AuthProviderProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => !!localStorage.getItem("access_token"));
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    () => !!localStorage.getItem("access_token")
+  );
   const [user, setUser] = useState<SafeUserDto | null>(() => {
     const stored = localStorage.getItem("user");
     return stored ? JSON.parse(stored) : null;
   });
 
-  function login(access_token: string, refresh_token: string, user: SafeUserDto) {
+  function login(
+    access_token: string,
+    refresh_token: string,
+    user: SafeUserDto
+  ) {
     localStorage.setItem("access_token", access_token);
     localStorage.setItem("refresh_token", refresh_token);
     localStorage.setItem("user", JSON.stringify(user));
