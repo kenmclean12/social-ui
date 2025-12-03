@@ -46,27 +46,32 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
   const top = stack[stack.length - 1];
 
   const { data: followingList } = useFollowGetFollowing(self?.id || 0);
-  const { data: user } = useUserFindOne(userId);
+  const { data: user } = useUserFindOne(top.userId);
+  const followRecord = followingList?.find(
+    (f) => f.following.id === top.userId
+  );
+  const isFollowing = !!followRecord;
   const followCreate = useFollowCreate();
   const followRemove = useFollowRemove();
-  const followRecord = followingList?.find((f) => f.following.id === userId);
-  const isFollowing = !!followRecord;
+
   const push = (item: StackItem) => setStack((prev) => [...prev, item]);
   const pop = () =>
     setStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
   const isOwnProfile = top.type === "profile" && top.userId === self?.id;
-  const title =
-    top.type === "profile"
-      ? "Profile"
-      : top.listType === "followers"
-      ? "Followers"
-      : "Following";
+  
+  const getTitle = (item: StackItem) => {
+    if (item.type === "profile") return "Profile";
+    if (item.listType === "followers") return "Followers";
+    return "Following";
+  };
 
   const handleFollowToggle = () => {
     if (!user || !self) return;
     if (isFollowing) followRemove.mutate(followRecord?.id as number);
     else followCreate.mutate({ followerId: self.id, followingId: user.id });
   };
+
+  const title = getTitle(top);
 
   if (!top) return null;
 
