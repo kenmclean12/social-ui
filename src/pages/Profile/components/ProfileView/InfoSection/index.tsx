@@ -70,7 +70,7 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
       <Divider
         orientation="vertical"
         flexItem
-        sx={{ backgroundColor: "#333" }}
+        sx={{ backgroundColor: "lightblue" }}
       />
       <Box sx={{ flex: 1 }}>
         <Box sx={{ mb: 2 }}>
