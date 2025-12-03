@@ -89,7 +89,7 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
             <ArrowBackIcon />
           </IconButton>
         )}
-        <Stack direction="row" alignItems="center" spacing={2.5}>
+        <Stack direction="row" alignItems="center" spacing={2}>
           <span>{title}</span>
           {top.type === "profile" && !isOwnProfile && (
             <Button variant={"outlined"} endIcon={isFollowing ? <Check /> : <PersonAdd />} onClick={handleFollowToggle}>
