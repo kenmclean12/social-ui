@@ -24,7 +24,7 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
         backgroundColor: "black",
         color: "#fff",
         gap: 3,
-        border: "1px solid lightblue"
+        border: "1px solid #444"
       }}
     >
       <Box sx={{ flex: 1 }}>
@@ -74,7 +74,7 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
       <Divider
         orientation="vertical"
         flexItem
-        sx={{ backgroundColor: "lightblue" }}
+        sx={{ backgroundColor: "#ccc" }}
       />
       <Box sx={{ flex: 1 }}>
         <Box sx={{ mb: 2 }}>

@@ -53,6 +53,7 @@ export function DescriptionSection({
         sx={{
           p: 2,
           backgroundColor: "#1e1e1e",
+          border: "1px solid #444",
           color: "#fff",
           position: "relative",
         }}

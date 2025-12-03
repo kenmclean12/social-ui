@@ -91,7 +91,7 @@ export function Notifications() {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         PaperProps={{
-          sx: { width: 300, overflowY: "auto", backgroundColor: "#1e1e1e", color: "#fff", p: 1 },
+          sx: { width: 300, overflowY: "auto", backgroundColor: "#1e1e1e", border: "1px solid #444", color: "#fff", p: 1 },
         }}
       >
         <Stack spacing={1} sx={{ maxHeight: 400, overflowY: "auto" }}>

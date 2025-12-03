@@ -2,16 +2,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { api } from "../lib/api";
 import type { FollowDto, SafeFollowDto } from "../types";
-import { userKeys } from "./user";
-
-export const followKeys = {
-  all: ["follow"] as const,
-  followers: (id: number) => ["follow", "followers", id] as const,
-  following: (id: number) => ["follow", "following", id] as const,
-  detail: (id: number) => ["follow", id] as const,
-  isFollowing: (followerId: number, followingId: number) =>
-    ["follow", "isFollowing", followerId, followingId] as const,
-};
 
 export function useFollowGetFollowers(
   userId: number,
@@ -21,10 +11,10 @@ export function useFollowGetFollowers(
     queryKey: ["follow", "followers", userId],
     queryFn: async () => {
       const res = await api(`/follow/${userId}/followers`);
-      if (!res?.ok)
-        throw new Error(
-          (await res?.json())?.message || "Failed to fetch followers"
-        );
+      if (!res?.ok) {
+        const err = await res?.json();
+        throw new Error(err.message || "Failed to fetch followers");
+      }
       return res.json() as Promise<SafeFollowDto[]>;
     },
     ...options,
@@ -39,18 +29,19 @@ export function useFollowGetFollowing(
     queryKey: ["follow", "following", userId],
     queryFn: async () => {
       const res = await api(`/follow/${userId}/following`);
-      if (!res?.ok)
-        throw new Error(
-          (await res?.json())?.message || "Failed to fetch following"
-        );
+      if (!res?.ok) {
+        const err = await res?.json();
+        throw new Error(err.message || "Failed to fetch following");
+      }
       return res.json() as Promise<SafeFollowDto[]>;
     },
+    retry: 0,
     ...options,
   });
 }
 
-export function useFollowCreate() {
-  const queryClient = useQueryClient();
+export function useFollowCreate(selfId: number) {
+  const qc = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
@@ -59,67 +50,68 @@ export function useFollowCreate() {
         method: "POST",
         body: JSON.stringify(dto),
       });
-      if (!res?.ok)
-        throw new Error(
-          (await res?.json())?.message || "Failed to follow user"
-        );
+
+      if (!res?.ok) {
+        const err = await res?.json();
+        throw new Error(err.message || "Failed to follow user");
+      }
+
       return res.json() as Promise<SafeFollowDto>;
     },
-    onSuccess: (data) => {
+
+    onSuccess: (_, dto) => {
       enqueueSnackbar("Followed user!", { variant: "success" });
-      queryClient.invalidateQueries({
-        queryKey: followKeys.followers(data.following.id),
+      qc.invalidateQueries({
+        queryKey: ["follow", "following", selfId],
       });
-      queryClient.invalidateQueries({
-        queryKey: followKeys.following(data.follower.id),
+      qc.invalidateQueries({
+        queryKey: ["user", dto.followingId],
       });
-      queryClient.invalidateQueries({
-        queryKey: followKeys.isFollowing(data.follower.id, data.following.id),
-      });
-      queryClient.invalidateQueries({
-        queryKey: userKeys.detail(data.following.id),
-      });
-      queryClient.invalidateQueries({
-        queryKey: userKeys.detail(data.follower.id),
+      qc.invalidateQueries({
+        queryKey: ["follow", "followers", dto.followingId],
       });
     },
 
-    onError: (err: Error) => enqueueSnackbar(err.message, { variant: "error" }),
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, { variant: "error" });
+    },
   });
 }
 
-export function useFollowRemove() {
-  const queryClient = useQueryClient();
+export function useFollowRemove(selfId: number) {
+  const qc = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
-    mutationFn: async (id: number) => {
+    mutationFn: async (vars: { id: number; followingId: number }) => {
+      const { id } = vars;
+
       const res = await api(`/follow/${id}`, { method: "DELETE" });
-      if (!res?.ok)
-        throw new Error(
-          (await res?.json())?.message || "Failed to unfollow user"
-        );
-      return res.json() as Promise<SafeFollowDto>;
+
+      if (!res?.ok) {
+        const err = await res?.json();
+        throw new Error(err.message || "Failed to unfollow user");
+      }
+
+      return vars;
     },
-    onSuccess: (data) => {
+
+    onSuccess: ({ followingId }) => {
       enqueueSnackbar("Unfollowed user!", { variant: "success" });
-      queryClient.invalidateQueries({
-        queryKey: followKeys.followers(data.following.id),
+
+      qc.invalidateQueries({
+        queryKey: ["follow", "following", selfId],
       });
-      queryClient.invalidateQueries({
-        queryKey: followKeys.following(data.follower.id),
+      qc.invalidateQueries({
+        queryKey: ["user", followingId],
       });
-      queryClient.invalidateQueries({
-        queryKey: followKeys.isFollowing(data.follower.id, data.following.id),
-      });
-      queryClient.invalidateQueries({
-        queryKey: userKeys.detail(data.following.id),
-      });
-      queryClient.invalidateQueries({
-        queryKey: userKeys.detail(data.follower.id),
+      qc.invalidateQueries({
+        queryKey: ["follow", "followers", followingId],
       });
     },
 
-    onError: (err: Error) => enqueueSnackbar(err.message, { variant: "error" }),
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, { variant: "error" });
+    },
   });
 }

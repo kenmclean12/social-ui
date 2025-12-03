@@ -46,14 +46,15 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
   ]);
   const top = stack[stack.length - 1];
 
-  const { data: followingList } = useFollowGetFollowing(self?.id || 0);
+  const { data: followingListRaw, error } = useFollowGetFollowing(self?.id as number);
+  const followingList = error ? [] : followingListRaw ?? [];
   const { data: user } = useUserFindOne(top.userId);
   const followRecord = followingList?.find(
     (f) => f.following.id === top.userId
   );
   const isFollowing = !!followRecord;
-  const followCreate = useFollowCreate();
-  const followRemove = useFollowRemove();
+  const followCreate = useFollowCreate(self?.id as number);
+  const followRemove = useFollowRemove(self?.id as number);
 
   const push = (item: StackItem) => setStack((prev) => [...prev, item]);
   const pop = () =>
@@ -68,7 +69,7 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
 
   const handleFollowToggle = () => {
     if (!user || !self) return;
-    if (isFollowing) followRemove.mutate(followRecord?.id as number);
+    if (isFollowing) followRemove.mutate({ id: followRecord?.id as number, followingId: user.id });
     else followCreate.mutate({ followerId: self.id, followingId: user.id });
   };
 
@@ -87,7 +88,7 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
           minWidth: "730px",
           backgroundColor: "#090909ff",
           color: "#fff",
-          border: "1px solid lightblue",
+          border: "1px solid #444",
         },
       }}
     >
@@ -122,6 +123,7 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
                     backgroundColor: "#1e1e1e",
                     minWidth: 200,
                     padding: "5px 0",
+                    border: "1px solid #444",
                   },
                 }}
               >

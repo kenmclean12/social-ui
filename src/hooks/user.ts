@@ -9,14 +9,9 @@ import {
 } from "../types";
 import { api } from "../lib/api";
 
-export const userKeys = {
-  all: ["users"] as const,
-  detail: (id: number) => ["users", id] as const,
-};
-
 export function useUserFindOne(id: number) {
   return useQuery({
-    queryKey: userKeys.detail(id),
+    queryKey: ["users", id],
     enabled: !!id,
     queryFn: async () => {
       const res = await api(`/user/${id}`);
@@ -24,7 +19,6 @@ export function useUserFindOne(id: number) {
         const err = await res?.json();
         throw new Error(err.message || "Failed to fetch user");
       }
-
       return res.json() as Promise<UserWithCountsResponseDto>;
     },
   });
@@ -32,21 +26,20 @@ export function useUserFindOne(id: number) {
 
 export function useUserFindAll() {
   return useQuery({
-    queryKey: userKeys.all,
+    queryKey: ["users"],
     queryFn: async () => {
       const res = await api("/user");
       if (!res?.ok) {
         const err = await res?.json();
         throw new Error(err.message || "Failed to fetch users");
       }
-
       return res.json() as Promise<SafeUserDto[]>;
     },
   });
 }
 
 export function useUserCreate() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
@@ -65,16 +58,14 @@ export function useUserCreate() {
     },
     onSuccess: () => {
       enqueueSnackbar("User created!", { variant: "success" });
-      queryClient.invalidateQueries({ queryKey: userKeys.all });
+      qc.invalidateQueries({ queryKey: ["users"] });
     },
-    onError: (err) => {
-      enqueueSnackbar(err.message, { variant: "error" });
-    },
+    onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
 
 export function useUserUpdate() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
@@ -93,16 +84,14 @@ export function useUserUpdate() {
     },
     onSuccess: () => {
       enqueueSnackbar("User updated!", { variant: "success" });
-      queryClient.invalidateQueries({ queryKey: userKeys.all });
+      qc.invalidateQueries({ queryKey: ["users"] });
     },
-    onError: (err) => {
-      enqueueSnackbar(err.message, { variant: "error" });
-    },
+    onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
 
 export function useUserDelete() {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
@@ -117,11 +106,9 @@ export function useUserDelete() {
     },
     onSuccess: () => {
       enqueueSnackbar("User deleted!", { variant: "success" });
-      queryClient.invalidateQueries({ queryKey: userKeys.all });
+      qc.invalidateQueries({ queryKey: ["users"] });
     },
-    onError: (err) => {
-      enqueueSnackbar(err.message, { variant: "error" });
-    },
+    onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
 
@@ -145,8 +132,6 @@ export function useUserResetPassword() {
     onSuccess: () => {
       enqueueSnackbar("Password reset successful!", { variant: "success" });
     },
-    onError: (err) => {
-      enqueueSnackbar(err.message, { variant: "error" });
-    },
+    onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
