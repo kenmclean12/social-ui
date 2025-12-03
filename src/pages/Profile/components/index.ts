@@ -1,2 +1,2 @@
-export * from './ProfileView';
-export * from './FollowListView';
+export * from "./ProfileView";
+export * from "./FollowListView";

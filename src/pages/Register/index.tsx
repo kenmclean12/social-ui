@@ -303,7 +303,9 @@ export function RegisterPage() {
                   disableUnderline
                   placeholder="Phone Number (optional)"
                   value={form.phoneNumber}
-                  onChange={(e) => update("phoneNumber", formatPhoneNumber(e.target.value))}
+                  onChange={(e) =>
+                    update("phoneNumber", formatPhoneNumber(e.target.value))
+                  }
                   sx={{
                     ...inputStyles,
                     border: "1px solid #ccc",

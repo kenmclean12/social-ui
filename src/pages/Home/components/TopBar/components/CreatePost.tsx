@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { IconButton, Dialog, DialogTitle, DialogContent, Button, Typography } from "@mui/material";
+import {
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Button,
+  Typography,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
 export function CreatePost() {

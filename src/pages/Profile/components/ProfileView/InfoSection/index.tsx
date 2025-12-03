@@ -47,26 +47,30 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
               onSave={(v: string) => updateUser({ userName: v })}
             />
 
-              <Box sx={{ flex: 1 }}>
-                <EditableField
-                  label="First Name"
-                  value={user.firstName}
-                  isOwnUser={isOwnUser}
-                  onSave={(v: string) => updateUser({ firstName: v })}
-                />
-              </Box>
-              <Box sx={{ flex: 1 }}>
-                <EditableField
-                  label="Last Name"
-                  value={user.lastName}
-                  isOwnUser={isOwnUser}
-                  onSave={(v: string) => updateUser({ lastName: v })}
-                />
-              </Box>
+            <Box sx={{ flex: 1 }}>
+              <EditableField
+                label="First Name"
+                value={user.firstName}
+                isOwnUser={isOwnUser}
+                onSave={(v: string) => updateUser({ firstName: v })}
+              />
+            </Box>
+            <Box sx={{ flex: 1 }}>
+              <EditableField
+                label="Last Name"
+                value={user.lastName}
+                isOwnUser={isOwnUser}
+                onSave={(v: string) => updateUser({ lastName: v })}
+              />
+            </Box>
           </Box>
         </Box>
       </Box>
-      <Divider orientation="vertical" flexItem sx={{ backgroundColor: "#333" }} />
+      <Divider
+        orientation="vertical"
+        flexItem
+        sx={{ backgroundColor: "#333" }}
+      />
       <Box sx={{ flex: 1 }}>
         <Box sx={{ mb: 2 }}>
           <Box

@@ -96,12 +96,7 @@ export function Notifications() {
       >
         <Stack spacing={1} sx={{ maxHeight: 400, overflowY: "auto" }}>
           {notifications.length === 0 ? (
-            <Typography
-              align="center"
-              pt={2}
-              pb={2}
-              sx={{ fontSize: 14 }}
-            >
+            <Typography align="center" pt={2} pb={2} sx={{ fontSize: 14 }}>
               No notifications found
             </Typography>
           ) : (

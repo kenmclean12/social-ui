@@ -61,18 +61,23 @@ export function LoginPage() {
         color="white"
         border="2px solid lightblue"
         borderRadius="16px"
-        sx={{ 
+        sx={{
           backgroundColor: "black",
-          opacity: 0.9, 
+          opacity: 0.9,
         }}
       >
-        <Stack direction="row" alignSelf="center" alignItems="center" spacing={1}>
+        <Stack
+          direction="row"
+          alignSelf="center"
+          alignItems="center"
+          spacing={1}
+        >
           <Typography align="center" fontSize={22}>
             Login
           </Typography>
           <NightsStay sx={{ color: "lightblue" }} />
         </Stack>
-        <Stack spacing={.75} mt={4.5}>
+        <Stack spacing={0.75} mt={4.5}>
           <Stack spacing={0.5}>
             <Input
               disableUnderline
@@ -108,7 +113,9 @@ export function LoginPage() {
               }
               sx={{
                 ...inputStyles,
-                border: errors.password ? "2px solid lightblue" : "1px solid #ccc",
+                border: errors.password
+                  ? "2px solid lightblue"
+                  : "1px solid #ccc",
                 color: "white",
               }}
             />

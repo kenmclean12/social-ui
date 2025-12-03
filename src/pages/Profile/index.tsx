@@ -141,9 +141,9 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
             </>
           )}
           {top.type === "profile" && !isOwnProfile && (
-            <Button 
-              variant="outlined" 
-              endIcon={isFollowing ? <Check /> : <PersonAdd />} 
+            <Button
+              variant="outlined"
+              endIcon={isFollowing ? <Check /> : <PersonAdd />}
               onClick={handleFollowToggle}
             >
               {isFollowing ? "Following" : "Follow"}

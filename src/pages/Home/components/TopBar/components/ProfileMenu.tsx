@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { IconButton, Avatar, Popover, MenuList, MenuItem, Typography } from "@mui/material";
+import {
+  IconButton,
+  Avatar,
+  Popover,
+  MenuList,
+  MenuItem,
+  Typography,
+} from "@mui/material";
 import { useAuth } from "../../../../../context";
 import { useUserFindOne } from "../../../../../hooks";
 import { ProfileDialog } from "../../../../Profile";
@@ -13,7 +20,10 @@ export function ProfileMenu() {
   return (
     <>
       <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-        <Avatar sx={{ width: 36, height: 36 }} src={activeUser?.avatarUrl || ""} />
+        <Avatar
+          sx={{ width: 36, height: 36 }}
+          src={activeUser?.avatarUrl || ""}
+        />
       </IconButton>
       <Popover
         open={!!anchorEl}

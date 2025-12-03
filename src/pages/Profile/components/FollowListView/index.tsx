@@ -1,4 +1,13 @@
-import { Avatar, IconButton, Paper, Stack, Typography, Box, Input, InputAdornment } from "@mui/material";
+import {
+  Avatar,
+  IconButton,
+  Paper,
+  Stack,
+  Typography,
+  Box,
+  Input,
+  InputAdornment,
+} from "@mui/material";
 import {
   useFollowGetFollowers,
   useFollowGetFollowing,
@@ -28,11 +37,7 @@ export function FollowListView({
   const { data: list, isLoading } = query;
 
   const normalize = (val: string) =>
-    (val ?? "")
-      .toString()
-      .toLowerCase()
-      .trim()
-      .replace(/\s+/g, "");
+    (val ?? "").toString().toLowerCase().trim().replace(/\s+/g, "");
 
   const filtered = useMemo(() => {
     if (!list) return [];
@@ -44,12 +49,7 @@ export function FollowListView({
     return list.filter((f) => {
       const u = f.following ?? f.follower;
 
-      const fields = [
-        u?.firstName,
-        u?.lastName,
-        u?.userName,
-        u?.email,
-      ];
+      const fields = [u?.firstName, u?.lastName, u?.userName, u?.email];
 
       return fields.some((field) => normalize(field).includes(s));
     });
@@ -103,7 +103,9 @@ export function FollowListView({
         }}
       >
         {filtered.length === 0 && (
-          <Typography align="center" sx={{ p: 3 }}>No matching users</Typography>
+          <Typography align="center" sx={{ p: 3 }}>
+            No matching users
+          </Typography>
         )}
         {filtered.map((f) => {
           const user = f.following ?? f.follower;
