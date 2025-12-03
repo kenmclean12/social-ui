@@ -20,9 +20,11 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
         alignItems: "flex-start",
         height: "100%",
         p: 3,
-        backgroundColor: "#1e1e1e",
+        borderRadius: 2,
+        backgroundColor: "black",
         color: "#fff",
         gap: 3,
+        border: "1px solid lightblue"
       }}
     >
       <Box sx={{ flex: 1 }}>

@@ -37,7 +37,8 @@ export function ProfileView({
           alignItems="center" 
           justifyContent="center" 
           height="100%" 
-          border="1px solid #ccc"
+          border="1px solid lightblue"
+          borderRadius={2}
           paddingInline="12px"
           sx={{
             backgroundColor: "black",
@@ -59,7 +60,9 @@ export function ProfileView({
               justifyContent: "center",
               height: "145px",
               width: "100px",
-              backgroundColor: "#1e1e1e",
+              backgroundColor: "black",
+              border: "1px solid lightblue",
+              borderRadius: 2,
               cursor: "pointer",
               p: 1,
               textAlign: "center",
@@ -79,7 +82,9 @@ export function ProfileView({
               justifyContent: "center",
               height: "145px",
               width: "100px",
-              backgroundColor: "#1e1e1e",
+              backgroundColor: "black",
+              border: "1px solid lightblue",
+              borderRadius: 2,
               cursor: "pointer",
               p: 1,
               textAlign: "center",

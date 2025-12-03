@@ -77,7 +77,7 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
       maxWidth="md"
       fullWidth
       PaperProps={{
-        sx: { minWidth: "730px", backgroundColor: "#121212", color: "#fff" },
+        sx: { minWidth: "730px", backgroundColor: "#090909ff", color: "#fff", border: "1px solid lightblue" },
       }}
     >
       <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 2 }}>
