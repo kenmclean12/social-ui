@@ -79,7 +79,7 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="md"
+      maxWidth="lg"
       fullWidth
       PaperProps={{
         sx: { minWidth: "730px", backgroundColor: "#090909ff", color: "#fff", border: "1px solid lightblue" },
