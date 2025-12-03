@@ -21,6 +21,7 @@ import {
 } from "../../hooks";
 import { ResetPassword } from "./components/ProfileView/ResetPassword";
 import { DeleteAccount } from "./components/ProfileView/DeleteAccount";
+import { Check, PersonAdd } from "@mui/icons-material";
 
 interface StackItem {
   type: "profile" | "followList";
@@ -91,7 +92,7 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
         <Stack direction="row" alignItems="center" spacing={2.5}>
           <span>{title}</span>
           {top.type === "profile" && !isOwnProfile && (
-            <Button variant={"outlined"} onClick={handleFollowToggle}>
+            <Button variant={"outlined"} endIcon={isFollowing ? <Check /> : <PersonAdd />} onClick={handleFollowToggle}>
               {isFollowing ? "Following" : "Follow"}
             </Button>
           )}
