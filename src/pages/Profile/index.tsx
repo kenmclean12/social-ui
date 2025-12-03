@@ -86,14 +86,7 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
             <ArrowBackIcon />
           </IconButton>
         )}
-        <Stack direction="row" alignItems="center" spacing={2}>
-          <span>{title}</span>
-          {top.type === "profile" && !isOwnProfile && (
-            <Button variant={"outlined"} endIcon={isFollowing ? <Check /> : <PersonAdd />} onClick={handleFollowToggle}>
-              {isFollowing ? "Following" : "Follow"}
-            </Button>
-          )}
-        </Stack>
+        {title}
         <Stack
           direction="row"
           spacing={1}
@@ -146,6 +139,15 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
                 </Stack>
               </Popover>
             </>
+          )}
+          {top.type === "profile" && !isOwnProfile && (
+            <Button 
+              variant="outlined" 
+              endIcon={isFollowing ? <Check /> : <PersonAdd />} 
+              onClick={handleFollowToggle}
+            >
+              {isFollowing ? "Following" : "Follow"}
+            </Button>
           )}
           <IconButton onClick={onClose} sx={{ color: "red" }}>
             <CloseIcon />
