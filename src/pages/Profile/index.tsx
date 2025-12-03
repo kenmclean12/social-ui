@@ -150,6 +150,10 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
               variant="outlined"
               endIcon={isFollowing ? <Check /> : <PersonAdd />}
               onClick={handleFollowToggle}
+              sx={{
+                borderColor: "lightblue",
+                color: "lightblue",
+              }}
             >
               {isFollowing ? "Following" : "Follow"}
             </Button>
