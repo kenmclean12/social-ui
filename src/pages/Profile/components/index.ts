@@ -1,3 +1,2 @@
-export * from './DescriptionSection';
-export * from './InfoSection';
-export * from './AvatarUpload';
+export * from './ProfileView';
+export * from './FollowListView';

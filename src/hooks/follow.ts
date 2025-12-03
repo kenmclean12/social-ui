@@ -13,33 +13,39 @@ export const followKeys = {
     ["follow", "isFollowing", followerId, followingId] as const,
 };
 
-export function useFollowGetFollowers(id: number) {
+export function useFollowGetFollowers(
+  userId: number,
+  options?: { enabled?: boolean }
+) {
   return useQuery({
-    queryKey: followKeys.followers(id),
-    enabled: !!id,
+    queryKey: ["follow", "followers", userId],
     queryFn: async () => {
-      const res = await api(`/follow/${id}/followers`);
+      const res = await api(`/follow/${userId}/followers`);
       if (!res?.ok)
         throw new Error(
-          ((await res?.json()) ?? {}).message || "Failed to fetch followers"
+          (await res?.json())?.message || "Failed to fetch followers"
         );
       return res.json() as Promise<SafeFollowDto[]>;
     },
+    ...options,
   });
 }
 
-export function useFollowGetFollowing(id: number) {
+export function useFollowGetFollowing(
+  userId: number,
+  options?: { enabled?: boolean }
+) {
   return useQuery({
-    queryKey: followKeys.following(id),
-    enabled: !!id,
+    queryKey: ["follow", "following", userId],
     queryFn: async () => {
-      const res = await api(`/follow/${id}/following`);
+      const res = await api(`/follow/${userId}/following`);
       if (!res?.ok)
         throw new Error(
-          ((await res?.json()) ?? {}).message || "Failed to fetch following"
+          (await res?.json())?.message || "Failed to fetch following"
         );
       return res.json() as Promise<SafeFollowDto[]>;
     },
+    ...options,
   });
 }
 
@@ -55,7 +61,7 @@ export function useFollowCreate() {
       });
       if (!res?.ok)
         throw new Error(
-          ((await res?.json()) ?? {}).message || "Failed to follow user"
+          (await res?.json())?.message || "Failed to follow user"
         );
       return res.json() as Promise<SafeFollowDto>;
     },
@@ -91,7 +97,7 @@ export function useFollowRemove() {
       const res = await api(`/follow/${id}`, { method: "DELETE" });
       if (!res?.ok)
         throw new Error(
-          ((await res?.json()) ?? {}).message || "Failed to unfollow user"
+          (await res?.json())?.message || "Failed to unfollow user"
         );
       return res.json() as Promise<SafeFollowDto>;
     },

@@ -2,19 +2,19 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  Stack,
-  Paper,
-  Typography,
   IconButton,
-  Button,
 } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
-import { useUserFindOne } from "../../hooks";
-import { AvatarUpload, DescriptionSection, InfoSection } from "./components";
+import { useState } from "react";
 import { useAuth } from "../../context";
-import { DeleteAccount } from "./components/DeleteAccount";
-import { ResetPassword } from "./components/ResetPassword";
-import { useFollowCreate, useFollowGetFollowing, useFollowRemove } from "../../hooks/follow";
+import { FollowListView, ProfileView } from "./components";
+
+interface StackItem {
+  type: "profile" | "followList";
+  userId: number;
+  listType?: "followers" | "following";
+}
 
 interface ProfileDialogProps {
   open: boolean;
@@ -24,127 +24,57 @@ interface ProfileDialogProps {
 
 export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
   const { user: self } = useAuth();
-  const { data: user, isLoading } = useUserFindOne(userId);
+  const [stack, setStack] = useState<StackItem[]>([{ type: "profile", userId }]);
+  const top = stack[stack.length - 1];
+  const push = (item: StackItem) => setStack((prev) => [...prev, item]);
+  const pop = () => setStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
 
-  const followCreate = useFollowCreate();
-  const followRemove = useFollowRemove();
-  const { data: followingList } = useFollowGetFollowing(self?.id || 0);
-  const followRecord = followingList?.find(f => f.following.id === userId);
-  const isFollowing = !!followRecord;
+  const title =
+    top.type === "profile"
+      ? "Profile"
+      : top.listType === "followers"
+      ? "Followers"
+      : "Following";
 
-
-  const handleFollowToggle = () => {
-    if (!user || !self) return;
-
-    if (isFollowing) {
-      followRemove.mutate(followRecord?.id as number);
-    } else {
-      followCreate.mutate(
-        { followerId: self.id, followingId: user.id },
-      );
-    }
-  };
-
-  function formatNumber(num: number): string {
-    if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1) + "B";
-    if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + "M";
-    if (num >= 1_000) return (num / 1_000).toFixed(1) + "K";
-    return num.toString();
-  }
+  if (!top) return null;
 
   return (
     <Dialog
       open={open}
-      onClose={undefined}
+      onClose={onClose}
       maxWidth="md"
       fullWidth
-      PaperProps={{
-        sx: { minWidth: "730px", backgroundColor: "#121212", color: "#fff" },
-      }}
+      PaperProps={{ sx: { minWidth: "730px", backgroundColor: "#121212", color: "#fff" } }}
     >
-      <DialogTitle
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          color: "#fff",
-          paddingBottom: 1,
-        }}
-      >
-        Profile
-        <IconButton onClick={onClose} sx={{ color: "red" }} aria-label="close">
+      <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        {stack.length > 1 && (
+          <IconButton onClick={pop} sx={{ color: "lightblue" }}>
+            <ArrowBackIcon />
+          </IconButton>
+        )}
+        {title}
+        <IconButton onClick={onClose} sx={{ marginLeft: "auto", color: "red" }}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent sx={{ padding: 0 }}>
-        {isLoading && <Typography sx={{ p: 2 }}>Loading...</Typography>}
-        {user && (
-          <Stack spacing={3} sx={{ p: 3 }}>
-            <Stack direction="row" alignItems="center" spacing={3} height="150px">
-              <AvatarUpload currentUrl={user.avatarUrl} isOwnUser={user.id === self?.id} />
-              <InfoSection user={user} isOwnUser={user.id === self?.id} />
-              <Stack spacing={1} alignItems="center" height="100%" marginLeft="auto">
-                <Paper
-                  elevation={1}
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100px",
-                    p: 1,
-                    textAlign: "center",
-                    backgroundColor: "#1e1e1e",
-                  }}
-                >
-                  <Typography variant="subtitle2" sx={{ color: "#fff" }}>
-                    Followers
-                  </Typography>
-                  <Typography variant="h6" sx={{ color: "lightblue" }}>
-                    {formatNumber(user.followerCount)}
-                  </Typography>
-                </Paper>
-                <Paper
-                  elevation={1}
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100px",
-                    p: 1,
-                    textAlign: "center",
-                    backgroundColor: "#1e1e1e",
-                  }}
-                >
-                  <Typography variant="subtitle2" sx={{ color: "#fff" }}>
-                    Following
-                  </Typography>
-                  <Typography variant="h6" sx={{ color: "lightblue" }}>
-                    {formatNumber(user.followingCount)}
-                  </Typography>
-                </Paper>
-              </Stack>
-            </Stack>
-            <DescriptionSection description={user.description || ""} isOwnUser={user.id === self?.id} />
-            <Stack alignSelf="center" direction="row" spacing={2}>
-              {user.id === self?.id ? (
-                <>
-                  <ResetPassword />
-                  <DeleteAccount />
-                </>
-              ) : (
-                <Button
-                  variant={isFollowing ? "outlined" : "contained"}
-                  color="primary"
-                  onClick={handleFollowToggle}
-                  sx={{ height: 36 }}
-                >
-                  {isFollowing ? "Un-Follow" : "Follow"}
-                </Button>
-              )}
-            </Stack>
-          </Stack>
+        {top.type === "profile" ? (
+          <ProfileView
+            userId={top.userId}
+            self={self}
+            onClickFollowers={() =>
+              push({ type: "followList", userId: top.userId, listType: "followers" })
+            }
+            onClickFollowing={() =>
+              push({ type: "followList", userId: top.userId, listType: "following" })
+            }
+          />
+        ) : (
+          <FollowListView
+            userId={top.userId}
+            listType={top.listType!}
+            onClickUser={(id: number) => push({ type: "profile", userId: id })}
+          />
         )}
       </DialogContent>
     </Dialog>

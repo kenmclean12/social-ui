@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Dialog, DialogTitle, DialogContent, Stack, Typography, Button, IconButton } from "@mui/material";
-import { useUserDelete } from "../../../../hooks";
-import { useAuth } from "../../../../context";
 import { Close } from "@mui/icons-material";
+import { useAuth } from "../../../../../context";
+import { useUserDelete } from "../../../../../hooks";
 
 export function DeleteAccount() {
   const { logout } = useAuth();
