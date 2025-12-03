@@ -2,7 +2,8 @@ import type { ContentResponseDto } from "../content";
 
 export interface PostResponseDto {
   id: number;
-  title: string;
+  title?: string;
+  textContent?: string;
   createdAt: Date;
   contents: ContentResponseDto[];
   creatorId: number;

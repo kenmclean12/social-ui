@@ -1,7 +1,8 @@
-import { Paper, Stack, Typography } from "@mui/material";
+import { Stack, Paper, Typography } from "@mui/material";
 import { AvatarUpload } from "./AvatarUpload";
 import { InfoSection } from "./InfoSection";
 import { DescriptionSection } from "./DescriptionSection";
+import { PostSection } from "./PostSection";
 import { useUserFindOne } from "../../../../hooks";
 import type { SafeUserDto } from "../../../../types";
 
@@ -33,16 +34,14 @@ export function ProfileView({
   return (
     <Stack spacing={3} sx={{ p: 3 }}>
       <Stack direction="row" alignItems="center" spacing={3} height="300px">
-        <Stack 
-          alignItems="center" 
-          justifyContent="center" 
-          height="100%" 
+        <Stack
+          alignItems="center"
+          justifyContent="center"
+          height="100%"
           border="1px solid #444"
           borderRadius={2}
           paddingInline="12px"
-          sx={{
-            backgroundColor: "black",
-          }}
+          sx={{ backgroundColor: "black" }}
         >
           <AvatarUpload
             currentUrl={user.avatarUrl}
@@ -101,6 +100,7 @@ export function ProfileView({
         description={user.description || ""}
         isOwnUser={user.id === self?.id}
       />
+      <PostSection userId={userId} />
     </Stack>
   );
 }
