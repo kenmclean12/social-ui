@@ -9,9 +9,9 @@ import {
   Stack,
 } from "@mui/material";
 import { useUserFindAll } from "../../../../../hooks";
-import type { SafeUserDto } from "../../../../../types";
 import { ProfileDialog } from "../../../../Profile";
 import { useAuth } from "../../../../../context";
+import type { UserResponseDto } from "../../../../../types";
 
 export function UserSearch() {
   const { user } = useAuth();
@@ -26,7 +26,7 @@ export function UserSearch() {
     if (!users || !search.trim() || !user) return [];
 
     const q = search.toLowerCase();
-    const priority = (user: SafeUserDto) => {
+    const priority = (user: UserResponseDto) => {
       if (user.firstName?.toLowerCase().startsWith(q)) return 1;
       if (user.lastName?.toLowerCase().startsWith(q)) return 2;
       if (user.userName?.toLowerCase().startsWith(q)) return 3;

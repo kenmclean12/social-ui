@@ -4,11 +4,11 @@ import { InfoSection } from "./InfoSection";
 import { DescriptionSection } from "./DescriptionSection";
 import { PostSection } from "./PostSection";
 import { useUserFindOne } from "../../../../hooks";
-import type { SafeUserDto } from "../../../../types";
+import type { UserResponseDto } from "../../../../types";
 
 interface ProfileViewProps {
   userId: number;
-  self: SafeUserDto | null;
+  self: UserResponseDto | null;
   onClickFollowers: () => void;
   onClickFollowing: () => void;
 }

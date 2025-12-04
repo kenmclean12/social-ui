@@ -72,7 +72,7 @@ export function useReactionDelete() {
     },
     onSuccess: (data) => {
       enqueueSnackbar("Reaction removed", { variant: "success" });
-
+     console.log(data)
       const key = data.postId
         ? ["reactions", "post", data.postId]
         : data.messageId

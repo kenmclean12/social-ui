@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
-import type { SafeUserDto } from "../types";
 import { AuthContext } from "./authContext";
+import type { UserResponseDto } from "../types";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -10,7 +10,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(
     () => !!localStorage.getItem("access_token")
   );
-  const [user, setUser] = useState<SafeUserDto | null>(() => {
+  const [user, setUser] = useState<UserResponseDto | null>(() => {
     const stored = localStorage.getItem("user");
     return stored ? JSON.parse(stored) : null;
   });
@@ -18,7 +18,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   function login(
     access_token: string,
     refresh_token: string,
-    user: SafeUserDto
+    user: UserResponseDto,
   ) {
     localStorage.setItem("access_token", access_token);
     localStorage.setItem("refresh_token", refresh_token);

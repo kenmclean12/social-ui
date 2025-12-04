@@ -3,9 +3,9 @@ import { useSnackbar } from "notistack";
 import {
   type UserCreateDto,
   type UserWithCountsResponseDto,
-  type SafeUserDto,
   type UserUpdateDto,
   type PasswordResetDto,
+  type UserResponseDto,
 } from "../types";
 import { api } from "../lib/api";
 
@@ -33,7 +33,7 @@ export function useUserFindAll() {
         const err = await res?.json();
         throw new Error(err.message || "Failed to fetch users");
       }
-      return res.json() as Promise<SafeUserDto[]>;
+      return res.json() as Promise<UserResponseDto[]>;
     },
   });
 }
@@ -54,7 +54,7 @@ export function useUserCreate() {
         throw new Error(err.message || "Failed to create user");
       }
 
-      return res.json() as Promise<SafeUserDto>;
+      return res.json() as Promise<UserResponseDto>;
     },
     onSuccess: () => {
       enqueueSnackbar("User created!", { variant: "success" });
@@ -80,7 +80,7 @@ export function useUserUpdate() {
         throw new Error(err.message || "Failed to update user");
       }
 
-      return res.json() as Promise<SafeUserDto>;
+      return res.json() as Promise<UserResponseDto>;
     },
     onSuccess: () => {
       enqueueSnackbar("User updated!", { variant: "success" });
@@ -102,7 +102,7 @@ export function useUserDelete() {
         throw new Error(err.message || "Failed to delete user");
       }
 
-      return res.json() as Promise<SafeUserDto>;
+      return res.json() as Promise<UserResponseDto>;
     },
     onSuccess: () => {
       enqueueSnackbar("User deleted!", { variant: "success" });
@@ -127,7 +127,7 @@ export function useUserResetPassword() {
         throw new Error(err.message || "Failed to reset password");
       }
 
-      return res.json() as Promise<SafeUserDto>;
+      return res.json() as Promise<UserResponseDto>;
     },
     onSuccess: () => {
       enqueueSnackbar("Password reset successful!", { variant: "success" });

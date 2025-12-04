@@ -1,8 +1,8 @@
-import type { SafeUserDto } from "../user";
+import type { UserResponseDto } from "../user";
 
 export interface ReactionResponseDto {
   id: number;
-  user: SafeUserDto;
+  user: UserResponseDto;
   reaction: string;
   messageId?: string;
   postId?: string;

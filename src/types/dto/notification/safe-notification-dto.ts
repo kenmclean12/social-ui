@@ -1,11 +1,11 @@
 import type { Message, UserPost } from "../../entities";
-import type { SafeUserDto } from "../user";
+import type { UserResponseDto } from "../user";
 import type { NotificationType } from "./notification-create-dto";
 
 export interface SafeNotificationDto {
   id: number;
-  recipient: SafeUserDto;
-  actionUser: SafeUserDto;
+  recipient: UserResponseDto;
+  actionUser: UserResponseDto;
   type: NotificationType;
   post?: UserPost;
   comment?: Comment;
