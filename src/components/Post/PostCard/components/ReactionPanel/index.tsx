@@ -9,9 +9,9 @@ import {
   ListItem,
   Divider,
 } from "@mui/material";
-import { EmojiEmotions } from "@mui/icons-material";
+import { Close, EmojiEmotions } from "@mui/icons-material";
 import { useAuth } from "../../../../../context";
-import { useReactionCreate, useReactionFind } from "../../../../../hooks";
+import { useReactionCreate, useReactionDelete, useReactionFind } from "../../../../../hooks";
 
 interface ReactionPanelProps {
   entityType: "post" | "message" | "comment";
@@ -29,6 +29,7 @@ export function ReactionPanel({
   const { user } = useAuth();
   const { data: reactions = [] } = useReactionFind(entityType, entityId);
   const { mutate: createReaction } = useReactionCreate();
+  const { mutate: removeReaction } = useReactionDelete();
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const handleOpen = (event: React.MouseEvent<HTMLElement>) =>
@@ -136,6 +137,7 @@ export function ReactionPanel({
                     >
                       {r.reaction}
                     </Typography>
+                    {r.user.id === user?.id && <Close onClick={() => removeReaction(r.id)} />}
                   </Stack>
                 </ListItem>
               ))

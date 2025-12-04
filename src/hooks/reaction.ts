@@ -1,9 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import type { Reaction, ReactionCreateDto } from "../types";
+import type { ReactionCreateDto, ReactionResponseDto } from "../types";
 import { api } from "../lib/api";
 
-export function useReactionFind(type: "message" | "post" | "comment", id: number) {
+export function useReactionFind(
+  type: "message" | "post" | "comment",
+  id: number
+) {
   return useQuery({
     queryKey: ["reactions", type, id],
     enabled: !!type && !!id,
@@ -13,7 +16,7 @@ export function useReactionFind(type: "message" | "post" | "comment", id: number
         const err = await res?.json();
         throw new Error(err.message || "Failed to fetch reactions");
       }
-      return res.json() as Promise<Reaction[]>;
+      return res.json() as Promise<ReactionResponseDto[]>;
     },
   });
 }
@@ -32,19 +35,18 @@ export function useReactionCreate() {
         const err = await res?.json();
         throw new Error(err.message || "Failed to create reaction");
       }
-      return res.json() as Promise<Reaction>;
+      return res.json() as Promise<ReactionResponseDto>;
     },
     onSuccess: (data) => {
       enqueueSnackbar("Reaction added!", { variant: "success" });
 
-      const key =
-        data.post?.id
-          ? ["reactions", "post", data.post.id]
-          : data.message?.id
-          ? ["reactions", "message", data.message.id]
-          : data.comment?.id
-          ? ["reactions", "comment", data.comment.id]
-          : undefined;
+      const key = data.postId
+        ? ["reactions", "post", data.postId]
+        : data.messageId
+        ? ["reactions", "message", data.messageId]
+        : data.commentId
+        ? ["reactions", "comment", data.commentId]
+        : undefined;
 
       if (key) {
         qc.invalidateQueries({ queryKey: key });
@@ -66,19 +68,18 @@ export function useReactionDelete() {
         const err = await res?.json();
         throw new Error(err.message || "Failed to remove reaction");
       }
-      return res.json() as Promise<Reaction>;
+      return res.json() as Promise<ReactionResponseDto>;
     },
     onSuccess: (data) => {
       enqueueSnackbar("Reaction removed", { variant: "success" });
 
-      const key =
-        data.post?.id
-          ? ["reactions", "post", data.post.id]
-          : data.message?.id
-          ? ["reactions", "message", data.message.id]
-          : data.comment?.id
-          ? ["reactions", "comment", data.comment.id]
-          : undefined;
+      const key = data.postId
+        ? ["reactions", "post", data.postId]
+        : data.messageId
+        ? ["reactions", "message", data.messageId]
+        : data.commentId
+        ? ["reactions", "comment", data.commentId]
+        : undefined;
 
       if (key) {
         qc.invalidateQueries({ queryKey: key });

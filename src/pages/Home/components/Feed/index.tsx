@@ -1,7 +1,7 @@
 import { Stack, Typography } from "@mui/material";
 import { useAuth } from "../../../../context";
 import { useFeedPersonalized } from "../../../../hooks";
-import { FeedPost } from "../../../../components";
+import { PostCard } from "../../../../components";
 
 export function Feed() {
   const { user } = useAuth();
@@ -33,7 +33,7 @@ export function Feed() {
         }}
       >
         {posts.map((p) => (
-          <FeedPost post={p} />
+          <PostCard post={p} />
         ))}
       </Stack>
     </Stack>

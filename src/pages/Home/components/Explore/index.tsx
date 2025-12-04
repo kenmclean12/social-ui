@@ -9,7 +9,7 @@ import {
   type SelectChangeEvent,
 } from "@mui/material";
 import { useFeedExplore } from "../../../../hooks";
-import { FeedPost } from "../../../../components";
+import { PostCard } from "../../../../components";
 
 type FilterType = "mostLiked" | "mostReacted" | "recent" | "oldest";
 
@@ -103,7 +103,7 @@ export function ExploreFeed() {
         }}
       >
         {posts.map((p) => (
-          <FeedPost key={p.id} post={p} />
+          <PostCard key={p.id} post={p} />
         ))}
       </Stack>
     </Stack>
