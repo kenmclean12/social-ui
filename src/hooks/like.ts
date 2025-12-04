@@ -36,14 +36,23 @@ export function useLikeCreate() {
 
       return res.json() as Promise<Like>;
     },
+
     onSuccess: (data) => {
       enqueueSnackbar("Liked!", { variant: "success" });
+
       if (data?.post?.id) {
-        const key = ["likes", "post", data.post.id];
-        qc.invalidateQueries({ queryKey: key });
-        qc.refetchQueries({ queryKey: key });
+        qc.invalidateQueries({
+          queryKey: ["likes", "post", data.post.id],
+        });
+      }
+
+      if (data?.comment?.id) {
+        qc.invalidateQueries({
+          queryKey: ["likes", "comment", data.comment.id],
+        });
       }
     },
+
     onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
@@ -61,14 +70,23 @@ export function useLikeDelete() {
       }
       return res.json() as Promise<Like>;
     },
+
     onSuccess: (data) => {
       enqueueSnackbar("Like removed", { variant: "success" });
+
       if (data?.post?.id) {
-        const key = ["likes", "post", data.post.id];
-        qc.invalidateQueries({ queryKey: key });
-        qc.refetchQueries({ queryKey: key });
+        qc.invalidateQueries({
+          queryKey: ["likes", "post", data.post.id],
+        });
+      }
+
+      if (data?.comment?.id) {
+        qc.invalidateQueries({
+          queryKey: ["likes", "comment", data.comment.id],
+        });
       }
     },
+
     onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }

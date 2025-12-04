@@ -3,6 +3,7 @@ import { Stack, Paper, Typography, Avatar, IconButton } from "@mui/material";
 import { ThumbUp, ChatBubble } from "@mui/icons-material";
 import { type PostResponseDto } from "../../../types";
 import {
+  useCommentFindByPost,
   useLikeCreate,
   useLikeDelete,
   useLikeFind,
@@ -22,23 +23,27 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
   const [hover, setHover] = useState<boolean>(false);
   const [showComments, setShowComments] = useState<boolean>(false);
   const { data: creator } = useUserFindOne(post.creatorId);
-  const { data: likes, refetch } = useLikeFind("post", post.id);
+  const { data: likes } = useLikeFind("post", post.id);
+  const { data: comments } = useCommentFindByPost(post.id);
   const { mutate: createLike } = useLikeCreate();
   const { mutate: removeLike } = useLikeDelete();
-  const isLiked = useMemo(() => {
+
+  const hasLiked = useMemo(() => {
     return likes?.some((like) => like.user.id === user?.id);
   }, [likes, user?.id]);
 
+  const hasCommented = useMemo(() => {
+    return comments?.some((c) => c.user.id === user?.id);
+  }, [user?.id, comments]);
+
   const handleToggleLike = async () => {
     if (user?.id === post.creatorId) return;
-    if (!isLiked) {
+    if (!hasLiked) {
       createLike({ userId: user?.id as number, postId: post.id });
-      refetch();
     } else {
       const likeToRemove = likes?.find((like) => like.user.id === user?.id);
       if (likeToRemove) {
         removeLike(likeToRemove.id);
-        refetch();
       }
     }
   };
@@ -69,7 +74,6 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
               : "Unknown User"}
           </Typography>
         </Stack>
-
         <Typography color="white">{post.title || ""}</Typography>
         <Typography color="white">{post.textContent || ""}</Typography>
         <Stack
@@ -81,24 +85,28 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
           <Stack
             direction="row"
             alignItems="center"
-            sx={{ color: "lightblue", gap: 0.2, fontSize: 15 }}
+            sx={{ gap: 0.2, fontSize: 15 }}
           >
             <IconButton onClick={handleToggleLike}>
-              <ThumbUp sx={{ color: isLiked ? "lightblue" : "white" }} />
+              <ThumbUp sx={{ color: hasLiked ? "lightblue" : "white" }} />
             </IconButton>
-            <Typography sx={{ color: isLiked ? "lightblue" : "white" }}>
+            <Typography sx={{ color: hasLiked ? "lightblue" : "white" }}>
               {likes ? likes.length : 0}
             </Typography>
           </Stack>
           <Stack
             direction="row"
             alignItems="center"
-            sx={{ color: "lightblue", gap: 0.2, fontSize: 15 }}
+            sx={{ gap: 0.2, fontSize: 15 }}
           >
             <IconButton onClick={() => setShowComments((prev) => !prev)}>
-              <ChatBubble sx={{ color: "lightblue" }} />
+              <ChatBubble
+                sx={{ color: hasCommented ? "lightblue" : "white" }}
+              />
             </IconButton>
-            <Typography>{post.commentCount}</Typography>
+            <Typography sx={{ color: hasCommented ? "lightblue" : "white" }}>
+              {comments ? comments.length : 0}
+            </Typography>
           </Stack>
           <Stack
             direction="row"
