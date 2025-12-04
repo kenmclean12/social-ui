@@ -38,6 +38,7 @@ export function useLikeCreate() {
       return res.json() as Promise<LikeResponseDto>;
     },
     onSuccess: (data) => {
+        console.log("Liked: ", data)
       enqueueSnackbar("Liked!", { variant: "success" });
 
       if (data?.postId) {
@@ -72,6 +73,7 @@ export function useLikeDelete() {
     },
 
     onSuccess: (data) => {
+         console.log("Like removed: ", data)
       enqueueSnackbar("Like removed", { variant: "success" });
 
       if (data?.postId) {
