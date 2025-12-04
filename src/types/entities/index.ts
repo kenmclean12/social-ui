@@ -1,6 +1,5 @@
 export * from "./user-post";
 export * from "./message";
-export * from "./content";
 export * from "./user";
 export * from "./like";
 export * from "./reaction";
