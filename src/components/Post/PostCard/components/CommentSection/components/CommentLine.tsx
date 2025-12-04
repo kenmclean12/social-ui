@@ -7,7 +7,7 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { Close, ThumbUp } from "@mui/icons-material";
+import { Close, ThumbUp, ChatBubble } from "@mui/icons-material";
 import { useAuth } from "../../../../../../context";
 import type { CommentResponseDto } from "../../../../../../types";
 import {
@@ -21,9 +21,10 @@ import { ReactionPanel } from "../../ReactionPanel";
 
 interface CommentLineProps {
   comment: CommentResponseDto;
+  isReply?: boolean;
 }
 
-export function CommentLine({ comment }: CommentLineProps) {
+export function CommentLine({ comment, isReply }: CommentLineProps) {
   const { user } = useAuth();
   const { mutateAsync: createLike } = useLikeCreate();
   const { mutateAsync: deleteLike } = useLikeDelete();
@@ -37,9 +38,9 @@ export function CommentLine({ comment }: CommentLineProps) {
 
   const isAuthor = user?.id === comment.user.id;
 
-  const [showReplies, setShowReplies] = useState<boolean>(false);
-  const [showReplyInput, setShowReplyInput] = useState<boolean>(false);
-  const [replyText, setReplyText] = useState<string>("");
+  const [showReplies, setShowReplies] = useState(false);
+  const [showReplyInput, setShowReplyInput] = useState(false);
+  const [replyText, setReplyText] = useState("");
 
   const toggleLike = () => {
     if (!user || isAuthor) return;
@@ -69,6 +70,8 @@ export function CommentLine({ comment }: CommentLineProps) {
       }
     );
   };
+
+  const replyCount = comment.replies?.length || 0;
 
   return (
     <Stack spacing={0.5} sx={{ mb: 1 }}>
@@ -104,18 +107,33 @@ export function CommentLine({ comment }: CommentLineProps) {
           </Stack>
 
           <Stack direction="row" spacing={2} mt={0.5} pr={0.5}>
-            <Stack
-              direction="row"
-              alignItems="center"
-              sx={{ gap: 0.2, fontSize: 14 }}
-            >
-              {!isAuthor && (
-                <Typography
-                  onClick={() => setShowReplyInput((p) => !p)}
-                  sx={{ color: "lightblue", fontSize: 13, cursor: "pointer" }}
+            <Stack direction="row" alignItems="center" sx={{ gap: 0.2 }}>
+              {!isReply && (
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  spacing={0.25}
+                  pr={2}
                 >
-                  Reply
-                </Typography>
+                  <IconButton
+                    size="small"
+                    onClick={() => setShowReplies(!showReplies)}
+                  >
+                    <ChatBubble
+                      sx={{
+                        color: replyCount > 0 ? "lightblue" : "white",
+                      }}
+                    />
+                  </IconButton>
+                  <Typography
+                    sx={{
+                      color: hasLiked ? "lightblue" : "white",
+                      fontSize: 14,
+                    }}
+                  >
+                    {replyCount}
+                  </Typography>
+                </Stack>
               )}
               <IconButton size="small" onClick={toggleLike} disabled={isAuthor}>
                 <ThumbUp sx={{ color: hasLiked ? "lightblue" : "white" }} />
@@ -133,7 +151,6 @@ export function CommentLine({ comment }: CommentLineProps) {
             />
           </Stack>
         </Stack>
-
         {isAuthor && (
           <IconButton
             size="small"
@@ -144,7 +161,6 @@ export function CommentLine({ comment }: CommentLineProps) {
           </IconButton>
         )}
       </Stack>
-
       {showReplyInput && (
         <Stack direction="row" spacing={1} pl={5}>
           <TextField
@@ -168,24 +184,12 @@ export function CommentLine({ comment }: CommentLineProps) {
           </Button>
         </Stack>
       )}
-      {comment.replies && comment.replies?.length > 0 && (
-        <Typography
-          sx={{
-            color: "lightblue",
-            fontSize: 13,
-            cursor: "pointer",
-            ml: 5,
-          }}
-          onClick={() => setShowReplies((p) => !p)}
-        >
-          Replies ({comment.replies.length})
-        </Typography>
-      )}
-      {showReplies && comment.replies && comment.replies?.length > 0 && (
+      {showReplies && replyCount > 0 && (
         <Stack spacing={1} pl={5}>
-          {comment.replies.map((reply: CommentResponseDto) => (
-            <CommentLine key={reply.id} comment={reply} />
-          ))}
+          {comment.replies &&
+            comment.replies.map((reply) => (
+              <CommentLine key={reply.id} comment={reply} isReply />
+            ))}
         </Stack>
       )}
     </Stack>
