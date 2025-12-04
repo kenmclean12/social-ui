@@ -48,7 +48,6 @@ export function ReactionPanel({ entityType, entityId }: ReactionPanelProps) {
         maxWidth: 400,
       }}
     >
-      {/* Emoji buttons */}
       <Stack direction="row" spacing={1} mb={1}>
         {EMOJIS.map((emoji) => (
           <Tooltip key={emoji} title={`React with ${emoji}`}>
@@ -61,8 +60,6 @@ export function ReactionPanel({ entityType, entityId }: ReactionPanelProps) {
           </Tooltip>
         ))}
       </Stack>
-
-      {/* Reactions list */}
       <Stack spacing={1}>
         {reactions.map((r) => (
           <Stack
