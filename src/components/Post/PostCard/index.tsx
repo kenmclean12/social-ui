@@ -120,7 +120,7 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
             />
           </Stack>
         </Stack>
-        {showComments && <CommentSection postId={post.id} />}
+        {showComments && <CommentSection comments={comments} postId={post.id} />}
       </Stack>
     </Paper>
   );

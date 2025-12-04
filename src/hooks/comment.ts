@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { api } from "../lib/api";
-import type { Comment, CommentCreateDto } from "../types";
+import type { CommentCreateDto, CommentResponseDto } from "../types";
 
 export function useCommentFindByPost(postId: number) {
   return useQuery({
@@ -13,7 +13,7 @@ export function useCommentFindByPost(postId: number) {
         const err = await res?.json();
         throw new Error(err.message || "Failed to fetch comments");
       }
-      return res.json() as Promise<Comment[]>;
+      return res.json() as Promise<CommentResponseDto[]>;
     },
   });
 }
@@ -32,11 +32,12 @@ export function useCommentCreate() {
         const err = await res?.json();
         throw new Error(err.message || "Failed to create comment");
       }
-      return res.json() as Promise<Comment>;
+      return res.json() as Promise<CommentResponseDto>;
     },
     onSuccess: (data) => {
+        console.log(data)
       enqueueSnackbar("Comment created!", { variant: "success" });
-      qc.invalidateQueries({ queryKey: ["comments", data.post.id] });
+      qc.invalidateQueries({ queryKey: ["comments", data.postId] });
     },
     onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
@@ -55,11 +56,11 @@ export function useCommentUpdate() {
         const err = await res?.json();
         throw new Error(err.message || "Failed to update comment");
       }
-      return res.json() as Promise<Comment>;
+      return res.json() as Promise<CommentResponseDto>;
     },
     onSuccess: (data) => {
       enqueueSnackbar("Comment updated!", { variant: "success" });
-      qc.invalidateQueries({ queryKey: ["comments", data.post.id] });
+      qc.invalidateQueries({ queryKey: ["comments", data.postId] });
     },
     onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
@@ -76,11 +77,11 @@ export function useCommentDelete() {
         const err = await res?.json();
         throw new Error(err.message || "Failed to delete comment");
       }
-      return res.json() as Promise<Comment>;
+      return res.json() as Promise<CommentResponseDto>;
     },
     onSuccess: (data) => {
       enqueueSnackbar("Comment deleted!", { variant: "success" });
-      qc.invalidateQueries({ queryKey: ["comments", data.post.id] });
+      qc.invalidateQueries({ queryKey: ["comments", data.postId] });
     },
     onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });

@@ -1,33 +1,27 @@
 import { useState, useEffect, useRef } from "react";
-import {
-  Stack,
-  Paper,
-  TextField,
-  Button,
-  Divider,
-} from "@mui/material";
+import { Stack, Paper, TextField, Button, Divider } from "@mui/material";
 import { useAuth } from "../../../../../context";
-import type { CommentCreateDto } from "../../../../../types";
-import {
-  useCommentFindByPost,
-  useCommentCreate,
-} from "../../../../../hooks/comment";
+import type {
+  CommentCreateDto,
+  CommentResponseDto,
+} from "../../../../../types";
+import { useCommentCreate } from "../../../../../hooks/comment";
 import { CommentLine } from "./components";
 
 interface CommentSectionProps {
+  comments: CommentResponseDto[] | undefined;
   postId: number;
 }
 
-export function CommentSection({ postId }: CommentSectionProps) {
+export function CommentSection({ comments, postId }: CommentSectionProps) {
   const { user } = useAuth();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [newComment, setNewComment] = useState<string>("");
-  const { data: comments = [] } = useCommentFindByPost(postId);
   const createComment = useCommentCreate();
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
-  }, [comments]);
+  }, []);
 
   const handleCreate = () => {
     if (!newComment.trim() || !user) return;
@@ -74,7 +68,9 @@ export function CommentSection({ postId }: CommentSectionProps) {
           </Button>
         </Stack>
         <Divider sx={{ backgroundColor: "#444" }} />
-        {comments.map((comment) => <CommentLine comment={comment} />)}
+        {comments?.map((comment) => (
+          <CommentLine comment={comment} />
+        ))}
       </Stack>
     </Paper>
   );

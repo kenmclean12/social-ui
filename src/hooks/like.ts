@@ -38,10 +38,13 @@ export function useLikeCreate() {
       return res.json() as Promise<LikeResponseDto>;
     },
     onSuccess: (data) => {
-        console.log("Liked: ", data)
+        console.log(data)
       enqueueSnackbar("Liked!", { variant: "success" });
 
       if (data?.postId) {
+        // qc.invalidateQueries({
+        //   queryKey: ["comments", data.postId],
+        // });
         qc.invalidateQueries({
           queryKey: ["likes", "post", data.postId],
         });
@@ -73,10 +76,12 @@ export function useLikeDelete() {
     },
 
     onSuccess: (data) => {
-         console.log("Like removed: ", data)
       enqueueSnackbar("Like removed", { variant: "success" });
 
       if (data?.postId) {
+        //  qc.invalidateQueries({
+        //   queryKey: ["comments", data.postId],
+        // });
         qc.invalidateQueries({
           queryKey: ["likes", "post", data.postId],
         });

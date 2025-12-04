@@ -7,29 +7,32 @@ import {
   useLikeFind,
 } from "../../../../../../hooks";
 import { Close, ThumbUp } from "@mui/icons-material";
-import type { Comment } from "../../../../../../types";
+import type { CommentResponseDto } from "../../../../../../types";
 import { ReactionPanel } from "../../ReactionPanel";
+import { useMemo } from "react";
 
 interface CommentLineProps {
-  comment: Comment;
+  comment: CommentResponseDto;
 }
 
 export function CommentLine({ comment }: CommentLineProps) {
   const { user } = useAuth();
-  const { data: likes = [] } = useLikeFind("comment", comment.id);
   const { mutateAsync: createLike } = useLikeCreate();
   const { mutateAsync: deleteLike } = useLikeDelete();
   const { mutateAsync: deleteComment } = useCommentDelete();
+  const { data: likes } = useLikeFind("comment", comment.id);
+  const hasLiked = useMemo(() => {
+    return likes?.some((like) => like.userId === user?.id);
+  }, [likes, user?.id]);
 
   const isAuthor = user?.id === comment.user.id;
-  const isLiked = likes.some((l) => l.userId === user?.id);
 
   const toggleLike = () => {
     if (!user || isAuthor) return;
-    if (!isLiked) {
+    if (!hasLiked) {
       createLike({ userId: user.id, commentId: comment.id });
     } else {
-      const like = likes.find((l) => l.userId === user.id);
+      const like = likes?.find((l) => l.userId === user.id);
       if (like) deleteLike(like.id);
     }
   };
@@ -73,15 +76,15 @@ export function CommentLine({ comment }: CommentLineProps) {
             sx={{ gap: 0.2, fontSize: 14 }}
           >
             <IconButton size="small" onClick={toggleLike} disabled={isAuthor}>
-              <ThumbUp sx={{ color: isLiked ? "lightblue" : "white" }} />
+              <ThumbUp sx={{ color: hasLiked ? "lightblue" : "white" }} />
             </IconButton>
             <Typography
               sx={{
-                color: isLiked ? "lightblue" : "white",
+                color: hasLiked ? "lightblue" : "white",
                 fontSize: 14,
               }}
             >
-              {likes.length}
+              {likes ? likes.length : 0}
             </Typography>
           </Stack>
           <ReactionPanel
