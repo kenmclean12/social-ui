@@ -16,6 +16,7 @@ import {
 } from "../../../types";
 import { useLikeCreate, useLikeDelete, useLikeFind, useUserFindOne } from "../../../hooks";
 import { useAuth } from "../../../context";
+import { ReactionPanel } from "./components";
 
 interface PostProps {
   post: PostResponseDto;
@@ -102,6 +103,7 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
           </Stack>
         </Stack>
       </Stack>
+      <ReactionPanel entityType="post" entityId={post.id} />
     </Paper>
   );
 }
