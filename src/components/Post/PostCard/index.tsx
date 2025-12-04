@@ -1,21 +1,15 @@
 import { useMemo, useState } from "react";
+import { Stack, Paper, Typography, Avatar, IconButton } from "@mui/material";
+import { ThumbUp, ChatBubble } from "@mui/icons-material";
+import { type PostResponseDto } from "../../../types";
 import {
-  Stack,
-  Paper,
-  Typography,
-  Avatar,
-  IconButton,
-} from "@mui/material";
-import {
-  ThumbUp,
-  ChatBubble,
-} from "@mui/icons-material";
-import {
-  type PostResponseDto, 
-} from "../../../types";
-import { useLikeCreate, useLikeDelete, useLikeFind, useUserFindOne } from "../../../hooks";
+  useLikeCreate,
+  useLikeDelete,
+  useLikeFind,
+  useUserFindOne,
+} from "../../../hooks";
 import { useAuth } from "../../../context";
-import { ReactionPanel } from "./components";
+import { CommentSection, ReactionPanel } from "./components";
 
 interface PostProps {
   post: PostResponseDto;
@@ -26,6 +20,7 @@ interface PostProps {
 export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
   const { user } = useAuth();
   const [hover, setHover] = useState<boolean>(false);
+  const [showComments, setShowComments] = useState<boolean>(false);
   const { data: creator } = useUserFindOne(post.creatorId);
   const { data: likes, refetch } = useLikeFind("post", post.id);
   const { mutate: createLike } = useLikeCreate();
@@ -46,7 +41,7 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
         refetch();
       }
     }
-  }
+  };
 
   return (
     <Paper
@@ -83,22 +78,41 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
           alignItems="center"
           justifyContent="flex-end"
         >
-          <Stack direction="row" alignItems="center" sx={{ color: "lightblue", gap: .2, fontSize: 15 }}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            sx={{ color: "lightblue", gap: 0.2, fontSize: 15 }}
+          >
             <IconButton onClick={handleToggleLike}>
               <ThumbUp sx={{ color: isLiked ? "lightblue" : "white" }} />
             </IconButton>
-            <Typography sx={{ color: isLiked ? "lightblue" : "white" }}>{likes ? likes.length : 0}</Typography>
+            <Typography sx={{ color: isLiked ? "lightblue" : "white" }}>
+              {likes ? likes.length : 0}
+            </Typography>
           </Stack>
-          <Stack direction="row" alignItems="center" sx={{ color: "lightblue", gap: .2, fontSize: 15 }}>
-            <IconButton>
+          <Stack
+            direction="row"
+            alignItems="center"
+            sx={{ color: "lightblue", gap: 0.2, fontSize: 15 }}
+          >
+            <IconButton onClick={() => setShowComments((prev) => !prev)}>
               <ChatBubble sx={{ color: "lightblue" }} />
             </IconButton>
             <Typography>{post.commentCount}</Typography>
           </Stack>
-          <Stack direction="row" alignItems="center" sx={{ color: "lightblue", gap: .2, fontSize: 15 }}>
-            <ReactionPanel entityType="post" entityId={post.id} isSelf={user?.id === post.creatorId} />
+          <Stack
+            direction="row"
+            alignItems="center"
+            sx={{ color: "lightblue", gap: 0.2, fontSize: 15 }}
+          >
+            <ReactionPanel
+              entityType="post"
+              entityId={post.id}
+              isSelf={user?.id === post.creatorId}
+            />
           </Stack>
         </Stack>
+        {showComments && <CommentSection postId={post.id} />}
       </Stack>
     </Paper>
   );
