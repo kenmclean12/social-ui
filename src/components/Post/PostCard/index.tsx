@@ -9,7 +9,6 @@ import {
 import {
   ThumbUp,
   ChatBubble,
-  EmojiEmotions,
 } from "@mui/icons-material";
 import {
   type PostResponseDto, 
@@ -36,6 +35,7 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
   }, [likes, user?.id]);
 
   const handleToggleLike = async () => {
+    if (user?.id === post.creatorId) return;
     if (!isLiked) {
       createLike({ userId: user?.id as number, postId: post.id });
       refetch();
@@ -96,14 +96,10 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
             <Typography>{post.commentCount}</Typography>
           </Stack>
           <Stack direction="row" alignItems="center" sx={{ color: "lightblue", gap: .2, fontSize: 15 }}>
-            <IconButton>
-              <EmojiEmotions sx={{ color: "lightblue" }} />
-            </IconButton>
-            <Typography>{post.reactionCount}</Typography>
+            <ReactionPanel entityType="post" entityId={post.id} isSelf={user?.id === post.creatorId} />
           </Stack>
         </Stack>
       </Stack>
-      <ReactionPanel entityType="post" entityId={post.id} />
     </Paper>
   );
 }
