@@ -84,9 +84,9 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
         >
           <Stack direction="row" alignItems="center" sx={{ color: "lightblue", gap: .2, fontSize: 15 }}>
             <IconButton onClick={handleToggleLike}>
-              <ThumbUp sx={{ color: "lightblue" }} />
+              <ThumbUp sx={{ color: isLiked ? "lightblue" : "white" }} />
             </IconButton>
-            <Typography>{likes ? likes.length : 0}</Typography>
+            <Typography sx={{ color: isLiked ? "lightblue" : "white" }}>{likes ? likes.length : 0}</Typography>
           </Stack>
           <Stack direction="row" alignItems="center" sx={{ color: "lightblue", gap: .2, fontSize: 15 }}>
             <IconButton>
