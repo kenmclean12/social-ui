@@ -1,6 +1,6 @@
 import { Stack, Tabs, Tab } from "@mui/material";
 import { useState } from "react";
-import { Feed, TopBar } from "./components";
+import { ExploreFeed, Feed, TopBar } from "./components";
 
 type Tab = "feed" | "messages" | "explore";
 
@@ -47,7 +47,7 @@ export function HomePage() {
       <Stack flexGrow={1} p={2}>
         {tab === "feed" && <Feed />}
         {tab === "messages" && <h1>Messages</h1>}
-        {tab === "explore" && <h1>Explore</h1>}
+        {tab === "explore" && <ExploreFeed />}
       </Stack>
     </Stack>
   );
