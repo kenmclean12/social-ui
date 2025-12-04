@@ -7,12 +7,12 @@ import {
   Popover,
   List,
   ListItem,
+  Divider,
 } from "@mui/material";
-import { Close, EmojiEmotions } from "@mui/icons-material";
+import { EmojiEmotions } from "@mui/icons-material";
 import { useAuth } from "../../../../../context";
 import {
   useReactionCreate,
-  useReactionDelete,
   useReactionFind,
 } from "../../../../../hooks/reaction";
 
@@ -32,7 +32,6 @@ export function ReactionPanel({
   const { user } = useAuth();
   const { data: reactions = [] } = useReactionFind(entityType, entityId);
   const { mutate: createReaction } = useReactionCreate();
-  const { mutate: deleteReaction } = useReactionDelete();
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const handleOpen = (event: React.MouseEvent<HTMLElement>) =>
@@ -42,17 +41,13 @@ export function ReactionPanel({
   const userReaction = reactions.find((r) => r.user.id === user?.id);
   const handleReact = (emoji: string) => {
     if (isSelf) return;
-    if (!userReaction) {
-      createReaction({
-        userId: user?.id as number,
-        [entityType + "Id"]: entityId,
-        reaction: emoji,
-      });
-    }
+    createReaction({
+      userId: user?.id as number,
+      [entityType + "Id"]: entityId,
+      reaction: emoji,
+    });
     handleClose();
   };
-
-  const handleRemove = (reactionId: number) => deleteReaction(reactionId);
 
   const open = Boolean(anchorEl);
 
@@ -107,6 +102,7 @@ export function ReactionPanel({
               </IconButton>
             ))}
           </Stack>
+          <Divider sx={{ backgroundColor: "#fff" }} />
           <List
             sx={{
               maxHeight: 200,
@@ -138,20 +134,11 @@ export function ReactionPanel({
                   <Stack direction="row" alignItems="center" gap={1}>
                     <Typography
                       component="span"
-                      fontSize={16}
+                      fontSize={24}
                       marginLeft="auto"
                     >
                       {r.reaction}
                     </Typography>
-                    {r.user.id === user?.id && (
-                      <IconButton
-                        size="small"
-                        onClick={() => handleRemove(r.id)}
-                        sx={{ color: "red" }}
-                      >
-                        <Close fontSize="small" />
-                      </IconButton>
-                    )}
                   </Stack>
                 </ListItem>
               ))
