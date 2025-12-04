@@ -1,6 +1,6 @@
 import { Stack, Tabs, Tab } from "@mui/material";
 import { useState } from "react";
-import { TopBar } from "./components";
+import { Feed, TopBar } from "./components";
 
 type Tab = "feed" | "messages" | "explore";
 
@@ -21,7 +21,12 @@ export function HomePage() {
   };
 
   return (
-    <Stack height="100vh" width="100vw" minWidth="550px" sx={{ backgroundColor: "black" }}>
+    <Stack
+      height="100vh"
+      width="100vw"
+      minWidth="550px"
+      sx={{ backgroundColor: "black" }}
+    >
       <TopBar />
       <Tabs
         value={tab}
@@ -39,9 +44,8 @@ export function HomePage() {
         <Tab label="Messages" value="messages" sx={tabStyles} />
         <Tab label="Explore" value="explore" sx={tabStyles} />
       </Tabs>
-
       <Stack flexGrow={1} p={2}>
-        {tab === "feed" && <h1>Feed</h1>}
+        {tab === "feed" && <Feed />}
         {tab === "messages" && <h1>Messages</h1>}
         {tab === "explore" && <h1>Explore</h1>}
       </Stack>
