@@ -11,10 +11,7 @@ import {
 } from "@mui/material";
 import { EmojiEmotions } from "@mui/icons-material";
 import { useAuth } from "../../../../../context";
-import {
-  useReactionCreate,
-  useReactionFind,
-} from "../../../../../hooks/reaction";
+import { useReactionCreate, useReactionFind } from "../../../../../hooks";
 
 interface ReactionPanelProps {
   entityType: "post" | "message" | "comment";

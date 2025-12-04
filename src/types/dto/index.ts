@@ -5,3 +5,4 @@ export * from "./notification";
 export * from "./post";
 export * from "./like";
 export * from "./reaction";
+export * from "./comment";
