@@ -9,7 +9,4 @@ export interface SafeUserDto {
 
   description?: string;
   avatarUrl?: string;
-
-  following?: SafeUserDto[];
-  followers?: SafeUserDto[];
 }
