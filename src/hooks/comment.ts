@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { api } from "../lib/api";
-import type { CommentCreateDto, CommentResponseDto } from "../types";
+import type { CommentCreateDto, CommentResponseDto, CommentUpdateDto } from "../types";
 
 export function useCommentFindByPost(postId: number) {
   return useQuery({
@@ -43,12 +43,12 @@ export function useCommentCreate() {
   });
 }
 
-export function useCommentUpdate() {
+export function useCommentUpdate(id: number) {
   const qc = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
-    mutationFn: async ({ id, content }: { id: number; content: string }) => {
+    mutationFn: async ({ content }: CommentUpdateDto) => {
       const res = await api(`/comment/${id}?content=${encodeURIComponent(content)}`, {
         method: "PATCH",
       });
