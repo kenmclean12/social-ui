@@ -15,13 +15,8 @@ interface CommentSectionProps {
 
 export function CommentSection({ comments, postId }: CommentSectionProps) {
   const { user } = useAuth();
-  const scrollRef = useRef<HTMLDivElement>(null);
   const [newComment, setNewComment] = useState<string>("");
   const createComment = useCommentCreate();
-
-  useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
-  }, []);
 
   const handleCreate = () => {
     if (!newComment.trim() || !user) return;
@@ -43,7 +38,6 @@ export function CommentSection({ comments, postId }: CommentSectionProps) {
         border: "1px solid #444",
         borderRadius: 1,
       }}
-      ref={scrollRef}
     >
       <Stack spacing={1}>
         <Stack direction="row" spacing={1} mt={1} alignItems="center">
