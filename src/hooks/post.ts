@@ -19,6 +19,7 @@ export function usePostFindByUserId(userId: number) {
       }
       return res.json() as Promise<PostResponseDto[]>;
     },
+    retry: 0,
   });
 }
 
