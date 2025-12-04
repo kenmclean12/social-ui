@@ -15,13 +15,11 @@ import { usePostCreate } from "../../../hooks";
 export function CreatePost() {
   const { user } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
-  const [title, setTitle] = useState<string>("");
   const [textContent, setTextContent] = useState<string>("");
   const { mutateAsync: createPost, isPending } = usePostCreate();
 
   const handleClose = () => {
     setOpen(false);
-    setTitle("");
     setTextContent("");
   };
 
@@ -30,7 +28,6 @@ export function CreatePost() {
 
     await createPost({
       userId: user.id,
-      title,
       textContent,
     });
 
@@ -58,21 +55,6 @@ export function CreatePost() {
         <DialogTitle>Create Post</DialogTitle>
         <DialogContent>
           <Stack spacing={2} mt={1}>
-            <Input
-              fullWidth
-              placeholder="Title"
-              disableUnderline
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              sx={{
-                background: "#2a2a2a",
-                color: "white",
-                px: 1.5,
-                py: 1,
-                borderRadius: 1,
-                border: "1px solid #444",
-              }}
-            />
             <Input
               fullWidth
               placeholder="Write something..."

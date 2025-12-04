@@ -6,7 +6,6 @@ import type { User } from "../user/user";
 export interface UserPost {
   id: number;
   createdAt: Date;
-  title?: string;
   textContent?: string;
   creator: User;
   likes?: Like[];

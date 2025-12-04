@@ -74,7 +74,6 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
               : "Unknown User"}
           </Typography>
         </Stack>
-        <Typography color="white">{post.title || ""}</Typography>
         <Typography color="white">{post.textContent || ""}</Typography>
         <Stack
           direction="row"
