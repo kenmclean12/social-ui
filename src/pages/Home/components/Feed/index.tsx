@@ -33,7 +33,7 @@ export function Feed() {
         }}
       >
         {posts.map((p) => (
-          <PostCard post={p} />
+          <PostCard key={p.id} post={p} />
         ))}
       </Stack>
     </Stack>
