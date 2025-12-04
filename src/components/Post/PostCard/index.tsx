@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Stack,
   Paper,
@@ -14,7 +14,8 @@ import {
 import {
   type PostResponseDto, 
 } from "../../../types";
-import { useUserFindOne } from "../../../hooks";
+import { useLikeCreate, useLikeDelete, useLikeFind, useUserFindOne } from "../../../hooks";
+import { useAuth } from "../../../context";
 
 interface PostProps {
   post: PostResponseDto;
@@ -23,8 +24,28 @@ interface PostProps {
 }
 
 export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
+  const { user } = useAuth();
   const [hover, setHover] = useState<boolean>(false);
   const { data: creator } = useUserFindOne(post.creatorId);
+  const { data: likes, refetch } = useLikeFind("post", post.id);
+  const { mutate: createLike } = useLikeCreate();
+  const { mutate: removeLike } = useLikeDelete();
+  const isLiked = useMemo(() => {
+    return likes?.some((like) => like.user.id === user?.id);
+  }, [likes, user?.id]);
+
+  const handleToggleLike = async () => {
+    if (!isLiked) {
+      createLike({ userId: user?.id as number, postId: post.id });
+      refetch();
+    } else {
+      const likeToRemove = likes?.find((like) => like.user.id === user?.id);
+      if (likeToRemove) {
+        removeLike(likeToRemove.id);
+        refetch();
+      }
+    }
+  }
 
   return (
     <Paper
@@ -62,10 +83,10 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
           justifyContent="flex-end"
         >
           <Stack direction="row" alignItems="center" sx={{ color: "lightblue", gap: .2, fontSize: 15 }}>
-            <IconButton>
+            <IconButton onClick={handleToggleLike}>
               <ThumbUp sx={{ color: "lightblue" }} />
             </IconButton>
-            <Typography>{post.likeCount}</Typography>
+            <Typography>{likes ? likes.length : 0}</Typography>
           </Stack>
           <Stack direction="row" alignItems="center" sx={{ color: "lightblue", gap: .2, fontSize: 15 }}>
             <IconButton>

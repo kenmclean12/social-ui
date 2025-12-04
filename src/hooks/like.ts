@@ -24,7 +24,7 @@ export function useLikeCreate() {
 
   return useMutation({
     mutationFn: async (dto: LikeCreateDto) => {
-      const res = await api("/like", {
+      const res = await api(`/like`, {
         method: "POST",
         body: JSON.stringify(dto),
       });
@@ -38,7 +38,6 @@ export function useLikeCreate() {
     },
     onSuccess: (data) => {
       enqueueSnackbar("Liked!", { variant: "success" });
-console.log("like created:", data);
       if (data?.post?.id) {
         const key = ["likes", "post", data.post.id];
         qc.invalidateQueries({ queryKey: key });
@@ -64,7 +63,6 @@ export function useLikeDelete() {
     },
     onSuccess: (data) => {
       enqueueSnackbar("Like removed", { variant: "success" });
-console.log("like removed:", data);
       if (data?.post?.id) {
         const key = ["likes", "post", data.post.id];
         qc.invalidateQueries({ queryKey: key });
