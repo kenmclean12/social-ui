@@ -27,8 +27,8 @@ export function Feed() {
       <Stack
         sx={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-          gap: 16,
+          gridTemplateColumns: "repeat(auto-fill, minmax(530px, 1fr))",
+          gap: 2,
           p: 1,
         }}
       >
