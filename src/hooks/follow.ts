@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { api } from "../lib/api";
-import type { FollowDto, SafeFollowDto } from "../types";
+import type { FollowDto, FollowResponseDto } from "../types";
 
 export function useFollowGetFollowers(
   userId: number,
@@ -15,7 +15,7 @@ export function useFollowGetFollowers(
         const err = await res?.json();
         throw new Error(err.message || "Failed to fetch followers");
       }
-      return res.json() as Promise<SafeFollowDto[]>;
+      return res.json() as Promise<FollowResponseDto[]>;
     },
     ...options,
   });
@@ -33,7 +33,7 @@ export function useFollowGetFollowing(
         const err = await res?.json();
         throw new Error(err.message || "Failed to fetch following");
       }
-      return res.json() as Promise<SafeFollowDto[]>;
+      return res.json() as Promise<FollowResponseDto[]>;
     },
     retry: 0,
     ...options,
@@ -56,7 +56,7 @@ export function useFollowCreate(selfId: number) {
         throw new Error(err.message || "Failed to follow user");
       }
 
-      return res.json() as Promise<SafeFollowDto>;
+      return res.json() as Promise<FollowResponseDto>;
     },
 
     onSuccess: (_, dto) => {
