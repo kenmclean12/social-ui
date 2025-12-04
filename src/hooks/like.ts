@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import type { Like, LikeCreateDto } from "../types";
+import type { LikeCreateDto, LikeResponseDto } from "../types";
 import { api } from "../lib/api";
 
 export function useLikeFind(type: string, id: number) {
@@ -13,7 +13,8 @@ export function useLikeFind(type: string, id: number) {
         const err = await res?.json();
         throw new Error(err.message || "Failed to fetch likes");
       }
-      return res.json() as Promise<Like[]>;
+
+      return res.json() as Promise<LikeResponseDto[]>;
     },
   });
 }
@@ -34,25 +35,23 @@ export function useLikeCreate() {
         throw new Error(err.message || "Failed to create like");
       }
 
-      return res.json() as Promise<Like>;
+      return res.json() as Promise<LikeResponseDto>;
     },
-
     onSuccess: (data) => {
       enqueueSnackbar("Liked!", { variant: "success" });
 
-      if (data?.post?.id) {
+      if (data?.postId) {
         qc.invalidateQueries({
-          queryKey: ["likes", "post", data.post.id],
+          queryKey: ["likes", "post", data.postId],
         });
       }
 
-      if (data?.comment?.id) {
+      if (data?.commentId) {
         qc.invalidateQueries({
-          queryKey: ["likes", "comment", data.comment.id],
+          queryKey: ["likes", "comment", data.commentId],
         });
       }
     },
-
     onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
@@ -68,25 +67,25 @@ export function useLikeDelete() {
         const err = await res?.json();
         throw new Error(err.message || "Failed to delete like");
       }
-      return res.json() as Promise<Like>;
+
+      return res.json() as Promise<LikeResponseDto>;
     },
 
     onSuccess: (data) => {
       enqueueSnackbar("Like removed", { variant: "success" });
 
-      if (data?.post?.id) {
+      if (data?.postId) {
         qc.invalidateQueries({
-          queryKey: ["likes", "post", data.post.id],
+          queryKey: ["likes", "post", data.postId],
         });
       }
 
-      if (data?.comment?.id) {
+      if (data?.commentId) {
         qc.invalidateQueries({
-          queryKey: ["likes", "comment", data.comment.id],
+          queryKey: ["likes", "comment", data.commentId],
         });
       }
     },
-
     onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }

@@ -22,14 +22,14 @@ export function CommentLine({ comment }: CommentLineProps) {
   const { mutateAsync: deleteComment } = useCommentDelete();
 
   const isAuthor = user?.id === comment.user.id;
-  const isLiked = likes.some((l) => l.user.id === user?.id);
+  const isLiked = likes.some((l) => l.userId === user?.id);
 
   const toggleLike = () => {
     if (!user || isAuthor) return;
     if (!isLiked) {
       createLike({ userId: user.id, commentId: comment.id });
     } else {
-      const like = likes.find((l) => l.user.id === user.id);
+      const like = likes.find((l) => l.userId === user.id);
       if (like) deleteLike(like.id);
     }
   };

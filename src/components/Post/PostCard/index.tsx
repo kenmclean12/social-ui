@@ -29,7 +29,7 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
   const { mutate: removeLike } = useLikeDelete();
 
   const hasLiked = useMemo(() => {
-    return likes?.some((like) => like.user.id === user?.id);
+    return likes?.some((like) => like.userId === user?.id);
   }, [likes, user?.id]);
 
   const hasCommented = useMemo(() => {
@@ -41,7 +41,7 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
     if (!hasLiked) {
       createLike({ userId: user?.id as number, postId: post.id });
     } else {
-      const likeToRemove = likes?.find((like) => like.user.id === user?.id);
+      const likeToRemove = likes?.find((like) => like.userId === user?.id);
       if (likeToRemove) {
         removeLike(likeToRemove.id);
       }
