@@ -7,3 +7,5 @@ export * from "./like";
 export * from "./reaction";
 export * from "./comment";
 export * from "./feed";
+export * from "./conversation";
+export * from "./message";
