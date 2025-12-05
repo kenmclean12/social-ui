@@ -11,12 +11,17 @@ import {
 } from "@mui/material";
 import { Close, EmojiEmotions } from "@mui/icons-material";
 import { useAuth } from "../../../../../context";
-import { useReactionCreate, useReactionDelete, useReactionFind } from "../../../../../hooks";
+import {
+  useReactionCreate,
+  useReactionDelete,
+  useReactionFind,
+} from "../../../../../hooks";
 
 interface ReactionPanelProps {
   entityType: "post" | "message" | "comment";
   entityId: number;
   isSelf: boolean;
+  direction?: "left" | "right";
 }
 
 const EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "😡"];
@@ -25,6 +30,7 @@ export function ReactionPanel({
   entityType,
   entityId,
   isSelf,
+  direction,
 }: ReactionPanelProps) {
   const { user } = useAuth();
   const { data: reactions = [] } = useReactionFind(entityType, entityId);
@@ -67,8 +73,14 @@ export function ReactionPanel({
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: direction && direction === "right" ? "left" : "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: direction && direction === "right" ? "left" : "right",
+        }}
       >
         <Paper
           sx={{
@@ -137,7 +149,9 @@ export function ReactionPanel({
                     >
                       {r.reaction}
                     </Typography>
-                    {r.user.id === user?.id && <Close onClick={() => removeReaction(r.id)} />}
+                    {r.user.id === user?.id && (
+                      <Close onClick={() => removeReaction(r.id)} />
+                    )}
                   </Stack>
                 </ListItem>
               ))

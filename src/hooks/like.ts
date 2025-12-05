@@ -42,11 +42,14 @@ export function useLikeCreate() {
       enqueueSnackbar("Liked!", { variant: "success" });
 
       if (data?.postId) {
-        // qc.invalidateQueries({
-        //   queryKey: ["comments", data.postId],
-        // });
         qc.invalidateQueries({
           queryKey: ["likes", "post", data.postId],
+        });
+      }
+
+      if (data?.messageId) {
+        qc.invalidateQueries({
+          queryKey: ["likes", "message", data.messageId],
         });
       }
 
@@ -79,11 +82,14 @@ export function useLikeDelete() {
       enqueueSnackbar("Like removed", { variant: "success" });
 
       if (data?.postId) {
-        //  qc.invalidateQueries({
-        //   queryKey: ["comments", data.postId],
-        // });
         qc.invalidateQueries({
           queryKey: ["likes", "post", data.postId],
+        });
+      }
+
+      if (data?.messageId) {
+        qc.invalidateQueries({
+          queryKey: ["likes", "message", data.messageId],
         });
       }
 
