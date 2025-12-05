@@ -2,7 +2,7 @@ import type { Message, UserPost } from "../../entities";
 import type { UserResponseDto } from "../user";
 import type { NotificationType } from "./notification-create-dto";
 
-export interface SafeNotificationDto {
+export interface NotificationResponseDto {
   id: number;
   recipient: UserResponseDto;
   actionUser: UserResponseDto;

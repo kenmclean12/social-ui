@@ -15,8 +15,8 @@ import {
   useNotificationUpdate,
 } from "../../../../../hooks/notification";
 import {
-  type SafeNotificationDto,
   NotificationType,
+  type NotificationResponseDto,
 } from "../../../../../types";
 import { ProfileDialog } from "../../../../Profile";
 
@@ -37,7 +37,7 @@ export function Notifications() {
     setProfileDialogOpen(true);
   };
 
-  const handleNotificationClick = (notif: SafeNotificationDto) => {
+  const handleNotificationClick = (notif: NotificationResponseDto) => {
     if (!notif.read) {
       updateNotification.mutate({ id: notif.id, read: true });
     }
@@ -48,7 +48,7 @@ export function Notifications() {
     }
   };
 
-  const renderNotificationText = (notif: SafeNotificationDto) => {
+  const renderNotificationText = (notif: NotificationResponseDto) => {
     const actorName = `${notif.actionUser.firstName} ${notif.actionUser.lastName}`;
 
     switch (notif.type) {
@@ -117,7 +117,7 @@ export function Notifications() {
               No notifications found
             </Typography>
           ) : (
-            notifications.map((notif: SafeNotificationDto) => (
+            notifications.map((notif: NotificationResponseDto) => (
               <Stack
                 key={notif.id}
                 direction="row"

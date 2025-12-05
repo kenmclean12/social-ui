@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { api } from "../lib/api";
-import type { NotificationCreateDto, SafeNotificationDto } from "../types";
+import type { NotificationCreateDto, NotificationResponseDto } from "../types";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 
@@ -14,7 +14,7 @@ export function useNotificationFindAll() {
         const err = await res?.json();
         throw new Error(err.message || "Failed to fetch notifications");
       }
-      return res.json() as Promise<SafeNotificationDto[]>;
+      return res.json() as Promise<NotificationResponseDto[]>;
     },
   });
 }
@@ -33,7 +33,7 @@ export function useNotificationCreate() {
         const err = await res?.json();
         throw new Error(err.message || "Failed to create notification");
       }
-      return res.json() as Promise<SafeNotificationDto>;
+      return res.json() as Promise<NotificationResponseDto>;
     },
     onSuccess: () => {
       enqueueSnackbar("Notification created!", { variant: "success" });
@@ -57,7 +57,7 @@ export function useNotificationUpdate() {
         const err = await res?.json();
         throw new Error(err.message || "Failed to update notification");
       }
-      return res.json() as Promise<SafeNotificationDto>;
+      return res.json() as Promise<NotificationResponseDto>;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["notifications"] });
@@ -78,7 +78,7 @@ export function useNotificationStream(userId: number) {
     });
 
     socket.on("notification", (notif) => {
-      qc.setQueryData<SafeNotificationDto[]>(["notifications"], (old) => {
+      qc.setQueryData<NotificationResponseDto[]>(["notifications"], (old) => {
         return [notif, ...(old ?? [])];
       });
       enqueueSnackbar("New notification", { variant: "info" });
