@@ -30,10 +30,10 @@ export function Sidebar({ userId, selectedId, onSelect }: SidebarProps) {
         py={1.5}
         borderBottom="1px solid #ddd"
       >
-        <Typography variant="h6">Messages</Typography>
+        <Typography variant="h6" color="white">Messages</Typography>
 
         <IconButton onClick={() => setOpenDialog(true)}>
-          <AddIcon />
+          <AddIcon sx={{ color: "lightblue" }} />
         </IconButton>
       </Box>
       <Box flex={1} overflow="auto">
@@ -47,7 +47,6 @@ export function Sidebar({ userId, selectedId, onSelect }: SidebarProps) {
                 conversation={c}
                 selected={selectedId === c.id}
                 onClick={() => onSelect(c.id)}
-                userId={userId}
               />
             ))}
           </List>

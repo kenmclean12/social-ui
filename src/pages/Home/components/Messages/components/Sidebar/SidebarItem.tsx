@@ -2,7 +2,7 @@ import {
   Avatar,
   ListItemButton,
   ListItemAvatar,
-  ListItemText,
+  Typography,
 } from "@mui/material";
 import type { ConversationResponseDto } from "../../../../../../types";
 
@@ -10,11 +10,10 @@ interface SidebarItemProps {
   conversation: ConversationResponseDto;
   selected: boolean;
   onClick: () => void;
-  userId: number;
 }
 
-export function SidebarItem({ conversation, selected, onClick, userId }: SidebarItemProps) {
-  const other = conversation.participants.find((p) => p.id !== userId);
+export function SidebarItem({ conversation, selected, onClick }: SidebarItemProps) {
+  const initiator = conversation.initiator;
 
   return (
     <ListItemButton
@@ -23,11 +22,9 @@ export function SidebarItem({ conversation, selected, onClick, userId }: Sidebar
       sx={{ borderBottom: "1px solid #eee", py: 1.5 }}
     >
       <ListItemAvatar>
-        <Avatar src={other?.avatarUrl} />
+        <Avatar src={initiator?.avatarUrl} />
       </ListItemAvatar>
-      <ListItemText
-        primary={other?.userName}
-      />
+    <Typography>{initiator?.firstName} {initiator?.lastName}</Typography>
     </ListItemButton>
   );
 }

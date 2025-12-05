@@ -20,7 +20,7 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
           <MessageBubble
             key={m.id}
             message={m}
-            isMe={m.sender.id === user?.id}
+            isMe={Boolean(m.sender && user && m.sender.id === user.id)}
           />
         ))}
       </Box>
