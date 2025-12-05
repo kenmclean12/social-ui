@@ -1,4 +1,3 @@
-import type { MessageResponseDto } from "../message/message-response-dto";
 import type { UserResponseDto } from "../user";
 
 export interface ConversationResponseDto {
@@ -7,5 +6,4 @@ export interface ConversationResponseDto {
   closed: boolean;
   initiator: UserResponseDto;
   participants: UserResponseDto[];
-  messages: MessageResponseDto[];
 }
