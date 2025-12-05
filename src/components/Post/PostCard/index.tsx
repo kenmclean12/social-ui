@@ -278,7 +278,7 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
         <DialogContent>
           <Stack spacing={2} mt={1}>
             <Typography>This action cannot be undone. Are you sure?</Typography>
-            <Stack direction="row" spacing={1}>
+            <Stack direction="row" justifyContent="flex-end" spacing={1}>
               <Button
                 variant="outlined"
                 onClick={() => setOpenDelete(false)}
