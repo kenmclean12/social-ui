@@ -1,14 +1,29 @@
-import { Popover, Stack, Avatar, Typography, Box, Divider } from "@mui/material";
+import {
+  Popover,
+  Stack,
+  Avatar,
+  Typography,
+  Box,
+  Divider,
+} from "@mui/material";
 import type { UserResponseDto } from "../../../../../../../../types";
 import { Group } from "@mui/icons-material";
 
 interface ChatMembersProps {
+  initiator: UserResponseDto;
   members: UserResponseDto[];
   anchorEl: HTMLElement | null;
   onClose: () => void;
 }
 
-export function ChatMembers({ members, anchorEl, onClose }: ChatMembersProps) {
+export function ChatMembers({
+  initiator,
+  members,
+  anchorEl,
+  onClose,
+}: ChatMembersProps) {
+  if (!members.length) return null;
+
   return (
     <Popover
       open={Boolean(anchorEl)}
@@ -27,13 +42,39 @@ export function ChatMembers({ members, anchorEl, onClose }: ChatMembersProps) {
       }}
     >
       <Stack spacing={1}>
-        <Stack direction="row" alignSelf="center" alignItems="center" justifyContent="center" spacing={0.5}>
+        <Stack
+          direction="row"
+          alignSelf="center"
+          alignItems="center"
+          justifyContent="center"
+          spacing={0.5}
+        >
           <Typography align="center" fontSize="13px" color="white">
             Conversation Members
           </Typography>
           <Group sx={{ height: 20, color: "lightblue" }} />
         </Stack>
         <Divider sx={{ backgroundColor: "#444" }} />
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+            p: 1,
+            borderRadius: 1,
+            backgroundColor: "rgba(100,150,255,0.1)",
+          }}
+        >
+          <Avatar src={initiator.avatarUrl} />
+          <Stack spacing={0}>
+            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
+              {initiator.firstName} {initiator.lastName} (Owner)
+            </Typography>
+            <Typography sx={{ fontSize: 13, color: "#bbb" }}>
+              @{initiator.userName}
+            </Typography>
+          </Stack>
+        </Box>
         {members.map((m) => (
           <Box
             key={m.id}

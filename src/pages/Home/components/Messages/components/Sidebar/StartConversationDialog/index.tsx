@@ -8,10 +8,15 @@ import {
   Autocomplete,
   TextField,
   Stack,
+  Box,
+  Checkbox,
 } from "@mui/material";
 import { useAuth } from "../../../../../../../context";
 import type { FollowResponseDto } from "../../../../../../../types";
-import { useConversationInitiate, useFollowGetFollowing } from "../../../../../../../hooks";
+import {
+  useConversationInitiate,
+  useFollowGetFollowing,
+} from "../../../../../../../hooks";
 
 interface StartConversationDialogProps {
   open: boolean;
@@ -19,7 +24,11 @@ interface StartConversationDialogProps {
   userId: number;
 }
 
-export function StartConversationDialog({ open, onClose, userId }: StartConversationDialogProps) {
+export function StartConversationDialog({
+  open,
+  onClose,
+  userId,
+}: StartConversationDialogProps) {
   const { user } = useAuth();
   const [selectedUsers, setSelectedUsers] = useState<FollowResponseDto[]>([]);
   const [message, setMessage] = useState<string>("");
@@ -75,6 +84,49 @@ export function StartConversationDialog({ open, onClose, userId }: StartConversa
             value={selectedUsers}
             getOptionLabel={(o) => o.following.userName}
             onChange={(_, v) => setSelectedUsers(v)}
+            PaperComponent={(props) => (
+              <Box
+                {...props}
+                sx={{
+                  backgroundColor: "#1a1a1a",
+                  color: "#fff",
+                  border: "1px solid #444",
+                  borderRadius: 1,
+                  mt: 1,
+                  overflow: "hidden",
+                }}
+              />
+            )}
+            ListboxProps={{
+              sx: {
+                "& .MuiAutocomplete-option": {
+                  color: "#fff",
+                  "&.Mui-focused": { backgroundColor: "#1a1a1a" },
+                  "&.Mui-selected": { backgroundColor: "#1a1a1a" },
+                },
+              },
+            }}
+            renderOption={(props, option, { selected }) => (
+              <Box
+                component="li"
+                {...props}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <span>{option.following.userName}</span>
+                <Checkbox
+                  checked={selected}
+                  sx={{
+                    marginLeft: "auto",
+                    color: "#fff",
+                    "&.Mui-checked": { color: "#fff" },
+                  }}
+                />
+              </Box>
+            )}
             sx={{
               "& .MuiInputBase-root": {
                 backgroundColor: "#1a1a1a",
@@ -94,9 +146,7 @@ export function StartConversationDialog({ open, onClose, userId }: StartConversa
                 label="Select users"
                 InputLabelProps={{ sx: { color: "#aaa" } }}
                 sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#444",
-                  },
+                  "& .MuiOutlinedInput-notchedOutline": { borderColor: "#444" },
                   "&:hover .MuiOutlinedInput-notchedOutline": {
                     borderColor: "#666",
                   },
@@ -139,9 +189,9 @@ export function StartConversationDialog({ open, onClose, userId }: StartConversa
           variant="contained"
           disabled={selectedUsers.length === 0 || !message.trim()}
           sx={{
-            backgroundColor: "#1976d2",
+            backgroundColor: "lightblue",
             color: "white",
-            ":hover": { backgroundColor: "#1565c0" },
+            ":hover": { backgroundColor: "lightblue" },
           }}
         >
           Start
