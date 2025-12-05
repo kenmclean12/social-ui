@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -8,21 +9,17 @@ import {
   TextField,
   Stack,
 } from "@mui/material";
-import { useState } from "react";
-import {
-  useConversationInitiate,
-  useFollowGetFollowing,
-} from "../../../../../../hooks";
-import { useAuth } from "../../../../../../context";
-import type { FollowResponseDto } from "../../../../../../types";
+import { useAuth } from "../../../../../../../context";
+import type { FollowResponseDto } from "../../../../../../../types";
+import { useConversationInitiate, useFollowGetFollowing } from "../../../../../../../hooks";
 
-interface Props {
+interface StartConversationDialogProps {
   open: boolean;
   onClose: () => void;
   userId: number;
 }
 
-export function StartConversationDialog({ open, onClose, userId }: Props) {
+export function StartConversationDialog({ open, onClose, userId }: StartConversationDialogProps) {
   const { user } = useAuth();
   const [selectedUsers, setSelectedUsers] = useState<FollowResponseDto[]>([]);
   const [message, setMessage] = useState<string>("");

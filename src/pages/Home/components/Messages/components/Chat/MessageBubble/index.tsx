@@ -1,5 +1,5 @@
 import { Box, Paper, Typography } from "@mui/material";
-import type { MessageResponseDto } from "../../../../../../types";
+import type { MessageResponseDto } from "../../../../../../../types";
 
 interface MessageBubbleProps {
   message: MessageResponseDto;

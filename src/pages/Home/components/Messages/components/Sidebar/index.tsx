@@ -7,8 +7,8 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { useConversationFindByUser } from "../../../../../../hooks";
-import { SidebarItem } from "./SidebarItem";
 import { StartConversationDialog } from "./StartConversationDialog";
+import { SidebarItem } from "./SidebarItem";
 
 interface SidebarProps {
   userId: number;

@@ -1,12 +1,12 @@
 import { Box, TextField, IconButton, Paper } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useState, useEffect, useRef } from "react";
-import { MessageBubble } from "./MessageBubble";
 import { useAuth } from "../../../../../../context";
 import {
   useMessageFindByConversation,
   useMessageCreate,
 } from "../../../../../../hooks";
+import { MessageBubble } from "./MessageBubble";
 
 interface ChatWindowProps {
   conversationId: number;
