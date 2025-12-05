@@ -27,7 +27,7 @@ import {
   usePostDelete,
 } from "../../../hooks";
 import { useAuth } from "../../../context";
-import { CommentSection, ReactionPanel } from "./components";
+import { CommentSection, MediaSection, ReactionPanel } from "./components";
 
 interface PostProps {
   post: PostResponseDto;
@@ -44,8 +44,14 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
   const [editValue, setEditValue] = useState(post.textContent);
   const [openDelete, setOpenDelete] = useState(false);
 
-  const { mutateAsync: updatePost, isPending: updating } = usePostUpdate(post.id, user?.id as number);
-  const { mutateAsync: deletePost, isPending: deleting } = usePostDelete(post.id, user?.id as number);
+  const { mutateAsync: updatePost, isPending: updating } = usePostUpdate(
+    post.id,
+    user?.id as number
+  );
+  const { mutateAsync: deletePost, isPending: deleting } = usePostDelete(
+    post.id,
+    user?.id as number
+  );
 
   const { data: creator } = useUserFindOne(post.creatorId);
   const { data: likes } = useLikeFind("post", post.id);
@@ -53,8 +59,14 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
   const { mutate: createLike } = useLikeCreate();
   const { mutate: removeLike } = useLikeDelete();
 
-  const hasLiked = useMemo(() => likes?.some((l) => l.userId === user?.id), [likes, user?.id]);
-  const hasCommented = useMemo(() => comments?.some((c) => c.user.id === user?.id), [comments, user?.id]);
+  const hasLiked = useMemo(
+    () => likes?.some((l) => l.userId === user?.id),
+    [likes, user?.id]
+  );
+  const hasCommented = useMemo(
+    () => comments?.some((c) => c.user.id === user?.id),
+    [comments, user?.id]
+  );
   const isOwner = user?.id === post.creatorId;
 
   const handleToggleLike = () => {
@@ -157,11 +169,14 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
         <Stack direction="row" spacing={2} alignItems="center">
           <Avatar src={creator?.avatarUrl} />
           <Typography color="white" fontWeight="bold">
-            {creator ? `${creator.firstName} ${creator.lastName}` : "Unknown User"}
+            {creator
+              ? `${creator.firstName} ${creator.lastName}`
+              : "Unknown User"}
           </Typography>
         </Stack>
         <Divider sx={{ backgroundColor: "#444" }} />
-        <Stack height="150px" sx={{ overflowY: 'auto' }} p={1}>
+        <MediaSection url={post.contentUrl} height={300} />
+        <Stack maxHeight="200px" sx={{ overflowY: "auto" }} p={1}>
           {!editing && (
             <Typography color="white">{post.textContent || ""}</Typography>
           )}
@@ -183,7 +198,14 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
                   border: "1px solid #444",
                 }}
               />
-              <Stack direction="row" alignItems="center" justifyContent="flex-end" spacing={1} width="100%" pt={1}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="flex-end"
+                spacing={1}
+                width="100%"
+                pt={1}
+              >
                 <Button
                   variant="outlined"
                   onClick={() => setEditing(false)}
@@ -191,7 +213,11 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
                 >
                   Cancel
                 </Button>
-                <Button variant="contained" disabled={updating} onClick={handleUpdate}>
+                <Button
+                  variant="contained"
+                  disabled={updating}
+                  onClick={handleUpdate}
+                >
                   {updating ? "Saving..." : "Save"}
                 </Button>
               </Stack>
@@ -199,7 +225,12 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
           )}
         </Stack>
         <Divider sx={{ backgroundColor: "#444" }} />
-        <Stack direction="row" spacing={2} alignItems="center" justifyContent="flex-end">
+        <Stack
+          direction="row"
+          spacing={2}
+          alignItems="center"
+          justifyContent="flex-end"
+        >
           <Stack direction="row" alignItems="center" sx={{ gap: 0.2 }}>
             <IconButton onClick={handleToggleLike}>
               <ThumbUp sx={{ color: hasLiked ? "lightblue" : "white" }} />
@@ -211,16 +242,24 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
 
           <Stack direction="row" alignItems="center" sx={{ gap: 0.2 }}>
             <IconButton onClick={() => setShowComments((v) => !v)}>
-              <ChatBubble sx={{ color: hasCommented ? "lightblue" : "white" }} />
+              <ChatBubble
+                sx={{ color: hasCommented ? "lightblue" : "white" }}
+              />
             </IconButton>
             <Typography sx={{ color: hasCommented ? "lightblue" : "white" }}>
               {comments ? comments.length : 0}
             </Typography>
           </Stack>
 
-          <ReactionPanel entityType="post" entityId={post.id} isSelf={isOwner} />
+          <ReactionPanel
+            entityType="post"
+            entityId={post.id}
+            isSelf={isOwner}
+          />
         </Stack>
-        {showComments && <CommentSection comments={comments} postId={post.id} />}
+        {showComments && (
+          <CommentSection comments={comments} postId={post.id} />
+        )}
       </Stack>
       <Dialog
         open={openDelete}

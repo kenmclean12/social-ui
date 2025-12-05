@@ -16,11 +16,13 @@ export function CreatePost() {
   const { user } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
   const [textContent, setTextContent] = useState<string>("");
+  const [contentUrl, setContentUrl] = useState<string>("");
   const { mutateAsync: createPost, isPending } = usePostCreate();
 
   const handleClose = () => {
     setOpen(false);
     setTextContent("");
+    setContentUrl("");
   };
 
   const handleSubmit = async () => {
@@ -28,7 +30,8 @@ export function CreatePost() {
 
     await createPost({
       userId: user.id,
-      textContent,
+      textContent: textContent || undefined,
+      contentUrl: contentUrl || undefined,
     });
 
     handleClose();
@@ -63,6 +66,21 @@ export function CreatePost() {
               minRows={3}
               value={textContent}
               onChange={(e) => setTextContent(e.target.value)}
+              sx={{
+                background: "#2a2a2a",
+                color: "white",
+                px: 1.5,
+                py: 1,
+                borderRadius: 1,
+                border: "1px solid #444",
+              }}
+            />
+            <Input
+              fullWidth
+              placeholder="Optional content URL..."
+              disableUnderline
+              value={contentUrl}
+              onChange={(e) => setContentUrl(e.target.value)}
               sx={{
                 background: "#2a2a2a",
                 color: "white",

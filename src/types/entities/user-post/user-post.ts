@@ -7,6 +7,7 @@ export interface UserPost {
   id: number;
   createdAt: Date;
   textContent?: string;
+  contentUrl?: string;
   creator: User;
   likes?: Like[];
   reactions?: Reaction[];
