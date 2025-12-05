@@ -88,12 +88,13 @@ export function StartConversationDialog({
               <Box
                 {...props}
                 sx={{
+                  maxHeight: "250px",
+                  overflowY: "auto",
                   backgroundColor: "#1a1a1a",
                   color: "#fff",
                   border: "1px solid #444",
                   borderRadius: 1,
                   mt: 1,
-                  overflow: "hidden",
                 }}
               />
             )}
