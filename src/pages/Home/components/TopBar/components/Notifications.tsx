@@ -30,6 +30,8 @@ export function Notifications() {
   const { data: notifications = [] } = useNotificationFindAll();
   const updateNotification = useNotificationUpdate();
 
+  console.log(notifications);
+
   const handleOpenProfile = (userId: number) => {
     setProfileUserId(userId);
     setProfileDialogOpen(true);
@@ -48,24 +50,32 @@ export function Notifications() {
 
   const renderNotificationText = (notif: SafeNotificationDto) => {
     const actorName = `${notif.actionUser.firstName} ${notif.actionUser.lastName}`;
+
     switch (notif.type) {
       case NotificationType.FOLLOW:
         return `${actorName} started following you`;
+
       case NotificationType.LIKE:
         if (notif.post) return `${actorName} liked your post`;
         if (notif.comment) return `${actorName} liked your comment`;
         if (notif.message) return `${actorName} liked your message`;
-        return `${actorName} liked something`;
+        return `${actorName} liked your content`;
+
       case NotificationType.REACT:
         if (notif.post) return `${actorName} reacted to your post`;
         if (notif.comment) return `${actorName} reacted to your comment`;
         if (notif.message) return `${actorName} reacted to your message`;
-        return `${actorName} reacted`;
+        return `${actorName} reacted to your content`;
+
       case NotificationType.COMMENT:
         if (notif.post) return `${actorName} commented on your post`;
+        if (notif.comment) return `${actorName} replied to your comment`;
         return `${actorName} commented`;
+
       case NotificationType.MESSAGE:
-        return `${actorName} sent you a message`;
+        if (notif.message) return `${actorName} sent you a message`;
+        return `${actorName} sent something`;
+
       default:
         return `${actorName} did something`;
     }
@@ -91,7 +101,14 @@ export function Notifications() {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         PaperProps={{
-          sx: { width: 300, overflowY: "auto", backgroundColor: "#1e1e1e", border: "1px solid #444", color: "#fff", p: 1 },
+          sx: {
+            width: 300,
+            overflowY: "auto",
+            backgroundColor: "#1e1e1e",
+            border: "1px solid #444",
+            color: "#fff",
+            p: 1,
+          },
         }}
       >
         <Stack spacing={1} sx={{ maxHeight: 400, overflowY: "auto" }}>
