@@ -94,10 +94,9 @@ export function SidebarItem({
                   right: -20,
                   zIndex: 10,
                   borderRadius: "50%",
-                  border: "1px solid #444",
-                  backgroundColor: "#222",
-                  color: "#fff",
-                  "&:hover": { backgroundColor: "#333" },
+                  backgroundColor: "lightblue",
+                  color: "white",
+                  "&:hover": { backgroundColor: "lightblue" },
                 }}
               >
                 <Typography sx={{ fontSize: 11 }}>

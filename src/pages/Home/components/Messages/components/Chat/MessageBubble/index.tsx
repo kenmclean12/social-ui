@@ -47,14 +47,20 @@ export function MessageBubble({ message, isMe }: MessageBubbleProps) {
     }
   };
 
+  const timestamp = new Date(message.createdAt).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
   return (
     <Box
       display="flex"
       flexDirection="column"
       alignItems={isMe ? "flex-end" : "flex-start"}
       mb={2}
+      gap={0.5}
     >
-      {!isMe && (
+      {!isMe ? (
         <Stack direction="row" alignItems="center" spacing={1} mb={0.5}>
           <Avatar
             src={message.sender.avatarUrl}
@@ -63,27 +69,63 @@ export function MessageBubble({ message, isMe }: MessageBubbleProps) {
           <Typography fontSize={13} color="#ccc">
             {message.sender.firstName} {message.sender.lastName}
           </Typography>
+            <Typography
+              fontSize={11}
+              color="#aaa"
+              sx={{
+                userSelect: "none",
+                pt: 0.25,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {timestamp}
+            </Typography>
+        </Stack>
+      ) : (
+        <Stack direction="row" alignItems="center" justifyContent="flex-end">
+            <Typography
+              fontSize={11}
+              color="#aaa"
+              sx={{
+                userSelect: "none",
+                pb: 0.5,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {timestamp}
+            </Typography>
         </Stack>
       )}
-
-      <Paper
-        elevation={2}
-        sx={{
-          maxWidth: "75%",
-          p: 1.3,
-          background: isMe ? "#1976d2" : "#2a2a2a",
-          color: "white",
-          borderRadius: 2,
-        }}
+      <Stack
+        direction="row"
+        alignItems="flex-end"
+        spacing={0.7}
+        justifyContent={isMe ? "flex-end" : "flex-start"}
+        width="50%"
       >
-        <Typography fontSize={15}>{message.content}</Typography>
-      </Paper>
+        <Paper
+          elevation={2}
+          sx={{
+            maxWidth: "90%",
+            p: 1.3,
+            background: isMe ? "#1976d2" : "#2a2a2a",
+            color: "white",
+            borderRadius: 3,
+          }}
+        >
+          <Typography fontSize={15}>{message.content}</Typography>
+        </Paper>
+      </Stack>
       <Stack
         direction="row"
         alignItems="center"
         spacing={1.2}
-        mt={0.5}
-        sx={{ opacity: 0.9 }}
+        mt={0.2}
+        sx={{
+          opacity: 0.9,
+          width: "100%",
+          justifyContent: isMe ? "flex-end" : "flex-start",
+        }}
       >
         <ReactionPanel
           entityType="message"
@@ -102,9 +144,9 @@ export function MessageBubble({ message, isMe }: MessageBubbleProps) {
             }}
           >
             {myLike ? (
-              <FavoriteIcon fontSize="small" />
+              <FavoriteIcon sx={{ height: 25 }} />
             ) : (
-              <FavoriteBorderIcon fontSize="small" />
+              <FavoriteBorderIcon sx={{ height: 25 }} />
             )}
           </IconButton>
           <Typography fontSize={13} color="white">

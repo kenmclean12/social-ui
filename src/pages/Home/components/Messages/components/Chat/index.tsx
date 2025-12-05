@@ -14,11 +14,10 @@ interface ChatWindowProps {
 
 export function ChatWindow({ conversationId }: ChatWindowProps) {
   const { user } = useAuth();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [content, setContent] = useState<string>("");;
   const { data = [], isLoading } = useMessageFindByConversation(conversationId);
   const { mutate: sendMessage } = useMessageCreate();
-
-  const [content, setContent] = useState("");
-  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -45,7 +44,6 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
 
   return (
     <Box height="100%" display="flex" flexDirection="column">
-      {/* MESSAGES LIST */}
       <Box
         ref={scrollRef}
         flex={1}
@@ -80,9 +78,7 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
           onKeyDown={(e) => {
             if (e.key === "Enter") handleSend();
           }}
-          sx={{
-            input: { color: "white" },
-          }}
+          sx={{ input: { color: "white" } }}
         />
         <IconButton
           onClick={handleSend}
