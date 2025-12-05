@@ -2,13 +2,13 @@ import { useState } from "react";
 import { AppBar, Toolbar, Box } from "@mui/material";
 import { useAuth } from "../../../../context";
 import { NightsStay } from "@mui/icons-material";
-import { ProfileDialog } from "../../../Profile";
 import {
   Notifications,
   ProfileMenu,
   UserSearch,
 } from "./components";
 import { CreatePost } from "../../../../components";
+import { ProfileDialog } from "../../../../components/Profile";
 
 export function TopBar() {
   const { user } = useAuth();

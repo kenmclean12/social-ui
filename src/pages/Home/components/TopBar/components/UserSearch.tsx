@@ -9,7 +9,7 @@ import {
   Stack,
 } from "@mui/material";
 import { useUserFindAll } from "../../../../../hooks";
-import { ProfileDialog } from "../../../../Profile";
+import { ProfileDialog } from "../../../../../components/Profile";
 import { useAuth } from "../../../../../context";
 import type { UserResponseDto } from "../../../../../types";
 

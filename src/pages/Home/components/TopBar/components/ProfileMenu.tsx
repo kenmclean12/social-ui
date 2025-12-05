@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useAuth } from "../../../../../context";
 import { useUserFindOne } from "../../../../../hooks";
-import { ProfileDialog } from "../../../../Profile";
+import { ProfileDialog } from "../../../../../components/Profile";
 
 export function ProfileMenu() {
   const { user, logout } = useAuth();

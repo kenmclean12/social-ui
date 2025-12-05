@@ -18,7 +18,7 @@ import {
   NotificationType,
   type NotificationResponseDto,
 } from "../../../../../types";
-import { ProfileDialog } from "../../../../Profile";
+import { ProfileDialog } from "../../../../../components/Profile";
 
 export function Notifications() {
   const { user } = useAuth();
