@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   Box,
   Paper,
@@ -8,12 +8,13 @@ import {
   IconButton,
   Popover,
   MenuItem,
+  Input,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Edit from "@mui/icons-material/Edit";
 import Delete from "@mui/icons-material/Delete";
-import type { MessageResponseDto } from "../../../../../../../types";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { ReactionPanel } from "../../../../../../../components/Post/PostCard/components";
 import { useAuth } from "../../../../../../../context";
 import {
@@ -22,8 +23,10 @@ import {
   useLikeFind,
   useMessageUpdate,
   useMessageDelete,
+  useMessageMarkRead,
 } from "../../../../../../../hooks";
 import { Settings } from "@mui/icons-material";
+import type { MessageResponseDto } from "../../../../../../../types";
 
 interface MessageBubbleProps {
   message: MessageResponseDto;
@@ -32,55 +35,61 @@ interface MessageBubbleProps {
 
 export function MessageBubble({ message, isMe }: MessageBubbleProps) {
   const { user } = useAuth();
-  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+  const [menuAnchor, setMenuAnchor] = useState<HTMLButtonElement | null>(null);
   const [editing, setEditing] = useState<boolean>(false);
-  const [editValue, setEditValue] = useState(message.content);
+  const [editValue, setEditValue] = useState<string>(message.content);
 
   const { data: likes = [] } = useLikeFind("message", message.id);
   const { mutateAsync: createLike } = useLikeCreate();
-  const removeLike = useLikeDelete();
-  const updateMessage = useMessageUpdate();
-  const deleteMessage = useMessageDelete();
+  const { mutateAsync: removeLike } = useLikeDelete();
+  const { mutateAsync: updateMessage } = useMessageUpdate();
+  const { mutateAsync: deleteMessage } = useMessageDelete();
+  const { mutateAsync: markRead } = useMessageMarkRead();
 
   const myLike = useMemo(
     () => likes.find((l) => l.userId === user?.id),
     [likes, user]
   );
+  const hasRead = useMemo(
+    () => message.reads?.some((r) => r.user.id === user?.id),
+    [message.reads, user]
+  );
 
-  const handleToggleLike = () => {
+  useEffect(() => {
+    if (!isMe && !hasRead)
+      markRead({ messageId: message.id, userId: user?.id as number });
+  }, [isMe, hasRead, message.id, markRead, user?.id]);
+
+  const handleToggleLike = async () => {
     if (isMe) return;
-    if (myLike) {
-      removeLike.mutate(myLike.id);
-    } else {
-      createLike({
-        userId: user?.id as number,
-        messageId: message.id,
-      });
-    }
+    if (myLike) await removeLike(myLike.id);
+    else
+      await createLike({ userId: user?.id as number, messageId: message.id });
   };
 
-  const handleUpdate = () => {
-    updateMessage.mutate(
-      {
-        id: message.id,
-        dto: { content: editValue },
-      },
-      {
-        onSuccess: () => {
-          setEditing(false);
-        },
-      }
-    );
+  const handleUpdate = async () => {
+    await updateMessage({ id: message.id, dto: { content: editValue } });
+    setEditing(false);
   };
 
-  const handleDelete = () => {
-    deleteMessage.mutate(message.id);
-  };
+  const handleDelete = async () => await deleteMessage(message.id);
 
   const timestamp = new Date(message.createdAt).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
+
+  const readCount = message.reads?.length || 0;
+
+  const likeIcon = myLike ? (
+    <FavoriteIcon sx={{ height: 25, color: "lightblue" }} />
+  ) : likes.length > 0 ? (
+    <FavoriteIcon sx={{ height: 25, color: "#fff" }} />
+  ) : (
+    <FavoriteBorderIcon sx={{ height: 25, color: "#fff" }} />
+  );
+
+  const likeColor = myLike ? "lightblue" : "#fff";
 
   return (
     <Box
@@ -102,11 +111,7 @@ export function MessageBubble({ message, isMe }: MessageBubbleProps) {
           <Typography
             fontSize={11}
             color="#aaa"
-            sx={{
-              userSelect: "none",
-              pt: 0.25,
-              whiteSpace: "nowrap",
-            }}
+            sx={{ userSelect: "none", pt: 0.25, whiteSpace: "nowrap" }}
           >
             {timestamp}
           </Typography>
@@ -116,11 +121,7 @@ export function MessageBubble({ message, isMe }: MessageBubbleProps) {
           <Typography
             fontSize={11}
             color="#aaa"
-            sx={{
-              userSelect: "none",
-              pb: 0.5,
-              whiteSpace: "nowrap",
-            }}
+            sx={{ userSelect: "none", pb: 0.5, whiteSpace: "nowrap" }}
           >
             {timestamp}
           </Typography>
@@ -145,7 +146,7 @@ export function MessageBubble({ message, isMe }: MessageBubbleProps) {
         >
           {editing ? (
             <Stack direction="row" spacing={1}>
-              <input
+              <Input
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
                 style={{
@@ -186,7 +187,7 @@ export function MessageBubble({ message, isMe }: MessageBubbleProps) {
             <IconButton
               size="small"
               onClick={(e) => setMenuAnchor(e.currentTarget)}
-              sx={{ color: "white", p: 0.3, pr: .75 }}
+              sx={{ color: "white", p: 0.3, pr: 0.75 }}
             >
               <Settings />
             </IconButton>
@@ -218,10 +219,8 @@ export function MessageBubble({ message, isMe }: MessageBubbleProps) {
                     color: "white",
                   }}
                 >
-                  Update
-                  <Edit sx={{ color: "lightblue", height: 20 }} />
+                  Update <Edit sx={{ color: "lightblue", height: 20 }} />
                 </MenuItem>
-
                 <MenuItem
                   onClick={() => {
                     handleDelete();
@@ -233,8 +232,7 @@ export function MessageBubble({ message, isMe }: MessageBubbleProps) {
                     color: "white",
                   }}
                 >
-                  Delete
-                  <Delete sx={{ color: "red", height: 20 }} />
+                  Delete <Delete sx={{ color: "red", height: 20 }} />
                 </MenuItem>
               </Stack>
             </Popover>
@@ -247,25 +245,21 @@ export function MessageBubble({ message, isMe }: MessageBubbleProps) {
           direction="right"
         />
         <Stack direction="row" alignItems="center" spacing={0.3}>
-          <IconButton
-            size="small"
-            onClick={handleToggleLike}
-            sx={{
-              color: myLike ? "lightblue" : "white",
-              p: 0.3,
-              opacity: isMe ? 0.4 : 1,
-            }}
-          >
-            {myLike ? (
-              <FavoriteIcon sx={{ height: 25 }} />
-            ) : (
-              <FavoriteBorderIcon sx={{ height: 25 }} />
-            )}
+          <IconButton size="small" onClick={handleToggleLike} sx={{ p: 0.3 }}>
+            {likeIcon}
           </IconButton>
-          <Typography fontSize={13} color="white">
+          <Typography fontSize={13} color={likeColor}>
             {likes.length}
           </Typography>
         </Stack>
+        {isMe && readCount > 0 && (
+          <Stack direction="row" alignItems="center" spacing={0.3} ml={1}>
+            <VisibilityIcon sx={{ fontSize: 17, color: "#9ecbff" }} />
+            <Typography fontSize={12} color="#9ecbff">
+              {readCount}
+            </Typography>
+          </Stack>
+        )}
       </Stack>
     </Box>
   );

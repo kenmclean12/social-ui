@@ -1,4 +1,4 @@
-import { Box, TextField, IconButton, Paper } from "@mui/material";
+import { Box, TextField, IconButton, Paper, Typography, Divider } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../../../../../context";
@@ -12,31 +12,34 @@ interface ChatWindowProps {
   conversationId: number;
 }
 
+function formatDayLabel(date: Date) {
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+
+  if (date.toDateString() === today.toDateString()) return "Today";
+  if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
+
+  return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+
 export function ChatWindow({ conversationId }: ChatWindowProps) {
   const { user } = useAuth();
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [content, setContent] = useState<string>("");;
+  const [content, setContent] = useState<string>("");
   const { data = [], isLoading } = useMessageFindByConversation(conversationId);
   const { mutate: sendMessage } = useMessageCreate();
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [data]);
 
   const handleSend = () => {
     if (!content.trim()) return;
 
     sendMessage(
-      {
-        content,
-        senderId: user?.id as number,
-        conversationId,
-      },
-      {
-        onSuccess: () => setContent(""),
-      }
+      { content, senderId: user?.id as number, conversationId },
+      { onSuccess: () => setContent("") }
     );
   };
 
@@ -44,22 +47,31 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
 
   return (
     <Box display="flex" flexDirection="column" height="100%" maxHeight="84vh">
-      <Box
-        ref={scrollRef}
-        flex={1}
-        overflow="auto"
-        p={2}
-        display="flex"
-        flexDirection="column"
-      >
-        {data.map((m) => (
-          <MessageBubble
-            key={m.id}
-            message={m}
-            isMe={m.sender.id === user?.id}
-          />
-        ))}
+      <Box ref={scrollRef} flex={1} overflow="auto" p={2} display="flex" flexDirection="column">
+        {data.map((msg, idx) => {
+          const msgDate = new Date(msg.createdAt);
+          const prevDate = idx > 0 ? new Date(data[idx - 1].createdAt) : null;
+
+          const showDivider =
+            !prevDate || prevDate.toDateString() !== msgDate.toDateString();
+
+          return (
+            <Box key={msg.id}>
+              {showDivider && (
+                <Box my={1} display="flex" alignItems="center">
+                  <Divider sx={{ flex: 1, borderColor: "#555" }} />
+                  <Typography sx={{ mx: 1, color: "#999", fontSize: 12, userSelect: "none" }}>
+                    {formatDayLabel(msgDate)}
+                  </Typography>
+                  <Divider sx={{ flex: 1, borderColor: "#555" }} />
+                </Box>
+              )}
+              <MessageBubble message={msg} isMe={msg.sender.id === user?.id} />
+            </Box>
+          );
+        })}
       </Box>
+
       <Paper
         elevation={3}
         sx={{
@@ -80,11 +92,7 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
           }}
           sx={{ input: { color: "white" } }}
         />
-        <IconButton
-          onClick={handleSend}
-          disabled={!content.trim()}
-          sx={{ color: "#4aa3ff", ml: 1 }}
-        >
+        <IconButton onClick={handleSend} disabled={!content.trim()} sx={{ color: "lightblue", ml: 1 }}>
           <SendIcon />
         </IconButton>
       </Paper>
