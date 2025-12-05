@@ -1,0 +1,34 @@
+import { useState } from "react";
+import { Box } from "@mui/material";
+import { useAuth } from "../../../../context";
+import { ChatWindow, Sidebar } from "./components";
+
+export function Messages() {
+  const { user } = useAuth();
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
+  return (
+    <Box display="flex" height="100%" width="100%">
+      <Sidebar
+        userId={user?.id as number}
+        selectedId={selectedId as number}
+        onSelect={setSelectedId}
+      />
+      <Box flex={1} borderLeft="1px solid #ddd">
+        {selectedId ? (
+          <ChatWindow conversationId={selectedId} />
+        ) : (
+          <Box
+            height="100%"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            color="#999"
+          >
+            Select a conversation
+          </Box>
+        )}
+      </Box>
+    </Box>
+  );
+}
