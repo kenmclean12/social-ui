@@ -6,6 +6,7 @@ export interface NotificationResponseDto {
   id: number;
   recipient: UserResponseDto;
   actionUser: UserResponseDto;
+  notificationMessage: string;
   type: NotificationType;
   post?: UserPost;
   comment?: Comment;

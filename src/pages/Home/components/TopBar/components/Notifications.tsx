@@ -46,39 +46,6 @@ export function Notifications() {
     }
   };
 
-  const renderNotificationText = (notif: NotificationResponseDto) => {
-    const actorName = `${notif.actionUser.firstName} ${notif.actionUser.lastName}`;
-
-    switch (notif.type) {
-      case NotificationType.FOLLOW:
-        return `${actorName} started following you`;
-
-      case NotificationType.LIKE:
-        if (notif.post) return `${actorName} liked your post`;
-        if (notif.comment) return `${actorName} liked your comment`;
-        if (notif.message) return `${actorName} liked your message`;
-        return `${actorName} liked your content`;
-
-      case NotificationType.REACT:
-        if (notif.post) return `${actorName} reacted to your post`;
-        if (notif.comment) return `${actorName} reacted to your comment`;
-        if (notif.message) return `${actorName} reacted to your message`;
-        return `${actorName} reacted to your content`;
-
-      case NotificationType.COMMENT:
-        if (notif.post) return `${actorName} commented on your post`;
-        if (notif.comment) return `${actorName} replied to your comment`;
-        return `${actorName} commented`;
-
-      case NotificationType.MESSAGE:
-        if (notif.message) return `${actorName} sent you a message`;
-        return `${actorName} sent something`;
-
-      default:
-        return `${actorName} did something`;
-    }
-  };
-
   return (
     <>
       <IconButton
@@ -136,7 +103,7 @@ export function Notifications() {
                   sx={{ width: 25, height: 25 }}
                 />
                 <Typography sx={{ fontSize: 13, lineHeight: 1.2 }}>
-                  {renderNotificationText(notif)}
+                  {notif.notificationMessage}
                 </Typography>
               </Stack>
             ))
