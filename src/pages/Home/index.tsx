@@ -44,7 +44,7 @@ export function HomePage() {
         <Tab label="Messages" value="messages" sx={tabStyles} />
         <Tab label="Explore" value="explore" sx={tabStyles} />
       </Tabs>
-      <Stack flexGrow={1} p={2}>
+      <Stack flexGrow={1}>
         {tab === "feed" && <Feed />}
         {tab === "messages" && <Messages />}
         {tab === "explore" && <ExploreFeed />}

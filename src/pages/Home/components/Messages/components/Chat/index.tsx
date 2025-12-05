@@ -43,7 +43,7 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
   if (isLoading) return <Box p={2}>Loading...</Box>;
 
   return (
-    <Box height="100%" display="flex" flexDirection="column">
+    <Box display="flex" flexDirection="column" height="100%" maxHeight="84vh">
       <Box
         ref={scrollRef}
         flex={1}

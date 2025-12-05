@@ -41,14 +41,18 @@ export function Sidebar({ userId, selectedId, onSelect }: SidebarProps) {
           <Typography px={2} py={2} color="gray">Loading...</Typography>
         ) : (
           <List disablePadding>
-            {data?.map((c) => (
+            {data && data.length > 0 ? data.map((c) => (
               <SidebarItem
                 key={c.id}
                 conversation={c}
                 selected={selectedId === c.id}
                 onClick={() => onSelect(c.id)}
               />
-            ))}
+            )) : (
+              <Typography align="center" p={3} color="white" fontSize={13}>
+                No Messages Found
+              </Typography>
+            )}
           </List>
         )}
       </Box>

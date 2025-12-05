@@ -19,6 +19,7 @@ export function Feed() {
       sx={{
         width: "100%",
         height: "100%",
+        p: 2,
         overflowY: "auto",
         "&::-webkit-scrollbar": { width: 8 },
         "&::-webkit-scrollbar-thumb": { backgroundColor: "#444", borderRadius: 4 },
