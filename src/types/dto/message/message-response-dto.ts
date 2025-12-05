@@ -1,5 +1,3 @@
-import type { LikeResponseDto } from "../like";
-import type { ReactionResponseDto } from "../reaction";
 import type { UserResponseDto } from "../user";
 import type { MessageReadResponseDto } from "./message-read-response-dto";
 
@@ -10,8 +8,6 @@ export interface MessageResponseDto {
   sender: UserResponseDto;
   conversationId: number;
   reads?: MessageReadResponseDto[];
-  likes?: LikeResponseDto[];
-  reactions?: ReactionResponseDto[];
   editedAt?: Date;
   isDeleted?: boolean;
 }

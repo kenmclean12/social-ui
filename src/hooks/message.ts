@@ -87,6 +87,7 @@ export function useMessageMarkRead() {
 
     onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: ["message", data.messageId] });
+      qc.invalidateQueries({ queryKey: ["messages", "conversation", data.conversationId] })
       enqueueSnackbar("Message marked as read", { variant: "info" });
     },
 

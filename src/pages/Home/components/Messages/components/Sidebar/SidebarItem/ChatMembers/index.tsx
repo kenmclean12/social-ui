@@ -77,7 +77,7 @@ export function ChatMembers({
         </Box>
         {members.map((m) => (
           <Box
-            key={m.id}
+            key={m?.id}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -87,13 +87,13 @@ export function ChatMembers({
               "&:hover": { backgroundColor: "rgba(100,150,255,0.15)" },
             }}
           >
-            <Avatar src={m.avatarUrl} />
+            <Avatar src={m?.avatarUrl} />
             <Stack spacing={0} sx={{ overflow: "hidden" }}>
               <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-                {m.firstName} {m.lastName}
+                {m?.firstName} {m?.lastName}
               </Typography>
               <Typography sx={{ fontSize: 13, color: "#bbb" }}>
-                @{m.userName}
+                @{m?.userName}
               </Typography>
             </Stack>
           </Box>

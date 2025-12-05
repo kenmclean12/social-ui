@@ -30,8 +30,6 @@ export function Notifications() {
   const { data: notifications = [] } = useNotificationFindAll();
   const updateNotification = useNotificationUpdate();
 
-  console.log(notifications);
-
   const handleOpenProfile = (userId: number) => {
     setProfileUserId(userId);
     setProfileDialogOpen(true);

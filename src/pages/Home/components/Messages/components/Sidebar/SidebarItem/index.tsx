@@ -33,21 +33,29 @@ export function SidebarItem({
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [updateAnchor, setUpdateAnchor] = useState<HTMLElement | null>(null);
   const [deleteAnchor, setDeleteAnchor] = useState<HTMLElement | null>(null);
+  let others = participants?.filter((p) => p.id !== user?.id);
+  if (initiator && initiator.id !== user?.id) {
+    others = [initiator, ...others];
+  }
 
-  const others = participants.filter((p) => p.id !== user?.id);
   const isGroup = others.length > 1;
-
   let primaryName = "";
   let extraParticipants: typeof others = [];
+
   if (!isGroup) {
-    primaryName = `${others[0]?.firstName} ${others[0]?.lastName}`;
+    const target = others[0];
+    primaryName = target
+      ? `${target.firstName ?? ""} ${target.lastName ?? ""}`.trim()
+      : "Unknown User";
   } else {
     const displayed = others
       .slice(0, 2)
-      .map((o) => o.firstName)
+      .map((o) => o?.firstName ?? "Unknown")
       .join(", ");
+
     extraParticipants = others.slice(2);
     const extraCount = extraParticipants.length;
+
     primaryName =
       extraCount > 0 ? `${displayed}, +${extraCount} more…` : displayed;
   }
@@ -88,7 +96,7 @@ export function SidebarItem({
                 }}
               >
                 <Avatar
-                  src={initiator?.avatarUrl}
+                  src={!isGroup ? others[0]?.avatarUrl : initiator?.avatarUrl}
                   sx={{
                     position: "absolute",
                     left: 8,
@@ -123,7 +131,7 @@ export function SidebarItem({
               </Box>
             ) : (
               <Avatar
-                src={initiator?.avatarUrl}
+                src={!isGroup ? others[0]?.avatarUrl : initiator?.avatarUrl}
                 sx={{
                   width: 35,
                   height: 35,
