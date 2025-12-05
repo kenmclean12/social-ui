@@ -6,3 +6,5 @@ export * from "./post";
 export * from "./like";
 export * from "./reaction";
 export * from "./comment";
+export * from "./conversation";
+export * from "./message";
