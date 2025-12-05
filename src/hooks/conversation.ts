@@ -78,18 +78,22 @@ export function useConversationInitiate() {
         method: "POST",
         body: JSON.stringify(dto),
       });
+
       if (!res?.ok) {
         const err = await res?.json();
         throw new Error(err.message || "Failed to initiate conversation");
       }
+
       return res.json() as Promise<InitiateConversationResponseDto>;
     },
 
     onSuccess: (data) => {
       enqueueSnackbar("Conversation started", { variant: "success" });
+
       qc.invalidateQueries({
         queryKey: ["conversations", "user", data.conversation.initiator.id],
       });
+
       qc.invalidateQueries({
         queryKey: ["conversation", data.conversation.id],
       });
@@ -102,10 +106,7 @@ export function useConversationAlterParticipants() {
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
-    mutationFn: async (params: {
-      id: number;
-      dto: AlterParticipantsDto;
-    }) => {
+    mutationFn: async (params: { id: number; dto: AlterParticipantsDto }) => {
       const res = await api(`/conversation/alter-participants/${params.id}`, {
         method: "POST",
         body: JSON.stringify(params.dto),
@@ -132,10 +133,7 @@ export function useConversationUpdate() {
   const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
-    mutationFn: async (params: {
-      id: number;
-      dto: ConversationUpdateDto;
-    }) => {
+    mutationFn: async (params: { id: number; dto: ConversationUpdateDto }) => {
       const res = await api(`/conversation/${params.id}`, {
         method: "PATCH",
         body: JSON.stringify(params.dto),

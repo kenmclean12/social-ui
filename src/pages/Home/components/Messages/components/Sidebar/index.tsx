@@ -5,7 +5,7 @@ import {
   Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { useState } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { useConversationFindByUser } from "../../../../../../hooks";
 import { SidebarItem } from "./SidebarItem";
 import { StartConversationDialog } from "./StartConversationDialog";
@@ -13,7 +13,7 @@ import { StartConversationDialog } from "./StartConversationDialog";
 interface SidebarProps {
   userId: number;
   selectedId: number;
-  onSelect: () => void;
+  onSelect: Dispatch<SetStateAction<number | null>>;
 }
 
 export function Sidebar({ userId, selectedId, onSelect }: SidebarProps) {
