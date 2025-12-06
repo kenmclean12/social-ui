@@ -22,8 +22,6 @@ export function HomePage() {
   const [tab, setTab] = useState<Tab>("feed");
   const { data: unreadCount } = useUnreadMessageCount();
 
-  console.log(unreadCount);
-
   return (
     <Stack
       height="100vh"

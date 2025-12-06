@@ -38,7 +38,6 @@ export function useLikeCreate() {
       return res.json() as Promise<LikeResponseDto>;
     },
     onSuccess: (data) => {
-        console.log(data)
       enqueueSnackbar("Liked!", { variant: "success" });
 
       if (data?.postId) {

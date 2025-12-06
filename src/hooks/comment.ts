@@ -35,7 +35,6 @@ export function useCommentCreate() {
       return res.json() as Promise<CommentResponseDto>;
     },
     onSuccess: (data) => {
-        console.log(data)
       enqueueSnackbar("Comment created!", { variant: "success" });
       qc.invalidateQueries({ queryKey: ["comments", data.postId] });
     },

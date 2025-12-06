@@ -38,7 +38,6 @@ export function SidebarItem({
     conversation.id
   );
   const hasUnreadMessages = typeof unreadCount === "number" && unreadCount > 0;
-  console.log(unreadCount);
   let others = participants?.filter((p) => p.id !== user?.id);
   if (initiator && initiator.id !== user?.id) {
     others = [initiator, ...others];
