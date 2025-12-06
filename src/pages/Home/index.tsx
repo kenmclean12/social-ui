@@ -4,21 +4,21 @@ import { ExploreFeed, Feed, Messages, TopBar } from "./components";
 
 type Tab = "feed" | "messages" | "explore";
 
+const tabStyles = {
+  flex: 1,
+  color: "lightblue",
+  fontWeight: 500,
+  "&.Mui-selected": {
+    color: "white",
+    borderBottom: "3px solid lightblue",
+  },
+  "&:hover": {
+    backgroundColor: "rgba(173, 216, 230, 0.08)",
+  },
+};
+
 export function HomePage() {
   const [tab, setTab] = useState<Tab>("feed");
-
-  const tabStyles = {
-    flex: 1,
-    color: "lightblue",
-    fontWeight: 500,
-    "&.Mui-selected": {
-      color: "white",
-      borderBottom: "3px solid lightblue",
-    },
-    "&:hover": {
-      backgroundColor: "rgba(173, 216, 230, 0.08)",
-    },
-  };
 
   return (
     <Stack
