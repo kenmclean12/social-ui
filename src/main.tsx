@@ -13,7 +13,12 @@ const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <SnackbarProvider maxSnack={3}>
+    <SnackbarProvider 
+      maxSnack={3}
+      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      style={{ zIndex: 999999 }}
+      preventDuplicate
+    >
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
           <CssBaseline />

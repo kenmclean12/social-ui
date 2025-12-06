@@ -10,6 +10,7 @@ import {
 import type { UserCreateDto } from "../../types";
 import { useAuthRegister } from "../../hooks";
 import { formatPhoneNumber } from "../../utils";
+import { useSnackbar } from "notistack";
 
 type Step = 1 | 2 | 3;
 
@@ -33,6 +34,7 @@ const inputStyles = {
 
 export function RegisterPage() {
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const [step, setStep] = useState<Step>(1);
   const [ageInput, setAgeInput] = useState<string>("");
   const [form, setForm] = useState<Omit<UserCreateDto, "age">>({
@@ -55,46 +57,63 @@ export function RegisterPage() {
   }
 
   const handleNext = () => {
-    const newErrors: FormErrors = {};
-
     if (step === 1) {
+      if (!form.firstName) {
+        enqueueSnackbar("First name is required", { variant: "warning" });
+        setErrors({ firstName: "First name is required" });
+        return;
+      }
+
+      if (!form.lastName) {
+        enqueueSnackbar("Last name is required", { variant: "warning" });
+        setErrors({ lastName: "Last name is required" });
+        return;
+      }
+
       const age = Number(ageInput);
-      if (!ageInput || isNaN(age) || age <= 0)
-        newErrors.age = "A valid age is required";
-      if (!form.firstName) newErrors.firstName = "First name is required";
-      if (!form.lastName) newErrors.lastName = "Last name is required";
+      if (!ageInput || isNaN(age) || age <= 0) {
+        enqueueSnackbar("Please enter a valid age", { variant: "warning" });
+        setErrors({ age: "A valid age is required" });
+        return;
+      }
     }
 
     if (step === 2) {
-      if (!form.userName) newErrors.userName = "Username is required";
-      if (!form.email) newErrors.email = "Email is required";
-      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-        newErrors.email = "Please enter a valid email address";
-      if (!form.password) newErrors.password = "Password is required";
+      if (!form.userName) {
+        enqueueSnackbar("Username is required", { variant: "warning" });
+        setErrors({ userName: "Username is required" });
+        return;
+      }
+
+      if (!form.email) {
+        enqueueSnackbar("Email is required", { variant: "warning" });
+        setErrors({ email: "Email is required" });
+        return;
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+        enqueueSnackbar("Please enter a valid email address", {
+          variant: "warning",
+        });
+        setErrors({ email: "Please enter a valid email address" });
+        return;
+      }
+
+      if (!form.password) {
+        enqueueSnackbar("Password is required", { variant: "warning" });
+        setErrors({ password: "Password is required" });
+        return;
+      }
     }
 
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length === 0) setStep((step + 1) as Step);
+    setErrors({});
+    setStep((step + 1) as Step);
   };
 
   const handleRegister = async () => {
-    const newErrors: FormErrors = {};
+    if (Object.keys(errors).length > 0) return;
+
     const age = Number(ageInput);
-
-    if (!ageInput || isNaN(age) || age <= 0)
-      newErrors.age = "A valid age is required";
-
-    if (!form.userName) newErrors.userName = "Username is required";
-    if (!form.email) {
-      newErrors.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      newErrors.email = "Please enter a valid email address";
-    }
-
-    if (!form.password) newErrors.password = "Password is required";
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
-
     const payload: UserCreateDto = { ...form, age };
     Object.keys(payload).forEach((key) => {
       const k = key as keyof UserCreateDto;
@@ -140,7 +159,7 @@ export function RegisterPage() {
           <Typography fontSize={24}>Register</Typography>
           <NightsStay sx={{ color: "lightblue" }} />
         </Stack>
-        <Stack alignItems="center" justifyContent="center" height="55%" pt={3}>
+        <Stack alignItems="center" justifyContent="center" height="60%" pt={2}>
           <Stack width="100%" spacing={2} pt={2}>
             {step === 1 && (
               <>
@@ -185,6 +204,7 @@ export function RegisterPage() {
                 />
               </>
             )}
+
             {step === 2 && (
               <>
                 <Input
@@ -229,6 +249,7 @@ export function RegisterPage() {
                 />
               </>
             )}
+
             {step === 3 && (
               <Stack spacing={3}>
                 <Input
@@ -263,7 +284,7 @@ export function RegisterPage() {
           alignSelf="center"
           height="30%"
           width="100%"
-          p={5.5}
+          p={4.5}
           paddingInline={0}
           spacing={1.5}
         >
@@ -271,10 +292,11 @@ export function RegisterPage() {
             direction="row"
             spacing={1.5}
             justifyContent="space-between"
-            pt={step > 1 ? 1 : 0}
+            pt={step > 1 ? 0.5 : 0}
           >
             {step > 1 && (
               <Button
+                className="back-btn"
                 variant="contained"
                 onClick={() => setStep((step - 1) as Step)}
                 fullWidth

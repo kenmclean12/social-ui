@@ -4,6 +4,7 @@ import { Stack, Input, Button, Typography } from "@mui/material";
 import { Login, NightsStay } from "@mui/icons-material";
 import type { LoginDto } from "../../types";
 import { useAuthLogin } from "../../hooks";
+import { useSnackbar } from "notistack";
 
 const inputStyles = {
   height: 40,
@@ -15,6 +16,7 @@ const inputStyles = {
 };
 
 export function LoginPage() {
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [errors, setErrors] = useState<Partial<LoginDto>>({});
   const [form, setForm] = useState<LoginDto>({ email: "", password: "" });
@@ -24,16 +26,28 @@ export function LoginPage() {
     const newErrors: typeof errors = {};
     if (!form.email) {
       newErrors.email = "Please enter your email";
+      enqueueSnackbar("Email is required", { variant: "warning" });
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       newErrors.email = "Please enter a valid email address";
+      enqueueSnackbar("Please enter a valid email address", { variant: "warning" });
     }
 
-    if (!form.password) newErrors.password = "Please enter your password";
+    if (!form.password) {
+      newErrors.password = "Please enter your password";
+      enqueueSnackbar("Password is required", { variant: "warning" });
+    }
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
     await loginUser(form);
     navigate("/", { replace: true });
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleLogin();
+    }
   };
 
   return (
@@ -48,7 +62,7 @@ export function LoginPage() {
     >
       <Stack
         width="50%"
-        height="50%"
+        height="45%"
         minHeight="300px"
         minWidth="400px"
         maxWidth="500px"
@@ -84,6 +98,7 @@ export function LoginPage() {
                   email: e.target.value,
                 }))
               }
+              onKeyDown={handleKeyDown}
               sx={{
                 ...inputStyles,
                 border: errors.email ? "2px solid lightblue" : "1px solid #ccc",
@@ -102,13 +117,13 @@ export function LoginPage() {
           </Stack>
           <Stack width="100%" spacing={0.25} pt={1}>
             <Input
-              disableUnderline
               type="password"
               placeholder="Password"
               value={form.password}
               onChange={(e) =>
                 setForm((prev) => ({ ...prev, password: e.target.value }))
               }
+              onKeyDown={handleKeyDown}
               sx={{
                 ...inputStyles,
                 border: errors.password
@@ -116,6 +131,7 @@ export function LoginPage() {
                   : "1px solid #ccc",
                 color: "white",
               }}
+              disableUnderline
             />
             <Typography
               fontSize={11}
