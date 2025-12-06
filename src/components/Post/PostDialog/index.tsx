@@ -1,4 +1,12 @@
-import { Dialog, DialogContent, Stack, Typography } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { usePostFindOne } from "../../../hooks";
 import { PostCard } from "../PostCard";
 
@@ -17,17 +25,29 @@ export function PostDialog({ open, postId, onClose }: PostDialogProps) {
       onClose={onClose}
       maxWidth="md"
       fullWidth
-      sx={{
-        "& .MuiPaper-root": {
-          backgroundColor: "#1e1e1e",
-          border: "1px solid #444",
-          borderRadius: 2,
+      PaperProps={{
+        sx: {
+          backgroundColor: "#090909",
+          border: "1px solid #333",
           color: "white",
-          p: 1,
+          borderRadius: 2,
         },
       }}
     >
-      <DialogContent>
+      <DialogTitle
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          paddingY: 1.5,
+          borderBottom: "1px solid #222",
+        }}
+      >
+        <Typography sx={{ fontSize: 18, fontWeight: 600 }}>Post</Typography>
+        <IconButton onClick={onClose} sx={{ marginLeft: "auto", color: "red" }}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent sx={{ padding: 2 }}>
         {isLoading && (
           <Typography align="center" p={3}>
             Loading post...
