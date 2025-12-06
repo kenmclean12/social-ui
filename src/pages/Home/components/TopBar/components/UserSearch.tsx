@@ -8,7 +8,7 @@ import {
   Popper,
   Stack,
 } from "@mui/material";
-import { useUserFindAll } from "../../../../../hooks";
+import { useUserFindAll, useFollowGetFollowing } from "../../../../../hooks";
 import { ProfileDialog } from "../../../../../components/Profile";
 import { useAuth } from "../../../../../context";
 import type { UserResponseDto } from "../../../../../types";
@@ -20,17 +20,26 @@ export function UserSearch() {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+
   const { data: users } = useUserFindAll();
+  const { data: following } = useFollowGetFollowing(user?.id ?? 0, {
+    enabled: !!user?.id,
+  });
 
   const filtered = useMemo(() => {
-    if (!users || !search.trim() || !user) return [];
+    if (!users || !user || !search.trim()) return [];
 
     const q = search.toLowerCase();
-    const priority = (user: UserResponseDto) => {
-      if (user.firstName?.toLowerCase().startsWith(q)) return 1;
-      if (user.lastName?.toLowerCase().startsWith(q)) return 2;
-      if (user.userName?.toLowerCase().startsWith(q)) return 3;
-      if (user.email?.toLowerCase().startsWith(q)) return 4;
+
+    const followingIds = new Set(following?.map((f) => f.following.id));
+
+    const priority = (u: UserResponseDto) => {
+      if (followingIds.has(u.id)) return 0;
+
+      if (u.firstName?.toLowerCase().startsWith(q)) return 1;
+      if (u.lastName?.toLowerCase().startsWith(q)) return 2;
+      if (u.userName?.toLowerCase().startsWith(q)) return 3;
+      if (u.email?.toLowerCase().startsWith(q)) return 4;
       return 99;
     };
 
@@ -42,7 +51,7 @@ export function UserSearch() {
           .some((x) => x!.toLowerCase().includes(q))
       )
       .sort((a, b) => priority(a) - priority(b));
-  }, [users, search, user]);
+  }, [users, search, user, following]);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -107,7 +116,9 @@ export function UserSearch() {
               phase: "beforeWrite",
               requires: ["computeStyles"],
               fn: ({ state }) => {
-                state.styles.popper.width = `${state.rects.reference.width + 16}px`;
+                state.styles.popper.width = `${
+                  state.rects.reference.width + 16
+                }px`;
               },
             },
           ]}
