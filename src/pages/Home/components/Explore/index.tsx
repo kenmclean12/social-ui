@@ -8,6 +8,7 @@ import {
   InputLabel,
   type SelectChangeEvent,
 } from "@mui/material";
+import { Public } from "@mui/icons-material";
 import { useFeedExplore } from "../../../../hooks";
 import { PostCard } from "../../../../components";
 
@@ -24,10 +25,11 @@ export function ExploreFeed() {
   if (isLoading) {
     return (
       <Stack
-        width="100%"
-        height="100%"
         alignItems="center"
         justifyContent="center"
+        height="100%"
+        width="100%"
+        p={1}
       >
         <Typography color="white">Loading explore feed...</Typography>
       </Stack>
@@ -36,10 +38,10 @@ export function ExploreFeed() {
 
   return (
     <Stack
+      height="100%"
+      width="100%"
+      p={2}
       sx={{
-        width: "100%",
-        height: "100%",
-        p: 2,
         overflowY: "auto",
         "&::-webkit-scrollbar": { width: 8 },
         "&::-webkit-scrollbar-thumb": {
@@ -48,64 +50,84 @@ export function ExploreFeed() {
         },
       }}
     >
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="flex-end"
-        sx={{ p: 1 }}
-      >
-        <FormControl size="small" sx={{ minWidth: 150 }}>
-          <InputLabel
-            sx={{
-              color: "white",
-              "&.Mui-focused": { color: "white" },
-            }}
+      <Stack p={1}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          width="100%"
+          p={2}
+          mb={2}
+          borderRadius={2}
+          sx={{
+            bgcolor: "#1e1e1e",
+          }}
+        >
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="center"
+            spacing={0.75}
           >
-            Filter By
-          </InputLabel>
-          <Select
-            value={filter}
-            onChange={handleChange}
-            label="Filter"
-            sx={{
-              backgroundColor: "#1e1e1e",
-              color: "white",
-              ".MuiOutlinedInput-notchedOutline": { borderColor: "#444" },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#666",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#444",
-              },
-              ".MuiSvgIcon-root": { color: "white" },
-            }}
-            MenuProps={{
-              PaperProps: {
-                sx: {
-                  backgroundColor: "#1e1e1e",
-                  color: "white",
+            <Typography color="white">Explore</Typography>
+            <Public sx={{ color: "lightblue" }} />
+          </Stack>
+          <FormControl size="small" sx={{ minWidth: 150 }}>
+            <InputLabel
+              sx={{
+                color: "white",
+                "&.Mui-focused": { color: "white" },
+              }}
+            >
+              Filter By
+            </InputLabel>
+            <Select
+              value={filter}
+              onChange={handleChange}
+              label="Filter"
+              sx={{
+                maxWidth: 400,
+                backgroundColor: "#1e1e1e",
+                color: "white",
+                ".MuiOutlinedInput-notchedOutline": { borderColor: "#444" },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#666",
                 },
-              },
-            }}
-          >
-            <MenuItem value="mostLiked">Most Liked</MenuItem>
-            <MenuItem value="mostReacted">Most Reacted</MenuItem>
-            <MenuItem value="recent">Recent</MenuItem>
-            <MenuItem value="oldest">Oldest</MenuItem>
-          </Select>
-        </FormControl>
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#444",
+                },
+                ".MuiSvgIcon-root": { color: "white" },
+              }}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    backgroundColor: "#1e1e1e",
+                    color: "white",
+                  },
+                },
+              }}
+            >
+              <MenuItem value="mostLiked">Most Liked</MenuItem>
+              <MenuItem value="mostReacted">Most Reacted</MenuItem>
+              <MenuItem value="recent">Recent</MenuItem>
+              <MenuItem value="oldest">Oldest</MenuItem>
+            </Select>
+          </FormControl>
+        </Stack>
       </Stack>
       <Stack
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(450px, 1fr))",
-          gap: 2,
-          p: 1,
-        }}
+        display="grid"
+        gridTemplateColumns="repeat(auto-fill, minmax(450px, 1fr))"
+        gap={2}
+        p={1}
       >
-        {posts.map((p) => (
-          <PostCard key={p.id} post={p} width="auto" />
-        ))}
+        {posts.length === 0 ? (
+          posts.map((p) => <PostCard key={p.id} post={p} width="auto" />)
+        ) : (
+          <Typography align="center" color="white">
+            No posts found
+          </Typography>
+        )}
       </Stack>
     </Stack>
   );

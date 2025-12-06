@@ -5,37 +5,49 @@ import { PostCard } from "../../../../components";
 
 export function Feed() {
   const { user } = useAuth();
-  const { data: posts = [], isLoading } = useFeedPersonalized(user?.id as number);
+  const { data: posts = [], isLoading } = useFeedPersonalized(
+    user?.id as number
+  );
 
   if (isLoading) {
     return (
-      <Stack width="100%" height="100%" alignItems="center" justifyContent="center">
+      <Stack
+        width="100%"
+        height="100%"
+        alignItems="center"
+        justifyContent="center"
+      >
         <Typography color="white">Loading feed...</Typography>
       </Stack>
     );
   }
   return (
     <Stack
+      height="100%"
+      width="100%"
+      p={2}
       sx={{
-        width: "100%",
-        height: "100%",
-        p: 2,
         overflowY: "auto",
         "&::-webkit-scrollbar": { width: 8 },
-        "&::-webkit-scrollbar-thumb": { backgroundColor: "#444", borderRadius: 4 },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "#444",
+          borderRadius: 4,
+        },
       }}
     >
       <Stack
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(450px, 1fr))",
-          gap: 2,
-          p: 1,
-        }}
+        display="grid"
+        gridTemplateColumns="repeat(auto-fill, minmax(450px, 1fr))"
+        gap={2}
+        p={1}
       >
-        {posts.map((p) => (
+        {posts.length === 0 ? posts.map((p) => (
           <PostCard key={p.id} post={p} width="auto" />
-        ))}
+        )) : (
+          <Typography align="center" color="white" p={1}>
+            No posts found
+          </Typography>
+        )}
       </Stack>
     </Stack>
   );
