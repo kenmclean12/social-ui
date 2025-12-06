@@ -34,6 +34,8 @@ interface MessageBubbleProps {
   isMe: boolean;
 }
 
+const sentReadRequests = new Set<number>();
+
 export function MessageBubble({ message, isMe }: MessageBubbleProps) {
   const { user } = useAuth();
   const [menuAnchor, setMenuAnchor] = useState<HTMLButtonElement | null>(null);
@@ -49,11 +51,18 @@ export function MessageBubble({ message, isMe }: MessageBubbleProps) {
   const { mutateAsync: markRead } = useMessageMarkRead();
 
   const myLike = useMemo(() => likes.find((l) => l.userId === user?.id), [likes, user]);
-  const hasRead = useMemo(() => message.reads?.some((r) => r.user.id === user?.id), [message.reads, user]);
+  const hasRead = useMemo(() => message.reads?.find((r) => r.user.id === user?.id ), [message.reads, user?.id]);
 
   useEffect(() => {
-    if (!isMe && !hasRead) markRead({ messageId: message.id, userId: user?.id as number });
-  }, [isMe, hasRead, message.id, markRead, user?.id]);
+    if (!message || !user) return;
+    if (message.sender.id === user.id) return;
+    if (sentReadRequests.has(message.id)) return;
+    if (hasRead) return;
+
+    sentReadRequests.add(message.id);
+
+    markRead({ messageId: message.id, userId: user.id });
+  }, [hasRead, markRead, message, message.id, user, user?.id]);
 
   const handleToggleLike = async () => {
     if (isMe) return;
