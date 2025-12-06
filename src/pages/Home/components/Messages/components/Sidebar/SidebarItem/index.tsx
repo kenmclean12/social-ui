@@ -15,6 +15,7 @@ import { useState } from "react";
 import { ChatMembers } from "./ChatMembers";
 import { UpdateConversationDialog } from "../UpdateConversationDialog";
 import { DeleteConversationDialog } from "../DeleteConversationDialog";
+import { useUnreadMessageCountByConversation } from "../../../../../../../hooks";
 
 interface SidebarItemProps {
   conversation: ConversationResponseDto;
@@ -33,6 +34,11 @@ export function SidebarItem({
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [updateAnchor, setUpdateAnchor] = useState<HTMLElement | null>(null);
   const [deleteAnchor, setDeleteAnchor] = useState<HTMLElement | null>(null);
+  const { data: unreadCount } = useUnreadMessageCountByConversation(
+    conversation.id
+  );
+  const hasUnreadMessages = typeof unreadCount === "number" && unreadCount > 0;
+  console.log(unreadCount);
   let others = participants?.filter((p) => p.id !== user?.id);
   if (initiator && initiator.id !== user?.id) {
     others = [initiator, ...others];
@@ -146,24 +152,35 @@ export function SidebarItem({
               />
             )}
           </Box>
-
           <Box sx={{ overflow: "hidden" }}>
             <Typography fontSize={15} color="white" noWrap>
               {primaryName}
             </Typography>
           </Box>
         </Box>
-
-        <IconButton
-          size="small"
-          onClick={(e) => {
-            e.stopPropagation();
-            setMenuAnchor(e.currentTarget);
-          }}
-          sx={{ color: "white" }}
-        >
-          <Settings />
-        </IconButton>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          {hasUnreadMessages && (
+            <Box
+              sx={{
+                width: 10,
+                height: 10,
+                borderRadius: "50%",
+                backgroundColor: "lightblue",
+                mr: 1.5,
+              }}
+            />
+          )}
+          <IconButton
+            size="small"
+            onClick={(e) => {
+              e.stopPropagation();
+              setMenuAnchor(e.currentTarget);
+            }}
+            sx={{ color: "white" }}
+          >
+            <Settings />
+          </IconButton>
+        </Stack>
       </ListItemButton>
       <Popover
         anchorEl={menuAnchor}

@@ -30,7 +30,7 @@ export function Sidebar({ userId, selectedId, onSelect }: SidebarProps) {
         py={1.5}
         borderBottom="1px solid lightblue"
       >
-        <Typography variant="h6" color="white">Messages</Typography>
+        <Typography variant="h6" color="white">Conversations</Typography>
         <IconButton onClick={() => setOpenDialog(true)}>
           <AddIcon sx={{ color: "lightblue" }} />
         </IconButton>

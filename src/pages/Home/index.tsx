@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Stack, Tabs, Tab } from "@mui/material";
+import { Stack, Tabs, Tab, Typography, Box } from "@mui/material";
 import { ExploreFeed, Feed, Messages, TopBar } from "./components";
+import { useUnreadMessageCount } from "../../hooks";
 
 type Tab = "feed" | "messages" | "explore";
 
@@ -19,6 +20,9 @@ const tabStyles = {
 
 export function HomePage() {
   const [tab, setTab] = useState<Tab>("feed");
+  const { data: unreadCount } = useUnreadMessageCount();
+
+  console.log(unreadCount);
 
   return (
     <Stack
@@ -41,7 +45,33 @@ export function HomePage() {
         }}
       >
         <Tab label="Feed" value="feed" sx={tabStyles} />
-        <Tab label="Messages" value="messages" sx={tabStyles} />
+        <Tab
+          value="messages"
+          sx={tabStyles}
+          label={
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <Typography>Messages</Typography>
+              {typeof unreadCount === "number" && unreadCount > 0 && (
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  height={20}
+                  width={20}
+                  color="black"
+                  fontSize="0.75rem"
+                  fontWeight={700}
+                  borderRadius="50%"
+                  sx={{
+                    backgroundColor: "lightblue",
+                  }}
+                >
+                  {unreadCount}
+                </Box>
+              )}
+            </Stack>
+          }
+        />
         <Tab label="Explore" value="explore" sx={tabStyles} />
       </Tabs>
       <Stack flexGrow={1}>

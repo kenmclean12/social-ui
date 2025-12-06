@@ -40,6 +40,37 @@ export function useMessageFindByConversation(conversationId: number) {
   });
 }
 
+export function useUnreadMessageCount() {
+  return useQuery({
+    queryKey: ["messages", "unread-count"],
+    queryFn: async () => {
+      const res = await api(`/message/unread-count`);
+      if (!res?.ok) {
+        const err = await res?.json();
+        throw new Error(err.message || "Failed to load unread count");
+      }
+      return res.json() as Promise<number>;
+    },
+  });
+}
+
+export function useUnreadMessageCountByConversation(conversationId: number) {
+  return useQuery({
+    queryKey: ["messages", "unread-count", "conversation", conversationId],
+    enabled: !!conversationId,
+    queryFn: async () => {
+      const res = await api(`/message/unread-count/${conversationId}`);
+      if (!res?.ok) {
+        const err = await res?.json();
+        throw new Error(
+          err.message || "Failed to load conversation unread count"
+        );
+      }
+      return res.json() as Promise<number>;
+    },
+  });
+}
+
 export function useMessageCreate() {
   const qc = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
@@ -50,6 +81,7 @@ export function useMessageCreate() {
         method: "POST",
         body: JSON.stringify(dto),
       });
+
       if (!res?.ok) {
         const err = await res?.json();
         throw new Error(err.message || "Failed to send message");
@@ -59,12 +91,20 @@ export function useMessageCreate() {
 
     onSuccess: (data) => {
       enqueueSnackbar("Message sent!", { variant: "success" });
+
       qc.invalidateQueries({
         queryKey: ["messages", "conversation", data.conversationId],
       });
+      qc.invalidateQueries({ queryKey: ["messages", "unread-count"] });
+      qc.invalidateQueries({
+        queryKey: [
+          "messages",
+          "unread-count",
+          "conversation",
+          data.conversationId,
+        ],
+      });
     },
-
-    onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
 
@@ -87,11 +127,21 @@ export function useMessageMarkRead() {
 
     onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: ["message", data.messageId] });
-      qc.invalidateQueries({ queryKey: ["messages", "conversation", data.conversationId] })
+      qc.invalidateQueries({
+        queryKey: ["messages", "conversation", data.conversationId],
+      });
+      qc.invalidateQueries({ queryKey: ["messages", "unread-count"] });
+      qc.invalidateQueries({
+        queryKey: [
+          "messages",
+          "unread-count",
+          "conversation",
+          data.conversationId,
+        ],
+      });
+
       enqueueSnackbar("Message marked as read", { variant: "info" });
     },
-
-    onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
 
@@ -114,13 +164,12 @@ export function useMessageUpdate() {
 
     onSuccess: (data) => {
       enqueueSnackbar("Message updated", { variant: "success" });
+
       qc.invalidateQueries({ queryKey: ["message", data.id] });
       qc.invalidateQueries({
         queryKey: ["messages", "conversation", data.conversationId],
       });
     },
-
-    onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
 
@@ -140,11 +189,10 @@ export function useMessageDelete() {
 
     onSuccess: (data) => {
       enqueueSnackbar("Message deleted", { variant: "success" });
+
       qc.invalidateQueries({
         queryKey: ["messages", "conversation", data.conversationId],
       });
     },
-
-    onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
