@@ -1,12 +1,8 @@
 import { useState } from "react";
-import { AppBar, Toolbar, Box } from "@mui/material";
+import { AppBar, Toolbar, Box, Stack, Typography } from "@mui/material";
 import { useAuth } from "../../../../context";
 import { NightsStay } from "@mui/icons-material";
-import {
-  Notifications,
-  ProfileMenu,
-  UserSearch,
-} from "./components";
+import { Notifications, ProfileMenu, UserSearch } from "./components";
 import { CreatePost } from "../../../../components";
 import { ProfileDialog } from "../../../../components/Profile";
 
@@ -32,13 +28,23 @@ export function TopBar() {
             gap: 2,
           }}
         >
-          <Box sx={{ display: "flex", flexShrink: 0 }}>
-            <NightsStay sx={{ height: "40px", color: "lightblue" }} />
-          </Box>
-          <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
+          <Stack
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="center"
+            spacing={1}
+            height="100%"
+            minWidth="130px"
+            borderRight="1px solid lightblue"
+            pr={2.5}
+          >
+            <Typography color="white">Social</Typography>
+            <NightsStay sx={{ color: "lightblue" }} />
+          </Stack>
+          <Box display="flex" flex={1} justifyContent="center">
             <UserSearch />
           </Box>
-          <Box sx={{ display: "flex", flexShrink: 0, gap: 1 }}>
+          <Box display="flex" flexShrink={0} gap={1} width="130px">
             <CreatePost />
             <Notifications />
             <ProfileMenu />

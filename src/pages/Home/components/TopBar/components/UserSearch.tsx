@@ -68,9 +68,13 @@ export function UserSearch() {
   return (
     <>
       <Stack
+        direction="row"
+        flex={1}
         sx={{
+          justifyContent: "center",
           flex: 1,
-          maxWidth: 600,
+          width: "60%",
+          maxWidth: 800,
           minWidth: 300,
           px: 2,
         }}
