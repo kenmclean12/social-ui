@@ -55,7 +55,7 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
           overflowY: "auto",
         }}
       >
-        {data.length === 0 ? (
+        {data.length > 0 ? (
           data.map((msg, idx) => {
             const msgDate = new Date(msg.createdAt);
             const prevDate = idx > 0 ? new Date(data[idx - 1].createdAt) : null;
