@@ -21,7 +21,7 @@ export function Sidebar({ userId, selectedId, onSelect }: SidebarProps) {
   const { data, isLoading } = useConversationFindByUser(userId);
 
   return (
-    <Box width={320} height="100%" display="flex" flexDirection="column">
+    <Box minWidth={150} maxWidth={320} height="100%" display="flex" flexDirection="column">
       <Box
         display="flex"
         justifyContent="space-between"
