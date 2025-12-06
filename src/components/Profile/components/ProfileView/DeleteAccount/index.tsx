@@ -4,12 +4,11 @@ import {
   DialogContent,
   Stack,
   Button,
-  IconButton,
   Typography,
 } from "@mui/material";
 import { useAuth } from "../../../../../context";
 import { useUserDelete } from "../../../../../hooks";
-import { Close } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
 
 interface DeleteAccountProps {
   open: boolean;
@@ -18,7 +17,7 @@ interface DeleteAccountProps {
 
 export function DeleteAccount({ open, setOpen }: DeleteAccountProps) {
   const { logout } = useAuth();
-  const { mutateAsync: deleteUser } = useUserDelete();
+  const { mutateAsync: deleteUser, isPending } = useUserDelete();
 
   const handleDelete = async () => {
     try {
@@ -33,9 +32,11 @@ export function DeleteAccount({ open, setOpen }: DeleteAccountProps) {
     <Dialog
       open={open}
       onClose={() => setOpen(false)}
-      PaperProps={{
-        sx: {
-          bgcolor: "#1e1e1e",
+      fullWidth
+      maxWidth="xs"
+      sx={{
+        "& .MuiPaper-root": {
+          backgroundColor: "black",
           color: "white",
           border: "1px solid #444",
         },
@@ -45,34 +46,32 @@ export function DeleteAccount({ open, setOpen }: DeleteAccountProps) {
         sx={{
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
           color: "white",
         }}
       >
         Delete Account
-        <IconButton onClick={() => setOpen(false)} sx={{ color: "red" }}>
-          <Close />
-        </IconButton>
+        <CloseIcon
+          onClick={() => setOpen(false)}
+          sx={{ marginLeft: "auto", color: "red", cursor: "pointer" }}
+        />
       </DialogTitle>
-      <DialogContent sx={{ color: "white" }}>
-        <Stack spacing={4} width="400px" mt={1}>
-          <Typography sx={{ color: "#ddd" }}>
-            This action is permanent. All data will be deleted.
+      <DialogContent>
+        <Stack spacing={3} mt={1}>
+          <Typography sx={{ color: "#ddd", lineHeight: 1.5 }}>
+            This action is <strong>permanent</strong>. All your data will be
+            permanently deleted and cannot be recovered.
           </Typography>
           <Stack direction="row" justifyContent="flex-end" spacing={2}>
-            <Button sx={{ color: "#ccc" }} onClick={() => setOpen(false)}>
+            <Button onClick={() => setOpen(false)} sx={{ color: "#ccc" }}>
               Cancel
             </Button>
             <Button
               variant="contained"
               color="error"
               onClick={handleDelete}
-              sx={{
-                bgcolor: "#b00020",
-                "&:hover": { bgcolor: "#d00028" },
-              }}
+              disabled={isPending}
             >
-              Delete
+              {isPending ? "Deleting..." : "Confirm"}
             </Button>
           </Stack>
         </Stack>

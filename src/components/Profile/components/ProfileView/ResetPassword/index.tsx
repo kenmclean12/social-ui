@@ -5,8 +5,8 @@ import {
   DialogContent,
   Stack,
   Button,
-  IconButton,
   Input,
+  Box,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useUserResetPassword } from "../../../../../hooks";
@@ -18,18 +18,23 @@ interface ResetPasswordProps {
 }
 
 export function ResetPassword({ open, setOpen }: ResetPasswordProps) {
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const { mutateAsync: resetPassword } = useUserResetPassword();
+  const [oldPassword, setOldPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const { mutateAsync: resetPassword, isPending } = useUserResetPassword();
+
+  const handleClose = () => {
+    setOpen(false);
+    setOldPassword("");
+    setNewPassword("");
+  };
 
   const handleSubmit = async () => {
     if (!oldPassword || !newPassword) return;
+
     const dto: PasswordResetDto = { oldPassword, newPassword };
     try {
       await resetPassword(dto);
-      setOpen(false);
-      setOldPassword("");
-      setNewPassword("");
+      handleClose();
     } catch (err) {
       console.error(err);
     }
@@ -38,10 +43,12 @@ export function ResetPassword({ open, setOpen }: ResetPasswordProps) {
   return (
     <Dialog
       open={open}
-      onClose={() => setOpen(false)}
-      PaperProps={{
-        sx: {
-          bgcolor: "#1e1e1e",
+      onClose={handleClose}
+      fullWidth
+      maxWidth="xs"
+      sx={{
+        "& .MuiPaper-root": {
+          backgroundColor: "black",
           color: "white",
           border: "1px solid #444",
         },
@@ -51,68 +58,66 @@ export function ResetPassword({ open, setOpen }: ResetPasswordProps) {
         sx={{
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
           color: "white",
         }}
       >
         Reset Password
-        <IconButton onClick={() => setOpen(false)} sx={{ color: "red" }}>
-          <CloseIcon />
-        </IconButton>
+        <CloseIcon
+          onClick={handleClose}
+          sx={{ marginLeft: "auto", color: "red", cursor: "pointer" }}
+        />
       </DialogTitle>
-      <DialogContent sx={{ color: "white" }}>
-        <Stack mt={1} width="400px">
+      <DialogContent>
+        <Stack spacing={2} mt={1}>
           <Input
-            placeholder="Current Password"
             type="password"
+            placeholder="Current Password"
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
-            sx={{
-              padding: 0.5,
-              paddingInline: 1,
-              color: "white",
-              bgcolor: "#2a2a2a",
-              border: "1px solid #444",
-              borderRadius: 1,
-              height: 38,
-            }}
-            disableUnderline
             fullWidth
+            disableUnderline
+            sx={{
+              height: "40px",
+              background: "#1e1e1e",
+              color: "white",
+              px: 1.5,
+              py: 1,
+              borderRadius: 1,
+              border: "1px solid #444",
+            }}
           />
           <Input
-            placeholder="New Password"
             type="password"
+            placeholder="New Password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             fullWidth
-            sx={{
-              mt: 2,
-              padding: 0.5,
-              paddingInline: 1,
-              color: "white",
-              bgcolor: "#2a2a2a",
-              border: "1px solid #444",
-              borderRadius: 1,
-              height: 38,
-            }}
             disableUnderline
+            sx={{
+              height: "40px",
+              background: "#1e1e1e",
+              color: "white",
+              px: 1.5,
+              py: 1,
+              borderRadius: 1,
+              border: "1px solid #444",
+            }}
           />
-          <Stack direction="row" spacing={2} justifyContent="flex-end" mt={3}>
-            <Button onClick={() => setOpen(false)} sx={{ color: "#ccc" }}>
-              Cancel
-            </Button>
+          <Box pt={1} width="100%">
             <Button
-              variant="contained"
+              variant="outlined"
               onClick={handleSubmit}
+              disabled={isPending}
               sx={{
-                bgcolor: "lightblue",
-                color: "black",
-                "&:hover": { bgcolor: "#9fd8ff" },
+                border: "1px solid #444",
+                color: "lightblue",
+                backgroundColor: "black",
               }}
+              fullWidth
             >
-              Reset
+              {isPending ? "Resetting..." : "Submit"}
             </Button>
-          </Stack>
+          </Box>
         </Stack>
       </DialogContent>
     </Dialog>
