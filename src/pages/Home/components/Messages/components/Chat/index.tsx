@@ -12,6 +12,7 @@ import { useAuth } from "../../../../../../context";
 import {
   useMessageFindByConversation,
   useMessageCreate,
+  useConversationFindOne,
 } from "../../../../../../hooks";
 import { MessageBubble } from "./MessageBubble";
 import { formatDayLabel } from "../../../../../../utils";
@@ -24,8 +25,12 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
   const { user } = useAuth();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [content, setContent] = useState<string>("");
+
+  const { data: conversation } = useConversationFindOne(conversationId);
   const { data = [], isLoading } = useMessageFindByConversation(conversationId);
   const { mutate: sendMessage } = useMessageCreate();
+
+  const isClosed = conversation?.closed === true;
 
   useEffect(() => {
     if (scrollRef.current)
@@ -33,7 +38,7 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
   }, [data]);
 
   const handleSend = () => {
-    if (!content.trim()) return;
+    if (!content.trim() || isClosed) return;
 
     sendMessage(
       { content, senderId: user?.id as number, conversationId },
@@ -44,17 +49,35 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
   if (isLoading) return <Box p={2}>Loading...</Box>;
 
   return (
-    <Box display="flex" flexDirection="column" height="100%" maxHeight="84vh">
+    <Box display="flex" flexDirection="column" height="100%">
       <Box
         ref={scrollRef}
-        display="flex"
         flex={1}
-        flexDirection="column"
         p={2}
         sx={{
           overflowY: "auto",
+          backgroundColor: "#000",
         }}
       >
+        {isClosed && (
+          <Box
+            sx={{
+              background: "#331111",
+              border: "1px solid #552222",
+              borderRadius: "6px",
+              p: 2,
+              mb: 2,
+            }}
+          >
+            <Typography
+              align="center"
+              sx={{ color: "#ff9999", fontSize: 14, fontWeight: 500 }}
+            >
+              This conversation has been closed by{" "}
+              <strong>{conversation?.initiator?.firstName}</strong>.
+            </Typography>
+          </Box>
+        )}
         {data.length > 0 ? (
           data.map((msg, idx) => {
             const msgDate = new Date(msg.createdAt);
@@ -67,18 +90,18 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
               <Box key={msg.id}>
                 {showDivider && (
                   <Box my={1} display="flex" alignItems="center">
-                    <Divider sx={{ flex: 1, borderColor: "#555" }} />
+                    <Divider sx={{ flex: 1, borderColor: "#333" }} />
                     <Typography
                       sx={{
                         mx: 1,
-                        color: "#999",
+                        color: "#777",
                         fontSize: 12,
                         userSelect: "none",
                       }}
                     >
                       {formatDayLabel(msgDate)}
                     </Typography>
-                    <Divider sx={{ flex: 1, borderColor: "#555" }} />
+                    <Divider sx={{ flex: 1, borderColor: "#333" }} />
                   </Box>
                 )}
                 <MessageBubble
@@ -99,31 +122,36 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
           </Typography>
         )}
       </Box>
-
       <Paper
         elevation={3}
+        square
         sx={{
-          p: 1,
           display: "flex",
           alignItems: "center",
-          borderTop: "1px solid #444",
+          p: 1,
+          borderTop: "1px solid #333",
           background: "#111",
         }}
       >
         <TextField
           fullWidth
-          placeholder="Type a message…"
+          placeholder={
+            isClosed ? "Conversation is closed. You cannot send messages." : "Type a message…"
+          }
           value={content}
           onChange={(e) => setContent(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") handleSend();
+            if (e.key === "Enter" && !isClosed) handleSend();
           }}
-          sx={{ input: { color: "white" } }}
+          disabled={isClosed}
+          sx={{
+            input: { color: isClosed ? "#777" : "white" },
+          }}
         />
         <IconButton
           onClick={handleSend}
-          disabled={!content.trim()}
-          sx={{ color: "lightblue", ml: 1 }}
+          disabled={!content.trim() || isClosed}
+          sx={{ color: isClosed ? "#555" : "lightblue", ml: 1 }}
         >
           <SendIcon />
         </IconButton>

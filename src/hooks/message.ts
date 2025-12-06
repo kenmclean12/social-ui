@@ -68,6 +68,7 @@ export function useUnreadMessageCountByConversation(conversationId: number) {
       }
       return res.json() as Promise<number>;
     },
+    retry: 0,
   });
 }
 

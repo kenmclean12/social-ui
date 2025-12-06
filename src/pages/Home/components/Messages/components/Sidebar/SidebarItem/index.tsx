@@ -170,16 +170,18 @@ export function SidebarItem({
               }}
             />
           )}
-          <IconButton
-            size="small"
-            onClick={(e) => {
-              e.stopPropagation();
-              setMenuAnchor(e.currentTarget);
-            }}
-            sx={{ color: "white" }}
-          >
-            <Settings />
-          </IconButton>
+          {user?.id === conversation.initiator.id && (
+            <IconButton
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                setMenuAnchor(e.currentTarget);
+              }}
+              sx={{ color: "white" }}
+            >
+              <Settings />
+            </IconButton>
+          )}
         </Stack>
       </ListItemButton>
       <Popover
