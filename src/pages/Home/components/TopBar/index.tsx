@@ -20,30 +20,32 @@ export function TopBar() {
       >
         <Toolbar
           sx={{
-            position: "relative",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 1,
+            px: 1,
             backgroundColor: "black",
-            gap: 2,
           }}
         >
           <Stack
-            flexDirection="row"
+            direction="row"
             alignItems="center"
             justifyContent="center"
-            gap={1}
-            height="100%"
-            minWidth="130px"
-            pr={1.5}
+            spacing={1}
+            flexShrink={0}
+            pl={1}
           >
-            <Typography color="white">Social</Typography>
+            <Typography align="center" color="white">
+              Luna
+            </Typography>
             <NightsStay sx={{ color: "lightblue" }} />
           </Stack>
-          <Box display="flex" flex={1} justifyContent="center">
+          <Box display="flex" flex={1} justifyContent="center" minWidth={0}>
             <UserSearch />
           </Box>
-          <Box display="flex" flexShrink={0} gap={1} width="130px">
+          <Box display="flex" gap={1} flexShrink={0}>
             <CreatePost />
             <Notifications />
             <ProfileMenu />

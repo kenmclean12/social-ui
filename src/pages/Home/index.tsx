@@ -24,7 +24,7 @@ export function HomePage() {
     <Stack
       height="100vh"
       width="100vw"
-      minWidth="550px"
+      minWidth="500px"
       sx={{ backgroundColor: "black" }}
     >
       <TopBar />

@@ -82,9 +82,9 @@ export function UserSearch() {
         sx={{
           justifyContent: "center",
           flex: 1,
-          width: "60%",
+          flexShrink: 1,
+          minWidth: 200,
           maxWidth: 800,
-          minWidth: 300,
           px: 2,
         }}
       >
@@ -104,6 +104,10 @@ export function UserSearch() {
             color: "white",
             border: "1px solid white",
             borderRadius: 4,
+            display: {
+              xs: "none",
+              sm: "block",
+            },
           }}
         />
         <Popper

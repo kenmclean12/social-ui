@@ -53,6 +53,8 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
     user?.id as number
   );
 
+  console.log(post)
+
   const { data: creator } = useUserFindOne(post.creatorId);
   const { data: likes } = useLikeFind("post", post.id);
   const { data: comments } = useCommentFindByPost(post.id);
@@ -93,6 +95,7 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
       sx={{
         width,
         height,
+        minWidth: 450,
         maxHeight: 600,
         p: 2,
         backgroundColor: "#1e1e1e",

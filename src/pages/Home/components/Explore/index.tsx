@@ -98,13 +98,13 @@ export function ExploreFeed() {
       <Stack
         sx={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(530px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fill, minmax(450px, 1fr))",
           gap: 2,
           p: 1,
         }}
       >
         {posts.map((p) => (
-          <PostCard key={p.id} post={p} />
+          <PostCard key={p.id} post={p} width="auto" />
         ))}
       </Stack>
     </Stack>

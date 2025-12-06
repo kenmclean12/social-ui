@@ -26,9 +26,9 @@ export function Notifications() {
   const [profileDialogOpen, setProfileDialogOpen] = useState<boolean>(false);
   const [profileUserId, setProfileUserId] = useState<number | null>(null);
 
-  useNotificationStream(user?.id as number);
   const { data: notifications = [] } = useNotificationFindAll();
   const updateNotification = useNotificationUpdate();
+  useNotificationStream(user?.id as number);
 
   const handleOpenProfile = (userId: number) => {
     setProfileUserId(userId);
@@ -67,18 +67,18 @@ export function Notifications() {
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         PaperProps={{
           sx: {
-            width: 300,
+            maxHeight: 400,
+            width: 350,
             overflowY: "auto",
             backgroundColor: "#1e1e1e",
             border: "1px solid #444",
             color: "#fff",
-            p: 1,
           },
         }}
       >
-        <Stack spacing={1} sx={{ maxHeight: 400, overflowY: "auto" }}>
+        <Stack spacing={1} maxHeight={400} sx={{ overflowY: "auto" }}>
           {notifications.length === 0 ? (
-            <Typography align="center" pt={2} pb={2} sx={{ fontSize: 14 }}>
+            <Typography align="center" fontSize={14} pt={2} pb={2}>
               No notifications found
             </Typography>
           ) : (
@@ -86,16 +86,16 @@ export function Notifications() {
               <Stack
                 key={notif.id}
                 direction="row"
-                spacing={1}
                 alignItems="center"
+                spacing={1.5}
+                p={2}
+                borderRadius={1}
+                onClick={() => handleNotificationClick(notif)}
                 sx={{
-                  p: 1,
-                  borderRadius: 1,
                   backgroundColor: notif.read ? "transparent" : "#333",
                   cursor: "pointer",
                   "&:hover": { backgroundColor: "#444" },
                 }}
-                onClick={() => handleNotificationClick(notif)}
               >
                 <Avatar
                   src={notif.actionUser.avatarUrl}
