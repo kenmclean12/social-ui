@@ -51,6 +51,7 @@ export function CreatePost() {
 
   const handleSubmit = async () => {
     if (!user) return;
+    if (!textContent) return;
 
     await createPost({
       userId: user.id,
@@ -66,7 +67,6 @@ export function CreatePost() {
       <IconButton onClick={() => setOpen(true)} sx={{ color: "white" }}>
         <AddIcon />
       </IconButton>
-
       <Dialog
         open={open}
         onClose={handleClose}
@@ -80,7 +80,13 @@ export function CreatePost() {
           },
         }}
       >
-        <DialogTitle>Create Post</DialogTitle>
+        <DialogTitle sx={{ display: "flex", justifyContent: "space-between" }}>
+          Create Post
+          <CloseIcon
+            onClick={() => setOpen(false)}
+            sx={{ marginLeft: "auto", color: "red", cursor: "pointer" }}
+          />
+        </DialogTitle>
         <DialogContent>
           <Stack spacing={2} mt={1}>
             <Input
@@ -110,7 +116,12 @@ export function CreatePost() {
                 variant="outlined"
                 component="label"
                 disabled={!!contentUrl}
-                sx={{ width: "46%", whiteSpace: "nowrap" }}
+                sx={{
+                  width: "45%",
+                  whiteSpace: "nowrap",
+                  border: "1px solid lightblue",
+                  color: "lightblue",
+                }}
               >
                 Upload File
                 <input
@@ -120,7 +131,12 @@ export function CreatePost() {
                   onChange={handleFileChange}
                 />
               </Button>
-              <Typography align="center" color="white" marginInline={1}>
+              <Typography
+                align="center"
+                width="10%"
+                color="white"
+                marginInline={1}
+              >
                 Or
               </Typography>
               <Input
@@ -140,7 +156,7 @@ export function CreatePost() {
                   )
                 }
                 sx={{
-                  width: "46%",
+                  width: "45%",
                   height: "35px",
                   background: "#2a2a2a",
                   color: "white",
@@ -189,7 +205,7 @@ export function CreatePost() {
               variant="contained"
               onClick={handleSubmit}
               disabled={isPending}
-              sx={{ mt: 1 }}
+              sx={{ mt: 1, backgroundColor: "lightblue" }}
             >
               {isPending ? "Posting..." : "Submit"}
             </Button>

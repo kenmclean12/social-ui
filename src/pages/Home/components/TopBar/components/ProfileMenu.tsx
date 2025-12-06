@@ -21,7 +21,7 @@ export function ProfileMenu() {
     <>
       <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
         <Avatar
-          sx={{ width: 36, height: 36, border: "1px solid lightblue" }}
+          sx={{ width: 36, height: 36, border: "1px solid white" }}
           src={activeUser?.avatarUrl || ""}
         />
       </IconButton>

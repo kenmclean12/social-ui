@@ -46,7 +46,9 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
   ]);
   const top = stack[stack.length - 1];
 
-  const { data: followingListRaw, error } = useFollowGetFollowing(self?.id as number);
+  const { data: followingListRaw, error } = useFollowGetFollowing(
+    self?.id as number
+  );
   const followingList = error ? [] : followingListRaw ?? [];
   const { data: user } = useUserFindOne(top.userId);
   const followRecord = followingList?.find(
@@ -69,7 +71,11 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
 
   const handleFollowToggle = () => {
     if (!user || !self) return;
-    if (isFollowing) followRemove.mutate({ id: followRecord?.id as number, followingId: user.id });
+    if (isFollowing)
+      followRemove.mutate({
+        id: followRecord?.id as number,
+        followingId: user.id,
+      });
     else followCreate.mutate({ followerId: self.id, followingId: user.id });
   };
 
@@ -101,13 +107,13 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
         {title}
         <Stack
           direction="row"
-          spacing={1}
+          spacing={1.25}
           sx={{ marginLeft: "auto", alignItems: "center" }}
         >
           {isOwnProfile && (
             <>
               <IconButton
-                sx={{ color: "lightblue" }}
+                sx={{ color: "white" }}
                 onClick={(e) => setMenuAnchor(e.currentTarget)}
               >
                 <SettingsIcon />
@@ -173,9 +179,10 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
               {isFollowing ? "Following" : "Follow"}
             </Button>
           )}
-          <IconButton onClick={onClose} sx={{ color: "red" }}>
-            <CloseIcon />
-          </IconButton>
+          <CloseIcon
+            onClick={onClose}
+            sx={{ color: "red", cursor: "pointer" }}
+          />
         </Stack>
       </DialogTitle>
       <DialogContent sx={{ padding: 0 }}>

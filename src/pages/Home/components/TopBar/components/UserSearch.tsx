@@ -93,7 +93,7 @@ export function UserSearch() {
             padding: "2px 16px",
             fontSize: "14px",
             color: "white",
-            border: "1px solid lightblue",
+            border: "1px solid white",
             borderRadius: 4,
           }}
         />
