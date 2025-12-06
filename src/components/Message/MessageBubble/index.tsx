@@ -16,18 +16,11 @@ import Edit from "@mui/icons-material/Edit";
 import Delete from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CloseIcon from "@mui/icons-material/Close";
-import { ReactionPanel } from "../../../../../../../components/Post/PostCard/components";
-import { useAuth } from "../../../../../../../context";
-import {
-  useLikeCreate,
-  useLikeDelete,
-  useLikeFind,
-  useMessageUpdate,
-  useMessageDelete,
-  useMessageMarkRead,
-} from "../../../../../../../hooks";
+import { useAuth } from "../../../context";
+import type { MessageResponseDto } from "../../../types";
+import { useLikeCreate, useLikeDelete, useLikeFind, useMessageDelete, useMessageMarkRead, useMessageUpdate } from "../../../hooks";
 import { Settings } from "@mui/icons-material";
-import type { MessageResponseDto } from "../../../../../../../types";
+import { ReactionPanel } from "../../Post/PostCard/components";
 
 interface MessageBubbleProps {
   message: MessageResponseDto;

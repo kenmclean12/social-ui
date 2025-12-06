@@ -20,6 +20,7 @@ import {
 } from "../../../../../types";
 import { ProfileDialog } from "../../../../../components/Profile";
 import { PostDialog } from "../../../../../components";
+import { MessageDialog } from "../../../../../components/Message";
 
 export function Notifications() {
   const { user } = useAuth();
@@ -28,6 +29,8 @@ export function Notifications() {
   const [profileUserId, setProfileUserId] = useState<number | null>(null);
   const [postDialogOpen, setPostDialogOpen] = useState<boolean>(false);
   const [postId, setPostId] = useState<number | null>(null);
+  const [messageDialogOpen, setMessageDialogOpen] = useState(false);
+  const [messageId, setMessageId] = useState<number | null>(null);
 
   const { data: notifications = [] } = useNotificationFindAll();
   const updateNotification = useNotificationUpdate();
@@ -55,9 +58,16 @@ export function Notifications() {
         setAnchorEl(null);
       }
     }
-  };
 
-  console.log(postId, postDialogOpen)
+    if (
+      notif.type === NotificationType.MESSAGE_LIKE ||
+      notif.type === NotificationType.MESSAGE_REACTION
+    ) {
+      setMessageId(notif.message?.id ?? null);
+      setMessageDialogOpen(true);
+      setAnchorEl(null);
+    }
+  };
 
   return (
     <>
@@ -135,6 +145,13 @@ export function Notifications() {
           open={postDialogOpen}
           postId={postId}
           onClose={() => setPostDialogOpen(false)}
+        />
+      )}
+      {messageId !== null && (
+        <MessageDialog
+          open={messageDialogOpen}
+          messageId={messageId}
+          onClose={() => setMessageDialogOpen(false)}
         />
       )}
     </>

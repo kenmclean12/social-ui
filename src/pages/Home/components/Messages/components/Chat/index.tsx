@@ -14,8 +14,8 @@ import {
   useMessageCreate,
   useConversationFindOne,
 } from "../../../../../../hooks";
-import { MessageBubble } from "./MessageBubble";
 import { formatDayLabel } from "../../../../../../utils";
+import { MessageBubble } from "../../../../../../components/Message";
 
 interface ChatWindowProps {
   conversationId: number;
