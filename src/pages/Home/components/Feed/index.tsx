@@ -41,13 +41,8 @@ export function Feed() {
         gap={2}
         p={1}
       >
-        {posts.length === 0 ? posts.map((p) => (
-          <PostCard key={p.id} post={p} width="auto" />
-        )) : (
-          <Typography align="center" color="white" p={1}>
-            No posts found
-          </Typography>
-        )}
+        {posts.length > 0 &&
+          posts.map((p) => <PostCard key={p.id} post={p} width="auto" />)}
       </Stack>
     </Stack>
   );

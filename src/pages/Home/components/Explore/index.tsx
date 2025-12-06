@@ -16,25 +16,11 @@ type FilterType = "mostLiked" | "mostReacted" | "recent" | "oldest";
 
 export function ExploreFeed() {
   const [filter, setFilter] = useState<FilterType>("mostLiked");
-  const { data: posts = [], isLoading } = useFeedExplore(filter);
+  const { data: posts = [] } = useFeedExplore(filter);
 
   const handleChange = (event: SelectChangeEvent<FilterType>) => {
     setFilter(event.target.value as typeof filter);
   };
-
-  if (isLoading) {
-    return (
-      <Stack
-        alignItems="center"
-        justifyContent="center"
-        height="100%"
-        width="100%"
-        p={1}
-      >
-        <Typography color="white">Loading explore feed...</Typography>
-      </Stack>
-    );
-  }
 
   return (
     <Stack
@@ -123,13 +109,8 @@ export function ExploreFeed() {
         gap={2}
         p={1}
       >
-        {posts.length === 0 ? (
-          posts.map((p) => <PostCard key={p.id} post={p} width="auto" />)
-        ) : (
-          <Typography align="center" color="white">
-            No posts found
-          </Typography>
-        )}
+        {posts.length > 0 &&
+          posts.map((p) => <PostCard key={p.id} post={p} width="auto" />)}
       </Stack>
     </Stack>
   );
