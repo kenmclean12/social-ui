@@ -53,8 +53,6 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
     user?.id as number
   );
 
-  console.log(post)
-
   const { data: creator } = useUserFindOne(post.creatorId);
   const { data: likes } = useLikeFind("post", post.id);
   const { data: comments } = useCommentFindByPost(post.id);
@@ -65,10 +63,12 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
     () => likes?.some((l) => l.userId === user?.id),
     [likes, user?.id]
   );
+
   const hasCommented = useMemo(
     () => comments?.some((c) => c.user.id === user?.id),
     [comments, user?.id]
   );
+
   const isOwner = user?.id === post.creatorId;
 
   const handleToggleLike = () => {

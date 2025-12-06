@@ -66,6 +66,9 @@ export function SidebarItem({
         onClick={onClick}
         selected={selected}
         sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          minWidth: "250px",
           borderBottom: "1px solid #222",
           py: 1.5,
           color: "white",
@@ -75,8 +78,6 @@ export function SidebarItem({
               ? "rgba(100,170,255,0.22)"
               : "rgba(255,255,255,0.05)",
           },
-          display: "flex",
-          justifyContent: "space-between",
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", overflow: "hidden" }}>

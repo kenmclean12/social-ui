@@ -8,13 +8,13 @@ export function Messages() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
   return (
-    <Box display="flex" height="100%" width="100%">
+    <Box display="flex" height="100%" width="100%" border="1px solid lightblue">
       <Sidebar
         userId={user?.id as number}
         selectedId={selectedId as number}
         onSelect={setSelectedId}
       />
-      <Box flex={1} borderLeft="1px solid #ddd">
+      <Box flex={1} borderLeft="1px solid lightblue">
         {selectedId ? (
           <ChatWindow conversationId={selectedId} />
         ) : (

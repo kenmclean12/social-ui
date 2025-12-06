@@ -24,9 +24,12 @@ export function ExploreFeed() {
 
   return (
     <Stack
+      alignSelf="center"
       height="100%"
       width="100%"
-      p={2}
+      pt={1}
+      border="1px solid lightblue"
+      boxSizing="border-box"
       sx={{
         overflowY: "auto",
         "&::-webkit-scrollbar": { width: 8 },
@@ -36,13 +39,13 @@ export function ExploreFeed() {
         },
       }}
     >
-      <Stack p={1}>
+      <Stack p={1} pb={0}>
         <Stack
           direction="row"
           alignItems="center"
           justifyContent="space-between"
           width="100%"
-          p={1.25}
+          p={1.5}
           paddingInline={2}
           mb={2}
           border="1px solid #444"
@@ -58,7 +61,7 @@ export function ExploreFeed() {
             spacing={0.75}
           >
             <Typography color="white">Explore</Typography>
-            <Public sx={{ color: "white" }} />
+            <Public sx={{ color: "lightblue" }} />
           </Stack>
           <FormControl size="small" sx={{ minWidth: 150 }}>
             <InputLabel
@@ -108,6 +111,7 @@ export function ExploreFeed() {
         gridTemplateColumns="repeat(auto-fill, minmax(450px, 1fr))"
         gap={2}
         p={1}
+        pt={0}
       >
         {posts.length > 0 &&
           posts.map((p) => <PostCard key={p.id} post={p} width="auto" />)}
