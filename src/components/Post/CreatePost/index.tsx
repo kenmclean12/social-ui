@@ -74,7 +74,7 @@ export function CreatePost() {
         fullWidth
         sx={{
           "& .MuiPaper-root": {
-            backgroundColor: "#1e1e1e",
+            backgroundColor: "black",
             color: "white",
             border: "1px solid #444",
           },
@@ -98,7 +98,7 @@ export function CreatePost() {
               value={textContent}
               onChange={(e) => setTextContent(e.target.value)}
               sx={{
-                background: "#2a2a2a",
+                background: "#1e1e1e",
                 color: "white",
                 px: 1.5,
                 py: 1,
@@ -118,9 +118,9 @@ export function CreatePost() {
                 disabled={!!contentUrl}
                 sx={{
                   width: "45%",
-                  whiteSpace: "nowrap",
-                  border: "1px solid lightblue",
-                  color: "lightblue",
+                  border: "1px solid #444",
+                  color: "white",
+                  backgroundColor: "#1e1e1e",
                 }}
               >
                 Upload File
@@ -158,7 +158,7 @@ export function CreatePost() {
                 sx={{
                   width: "45%",
                   height: "35px",
-                  background: "#2a2a2a",
+                  background: "#1e1e1e",
                   color: "white",
                   px: 1.5,
                   py: 1,
@@ -202,10 +202,15 @@ export function CreatePost() {
               </Stack>
             )}
             <Button
-              variant="contained"
+              variant="outlined"
               onClick={handleSubmit}
               disabled={isPending}
-              sx={{ mt: 1, backgroundColor: "lightblue" }}
+              sx={{
+                mt: 1,
+                border: "1px solid #444",
+                color: "lightblue",
+                backgroundColor: "black",
+              }}
             >
               {isPending ? "Posting..." : "Submit"}
             </Button>
