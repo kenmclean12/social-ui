@@ -19,10 +19,10 @@ export function Messages() {
           <ChatWindow conversationId={selectedId} />
         ) : (
           <Box
-            height="100%"
             display="flex"
             alignItems="center"
             justifyContent="center"
+            height="100%"
             color="#999"
           >
             Select a conversation

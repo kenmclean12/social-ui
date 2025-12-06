@@ -56,12 +56,13 @@ export function ExploreFeed() {
           alignItems="center"
           justifyContent="space-between"
           width="100%"
-          p={2}
+          p={1.25}
+          paddingInline={2}
           mb={2}
           border="1px solid #444"
           borderRadius={2}
           sx={{
-            bgcolor: "#1e1e1e",
+            bgcolor: "#0d0d0dff",
           }}
         >
           <Stack

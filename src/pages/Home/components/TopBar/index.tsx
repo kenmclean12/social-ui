@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AppBar, Toolbar, Box, Stack, Typography } from "@mui/material";
-import { useAuth } from "../../../../context";
 import { NightsStay } from "@mui/icons-material";
+import { useAuth } from "../../../../context";
 import { Notifications, ProfileMenu, UserSearch } from "./components";
 import { CreatePost } from "../../../../components";
 import { ProfileDialog } from "../../../../components/Profile";

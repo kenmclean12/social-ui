@@ -1,5 +1,5 @@
-import { Stack, Tabs, Tab } from "@mui/material";
 import { useState } from "react";
+import { Stack, Tabs, Tab } from "@mui/material";
 import { ExploreFeed, Feed, Messages, TopBar } from "./components";
 
 type Tab = "feed" | "messages" | "explore";
