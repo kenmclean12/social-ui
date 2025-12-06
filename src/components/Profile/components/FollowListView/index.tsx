@@ -60,7 +60,7 @@ export function FollowListView({
     return <Typography sx={{ p: 2 }}>No users</Typography>;
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ height: "100%", p: 2 }}>
       <Input
         fullWidth
         placeholder="Search users..."
@@ -94,7 +94,7 @@ export function FollowListView({
       <Stack
         spacing={1}
         sx={{
-          height: "380px",
+          height: "100%",
           overflowY: "auto",
           borderRadius: "8px",
         }}
