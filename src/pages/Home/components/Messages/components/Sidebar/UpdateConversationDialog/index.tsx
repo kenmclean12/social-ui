@@ -36,7 +36,7 @@ export function UpdateConversationDialog({
   conversation,
 }: UpdateConversationDialogProps) {
   const { user } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [title, setTitle] = useState(conversation.name || "");
   const [selectedUsers, setSelectedUsers] = useState<UserResponseDto[]>(
     conversation.participants

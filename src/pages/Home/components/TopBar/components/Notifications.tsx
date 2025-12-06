@@ -19,21 +19,19 @@ import {
   type NotificationResponseDto,
 } from "../../../../../types";
 import { ProfileDialog } from "../../../../../components/Profile";
+import { PostDialog } from "../../../../../components";
 
 export function Notifications() {
   const { user } = useAuth();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [profileDialogOpen, setProfileDialogOpen] = useState<boolean>(false);
   const [profileUserId, setProfileUserId] = useState<number | null>(null);
+  const [postDialogOpen, setPostDialogOpen] = useState<boolean>(false);
+  const [postId, setPostId] = useState<number | null>(null);
 
   const { data: notifications = [] } = useNotificationFindAll();
   const updateNotification = useNotificationUpdate();
   useNotificationStream(user?.id as number);
-
-  const handleOpenProfile = (userId: number) => {
-    setProfileUserId(userId);
-    setProfileDialogOpen(true);
-  };
 
   const handleNotificationClick = (notif: NotificationResponseDto) => {
     if (!notif.read) {
@@ -41,10 +39,25 @@ export function Notifications() {
     }
 
     if (notif.type === NotificationType.FOLLOW && notif.actionUser) {
-      handleOpenProfile(notif.actionUser.id);
+      setProfileUserId(notif.actionUser.id);
+      setProfileDialogOpen(true);
       setAnchorEl(null);
     }
+
+    if (
+      notif.type === NotificationType.POST_LIKE ||
+      notif.type === NotificationType.POST_REACTION ||
+      notif.type === NotificationType.POST_COMMENT
+    ) {
+      if (notif.post?.id) {
+        setPostId(notif.post.id);
+        setPostDialogOpen(true);
+        setAnchorEl(null);
+      }
+    }
   };
+
+  console.log(postId, postDialogOpen)
 
   return (
     <>
@@ -115,6 +128,13 @@ export function Notifications() {
           open={profileDialogOpen}
           userId={profileUserId}
           onClose={() => setProfileDialogOpen(false)}
+        />
+      )}
+      {postId !== null && (
+        <PostDialog
+          open={postDialogOpen}
+          postId={postId}
+          onClose={() => setPostDialogOpen(false)}
         />
       )}
     </>

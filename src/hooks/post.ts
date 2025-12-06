@@ -7,6 +7,22 @@ import {
 } from "../types";
 import { api } from "../lib/api";
 
+export function usePostFindOne(id: number) {
+  return useQuery({
+    queryKey: ["post", id],
+    enabled: !!id,
+    queryFn: async () => {
+      const res = await api(`/post/${id}`);
+      if (!res?.ok) {
+        const err = await res?.json();
+        throw new Error(err.message || "Failed to fetch post");
+      }
+      return res.json() as Promise<PostResponseDto>;
+    },
+    retry: 0,
+  });
+}
+
 export function usePostFindByUserId(userId: number) {
   return useQuery({
     queryKey: ["posts_user", userId],
