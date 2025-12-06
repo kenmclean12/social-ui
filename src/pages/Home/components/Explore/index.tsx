@@ -58,6 +58,7 @@ export function ExploreFeed() {
           width="100%"
           p={2}
           mb={2}
+          border="1px solid #444"
           borderRadius={2}
           sx={{
             bgcolor: "#1e1e1e",
@@ -70,7 +71,7 @@ export function ExploreFeed() {
             spacing={0.75}
           >
             <Typography color="white">Explore</Typography>
-            <Public sx={{ color: "lightblue" }} />
+            <Public sx={{ color: "white" }} />
           </Stack>
           <FormControl size="small" sx={{ minWidth: 150 }}>
             <InputLabel
@@ -87,7 +88,7 @@ export function ExploreFeed() {
               label="Filter"
               sx={{
                 maxWidth: 400,
-                backgroundColor: "#1e1e1e",
+                backgroundColor: "black",
                 color: "white",
                 ".MuiOutlinedInput-notchedOutline": { borderColor: "#444" },
                 "&:hover .MuiOutlinedInput-notchedOutline": {
@@ -101,7 +102,7 @@ export function ExploreFeed() {
               MenuProps={{
                 PaperProps: {
                   sx: {
-                    backgroundColor: "#1e1e1e",
+                    backgroundColor: "black",
                     color: "white",
                   },
                 },
