@@ -32,11 +32,10 @@ export function TopBar() {
             flexDirection="row"
             alignItems="center"
             justifyContent="center"
-            spacing={1}
+            gap={1}
             height="100%"
             minWidth="130px"
-            borderRight="1px solid lightblue"
-            pr={2.5}
+            pr={1.5}
           >
             <Typography color="white">Social</Typography>
             <NightsStay sx={{ color: "lightblue" }} />
