@@ -20,7 +20,7 @@ export function Sidebar({ userId, selectedId, onSelect }: SidebarProps) {
   const { data, isLoading } = useConversationFindByUser(userId);
 
   return (
-    <Box display="flex" flexDirection="column" height="100%" width="25%" minWidth={250}>
+    <Box display="flex" flexDirection="column" height="100%" width="100%" minWidth={250}>
       <Box
         display="flex"
         alignItems="center"
@@ -29,7 +29,7 @@ export function Sidebar({ userId, selectedId, onSelect }: SidebarProps) {
         py={1.5}
         borderBottom="1px solid lightblue"
       >
-        <Typography fontSize="17px" color="white">Conversations</Typography>
+        <Typography fontSize="17px" color="white" pl={4}>Conversations</Typography>
         <IconButton onClick={() => setOpenDialog(true)}>
           <AddIcon sx={{ color: "lightblue" }} />
         </IconButton>

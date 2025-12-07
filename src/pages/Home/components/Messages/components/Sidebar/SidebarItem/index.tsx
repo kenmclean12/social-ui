@@ -73,7 +73,6 @@ export function SidebarItem({
         sx={{
           display: "flex",
           justifyContent: "space-between",
-          minWidth: "250px",
           borderBottom: "1px solid #222",
           py: 1.5,
           color: "white",
