@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AppBar, Toolbar, Box, Stack, Typography } from "@mui/material";
+import { AppBar, Toolbar, Box, Stack } from "@mui/material";
 import { NightsStay } from "@mui/icons-material";
 import { useAuth } from "../../../../context";
 import { Notifications, ProfileMenu, UserSearch } from "./components";
@@ -25,7 +25,7 @@ export function TopBar() {
             justifyContent: "space-between",
             height: "100%",
             flexWrap: "wrap",
-            gap: 1,
+            gap: 1.5,
             px: 1,
             backgroundColor: "black",
           }}
@@ -38,9 +38,6 @@ export function TopBar() {
             flexShrink={0}
             pl={1}
           >
-            <Typography align="center" color="white">
-              Luna
-            </Typography>
             <NightsStay sx={{ color: "lightblue" }} />
           </Stack>
           <Box display="flex" flex={1} justifyContent="center" minWidth={0}>

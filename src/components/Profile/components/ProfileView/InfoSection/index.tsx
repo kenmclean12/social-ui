@@ -42,7 +42,7 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
             Basic Info
           </Box>
           <Divider sx={{ backgroundColor: "#ccc" }} />
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mt: 1 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mt: 1, paddingInline: 1 }}>
             <EditableField
               label="Username"
               value={user.userName}
@@ -93,7 +93,7 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
             Contact & Details
           </Box>
           <Divider sx={{ backgroundColor: "#ccc" }} />
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mt: 1 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mt: 1, paddingInline: 1 }}>
             <EditableField
               label="Email"
               value={user.email}
@@ -106,7 +106,7 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
               label="Phone"
               value={user.phoneNumber || ""}
               isOwnUser={isOwnUser}
-              maxLength={11}
+              maxLength={12}
               onSave={(v: string) => updateUser({ phoneNumber: v })}
               isPhone
             />
@@ -114,6 +114,7 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
               label="Age"
               value={user.age?.toString()}
               isOwnUser={isOwnUser}
+              maxLength={3}
               onSave={(v: string) => updateUser({ age: Number(v) })}
               isNumber
             />

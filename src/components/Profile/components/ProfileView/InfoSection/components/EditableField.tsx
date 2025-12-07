@@ -49,11 +49,22 @@ export function EditableField({
   };
 
   const handleChange = (val: string) => {
-    if (isPhone) {
-      setTemp(formatPhoneNumber(val));
-    } else {
+    if (isNumber && maxLength) {
+      if (val.length > maxLength) return;
       setTemp(val);
+      return;
     }
+
+    if (isPhone) {
+      const digits = val.replace(/\D/g, "");
+      if (maxLength && digits.length > maxLength) return;
+      setTemp(formatPhoneNumber(val));
+      return;
+    }
+
+    if (maxLength && val.length > maxLength) return;
+
+    setTemp(val);
   };
 
   const handleSave = () => {
@@ -141,13 +152,15 @@ export function EditableField({
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
         <TextField
-          type={isNumber ? "number" : "text"}
+          type="text"
+          inputMode={isNumber ? "numeric" : "text"}
           value={temp}
           onChange={(e) => handleChange(e.target.value)}
           error={error}
           variant="outlined"
           size="small"
           autoFocus
+          fullWidth
           inputProps={{ maxLength }} 
           sx={{
             "& .MuiOutlinedInput-root": {
