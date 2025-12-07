@@ -11,7 +11,7 @@ interface Props {
   loading?: boolean;
   hasContent?: boolean;
   emptyMessage?: string;
-  maxWidth?: "sm" | "md";
+  maxWidth?: "sm" | "md" | "lg";
 }
 
 export function UniversalDialog({
@@ -32,6 +32,7 @@ export function UniversalDialog({
       fullWidth
       PaperProps={{
         sx: {
+          height: maxWidth === "lg" ? "90vh" : "auto",
           backgroundColor: "black",
           border: "1px solid #444",
           color: "white",

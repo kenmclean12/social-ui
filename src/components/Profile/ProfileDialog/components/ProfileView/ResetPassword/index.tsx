@@ -9,8 +9,8 @@ import {
   Box,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useUserResetPassword } from "../../../../../hooks";
-import type { PasswordResetDto } from "../../../../../types";
+import { useUserResetPassword } from "../../../../../../hooks";
+import type { PasswordResetDto } from "../../../../../../types";
 
 interface ResetPasswordProps {
   open: boolean;

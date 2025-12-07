@@ -1,6 +1,6 @@
 import { CircularProgress, Stack, Typography } from "@mui/material";
-import { usePostFindByUserId } from "../../../../../hooks";
-import { PostCard } from "../../../..";
+import { usePostFindByUserId } from "../../../../../../hooks";
+import { PostCard } from "../../../../..";
 
 interface PostSectionProps {
   userId: number;

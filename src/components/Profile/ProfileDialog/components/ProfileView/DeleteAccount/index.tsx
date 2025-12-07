@@ -6,8 +6,8 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-import { useAuth } from "../../../../../context";
-import { useUserDelete } from "../../../../../hooks";
+import { useAuth } from "../../../../../../context";
+import { useUserDelete } from "../../../../../../hooks";
 import CloseIcon from "@mui/icons-material/Close";
 
 interface DeleteAccountProps {

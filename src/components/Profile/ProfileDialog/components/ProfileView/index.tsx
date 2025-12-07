@@ -3,8 +3,8 @@ import { AvatarUpload } from "./AvatarUpload";
 import { InfoSection } from "./InfoSection";
 import { DescriptionSection } from "./DescriptionSection";
 import { PostSection } from "./PostSection";
-import { useUserFindOne } from "../../../../hooks";
-import type { UserResponseDto } from "../../../../types";
+import { useUserFindOne } from "../../../../../hooks";
+import type { UserResponseDto } from "../../../../../types";
 
 interface ProfileViewProps {
   userId: number;

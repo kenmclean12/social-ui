@@ -13,10 +13,10 @@ import {
   useFollowCreate,
   useFollowGetFollowers,
   useFollowGetFollowing,
-} from "../../../../hooks";
+} from "../../../../../hooks";
 import { Close } from "@mui/icons-material";
 import { useState, useMemo } from "react";
-import { useAuth } from "../../../../context";
+import { useAuth } from "../../../../../context";
 
 interface FollowListViewProps {
   userId: number;

@@ -3,7 +3,7 @@ import { AppBar, Toolbar, Box, Stack } from "@mui/material";
 import { NightsStay } from "@mui/icons-material";
 import { useAuth } from "../../../../context";
 import { Notifications, ProfileMenu, UserSearch } from "./components";
-import { ProfileDialog } from "../../../../components/Profile";
+import { ProfileDialog } from "../../../../components/Profile/ProfileDialog";
 import { PostCreate } from "../../../../components";
 
 export function TopBar() {

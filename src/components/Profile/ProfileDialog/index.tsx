@@ -18,14 +18,14 @@ import {
   Settings,
 } from "@mui/icons-material";
 import { useState } from "react";
-import { useAuth } from "../../context";
+import { useAuth } from "../../../context";
 import { FollowListView, ProfileView } from "./components";
 import {
   useFollowCreate,
   useFollowGetFollowing,
   useFollowRemove,
   useUserFindOne,
-} from "../../hooks";
+} from "../../../hooks";
 import { ResetPassword } from "./components/ProfileView/ResetPassword";
 import { DeleteAccount } from "./components/ProfileView/DeleteAccount";
 
@@ -97,7 +97,7 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
       PaperProps={{
         sx: {
           height: "90vh",
-          backgroundColor: "#090909ff",
+          backgroundColor: "black",
           color: "#fff",
           border: "1px solid #444",
         },

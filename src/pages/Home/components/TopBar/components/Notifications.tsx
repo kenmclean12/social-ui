@@ -18,7 +18,7 @@ import {
   NotificationType,
   type NotificationResponseDto,
 } from "../../../../../types";
-import { ProfileDialog } from "../../../../../components/Profile";
+import { ProfileDialog } from "../../../../../components/Profile/ProfileDialog";
 import { MessageDialog, PostDialog } from "../../../../../components";
 
 export function Notifications() {
