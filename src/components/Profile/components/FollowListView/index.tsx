@@ -7,13 +7,16 @@ import {
   Box,
   Input,
   InputAdornment,
+  Button,
 } from "@mui/material";
 import {
+  useFollowCreate,
   useFollowGetFollowers,
   useFollowGetFollowing,
 } from "../../../../hooks";
-import { Close, Visibility } from "@mui/icons-material";
+import { Close } from "@mui/icons-material";
 import { useState, useMemo } from "react";
+import { useAuth } from "../../../../context";
 
 interface FollowListViewProps {
   userId: number;
@@ -26,6 +29,7 @@ export function FollowListView({
   listType,
   onClickUser,
 }: FollowListViewProps) {
+  const { user } = useAuth();
   const [search, setSearch] = useState<string>("");
   const followersQuery = useFollowGetFollowers(userId, {
     enabled: listType === "followers",
@@ -35,6 +39,7 @@ export function FollowListView({
   });
   const query = listType === "followers" ? followersQuery : followingQuery;
   const { data: list, isLoading } = query;
+  const { mutateAsync: followUser } = useFollowCreate(user?.id as number);
 
   const normalize = (val: string) =>
     (val ?? "").toString().toLowerCase().trim().replace(/\s+/g, "");
@@ -82,7 +87,7 @@ export function FollowListView({
         }
         sx={{
           height: 40,
-          padding: "2px 8px",
+          padding: "2px 12px",
           mb: 2,
           border: "1px solid black",
           backgroundColor: "#232222ff",
@@ -100,7 +105,7 @@ export function FollowListView({
         }}
       >
         {filtered.length === 0 && (
-          <Typography align="center" sx={{ p: 3 }}>
+          <Typography align="center" sx={{ p: 2 }}>
             No matching users
           </Typography>
         )}
@@ -115,7 +120,8 @@ export function FollowListView({
                 p: 1,
                 backgroundColor: "black",
                 cursor: "pointer",
-                transition: "background-color 0.15s ease, border-color 0.15s ease",
+                transition:
+                  "background-color 0.15s ease, border-color 0.15s ease",
                 "&:hover": {
                   backgroundColor: "#252525",
                   borderColor: "lightblue",
@@ -138,9 +144,25 @@ export function FollowListView({
                   (@{user.userName})
                 </Typography>
               </Stack>
-              <IconButton sx={{ marginLeft: "auto", cursor: "pointer" }}>
-                <Visibility sx={{ color: "lightblue" }} />
-              </IconButton>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  if (user?.id !== user.id) {
+                    followUser({
+                      followerId: user?.id as number,
+                      followingId: user.id,
+                    })
+                  }
+                }}
+                sx={{
+                  border: "1px solid lightblue",
+                  color: "lightblue",
+                  marginLeft: "auto",
+                  cursor: "pointer",
+                }}
+              >
+                Follow
+              </Button>
             </Paper>
           );
         })}
