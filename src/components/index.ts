@@ -3,4 +3,4 @@ export * from "./ProtectedRoute";
 export * from "./Post";
 export * from "./Message";
 export * from "./ReactionPanel";
-export * from "./DialogHeader";
+export * from "./UniversalDialog/Header";

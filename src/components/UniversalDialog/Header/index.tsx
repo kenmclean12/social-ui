@@ -7,7 +7,7 @@ interface Props {
   onClose: () => void;
 }
 
-export default function DialogHeader({ title, onClose }: Props) {
+export default function Header({ title, onClose }: Props) {
   return (
     <DialogTitle
       sx={{

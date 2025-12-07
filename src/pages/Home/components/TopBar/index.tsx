@@ -3,8 +3,8 @@ import { AppBar, Toolbar, Box, Stack } from "@mui/material";
 import { NightsStay } from "@mui/icons-material";
 import { useAuth } from "../../../../context";
 import { Notifications, ProfileMenu, UserSearch } from "./components";
-import { CreatePost } from "../../../../components";
 import { ProfileDialog } from "../../../../components/Profile";
+import { PostCreate } from "../../../../components";
 
 export function TopBar() {
   const { user } = useAuth();
@@ -44,7 +44,7 @@ export function TopBar() {
             <UserSearch />
           </Box>
           <Box display="flex" gap={1} flexShrink={0}>
-            <CreatePost />
+            <PostCreate />
             <Notifications />
             <ProfileMenu />
           </Box>

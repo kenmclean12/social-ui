@@ -1,8 +1,6 @@
 import { useState } from "react";
 import {
   IconButton,
-  Dialog,
-  DialogContent,
   Button,
   Input,
   Stack,
@@ -12,9 +10,9 @@ import {
 import { useAuth } from "../../../context";
 import { usePostCreate } from "../../../hooks";
 import { Add, Close } from "@mui/icons-material";
-import DialogHeader from "../../DialogHeader";
+import { UniversalDialog } from "../../UniversalDialog";
 
-export function CreatePost() {
+export function PostCreate() {
   const { user } = useAuth();
   const [open, setOpen] = useState<boolean>(false);
   const [textContent, setTextContent] = useState<string>("");
@@ -62,22 +60,12 @@ export function CreatePost() {
       <IconButton onClick={() => setOpen(true)} sx={{ color: "white" }}>
         <Add />
       </IconButton>
-      <Dialog
+      <UniversalDialog
         open={open}
         onClose={handleClose}
-        maxWidth="sm"
-        fullWidth
-        sx={{
-          "& .MuiPaper-root": {
-            backgroundColor: "black",
-            color: "white",
-            border: "1px solid #444",
-          },
-        }}
-      >
-        <DialogHeader title="Create Post" onClose={() => setOpen(false)} />
-        <DialogContent>
-          <Stack spacing={2} mt={2}>
+        title="Create Post"
+        content={
+          <Stack spacing={2} mt={1}>
             <Input
               fullWidth
               placeholder="Write something..."
@@ -208,8 +196,8 @@ export function CreatePost() {
               {isPending ? "Posting..." : "Submit"}
             </Button>
           </Stack>
-        </DialogContent>
-      </Dialog>
+        }
+      />
     </>
   );
 }
