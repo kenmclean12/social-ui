@@ -61,7 +61,7 @@ export function PostCreate() {
         <Add />
       </IconButton>
       <UniversalDialog open={open} onClose={handleClose} title="Create Post">
-        <Stack spacing={2} mt={1}>
+        <Stack spacing={2}>
           <Input
             fullWidth
             placeholder="Write something..."

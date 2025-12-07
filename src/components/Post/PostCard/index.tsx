@@ -57,6 +57,9 @@ export function PostCard({ post, width = "100%", height = "auto" }: Props) {
   return (
     <Paper
       sx={{
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
         height,
         width,
         minHeight: 400,
@@ -66,10 +69,7 @@ export function PostCard({ post, width = "100%", height = "auto" }: Props) {
         backgroundColor: "#1e1e1e",
         border: "1px solid #444",
         borderRadius: 2,
-        position: "relative",
         overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
       }}
     >
       <Slide direction="right" in={!showComments} mountOnEnter>

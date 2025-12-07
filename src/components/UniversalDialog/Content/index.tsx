@@ -25,7 +25,7 @@ export function Content({
         {loading && (
           <CircularProgress size={30} sx={{ p: 3, color: "lightblue" }} />
         )}
-        {!loading && display && <Stack p={1}>{children}</Stack>}
+        {!loading && display && <Stack p={1} pt={2}>{children}</Stack>}
         {!loading && !display && (
           <Typography align="center" color="white" p={3}>
             {emptyMessage}
