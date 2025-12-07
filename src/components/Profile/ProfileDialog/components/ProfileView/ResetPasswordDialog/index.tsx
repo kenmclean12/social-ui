@@ -4,12 +4,12 @@ import { useUserResetPassword } from "../../../../../../hooks";
 import type { PasswordResetDto } from "../../../../../../types";
 import { UniversalDialog } from "../../../../../UniversalDialog";
 
-interface ResetPasswordProps {
+interface Props {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function ResetPasswordDialog({ open, setOpen }: ResetPasswordProps) {
+export function ResetPasswordDialog({ open, setOpen }: Props) {
   const [oldPassword, setOldPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const { mutateAsync: resetPassword, isPending } = useUserResetPassword();

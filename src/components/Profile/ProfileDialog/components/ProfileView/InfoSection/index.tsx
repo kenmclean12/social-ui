@@ -3,12 +3,12 @@ import type { UserWithCountsResponseDto } from "../../../../../../types";
 import { useUserUpdate } from "../../../../../../hooks";
 import { EditableField } from "./components";
 
-interface InfoSectionProps {
+interface Props {
   user: UserWithCountsResponseDto;
   isOwnUser: boolean;
 }
 
-export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
+export function InfoSection({ user, isOwnUser }: Props) {
   const { mutateAsync: updateUser } = useUserUpdate();
 
   return (
@@ -44,7 +44,15 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
             Basic Info
           </Box>
           <Divider sx={{ backgroundColor: "#ccc" }} />
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mt: 1, paddingInline: 1 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 1.5,
+              mt: 1,
+              paddingInline: 1,
+            }}
+          >
             <EditableField
               label="Username"
               value={user.userName}
@@ -95,7 +103,15 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
             Contact Details
           </Box>
           <Divider sx={{ backgroundColor: "#ccc" }} />
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mt: 1, paddingInline: 1 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 1.5,
+              mt: 1,
+              paddingInline: 1,
+            }}
+          >
             <EditableField
               label="Email"
               value={user.email}

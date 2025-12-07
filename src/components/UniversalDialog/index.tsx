@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Dialog, Stack } from "@mui/material";
 import Header from "./Header";
 import { Content } from "./Content";
+import { dialogStyles } from "./styles";
 
 interface Props {
   open: boolean;
@@ -34,11 +35,8 @@ export function UniversalDialog({
       fullWidth
       PaperProps={{
         sx: {
+          ...dialogStyles,
           height: maxWidth === "lg" ? "90vh" : "auto",
-          backgroundColor: "black",
-          border: "1px solid #444",
-          color: "white",
-          borderRadius: 2,
         },
       }}
     >
@@ -53,7 +51,7 @@ export function UniversalDialog({
         </Stack>
       </Content>
       {footer && (
-        <Stack borderTop="1px solid #444" mt={2.5} pt={1.5} pb={1.5}>
+        <Stack mt={2.5} pt={1.5} pb={1.5} borderTop="1px solid #444">
           <Stack paddingInline={1}>{footer}</Stack>
         </Stack>
       )}

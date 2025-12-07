@@ -10,27 +10,21 @@ import {
   MenuItem,
   Input,
 } from "@mui/material";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import Edit from "@mui/icons-material/Edit";
-import Delete from "@mui/icons-material/Delete";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import CloseIcon from "@mui/icons-material/Close";
+import { Close, Delete, Edit, Favorite, FavoriteBorder, Settings, Visibility } from "@mui/icons-material";
 import { useAuth } from "../../../context";
 import type { MessageResponseDto } from "../../../types";
 import { useLikeCreate, useLikeDelete, useLikeFind, useMessageDelete, useMessageMarkRead, useMessageUpdate } from "../../../hooks";
-import { Settings } from "@mui/icons-material";
 import { ReactionPanel } from "../../ReactionPanel";
 
 interface Props {
   message: MessageResponseDto;
-  isMe: boolean;
+  isSelf: boolean;
   dialog?: boolean;
 }
 
 const sentReadRequests = new Set<number>();
 
-export function MessageBubble({ message, isMe, dialog = false }: Props) {
+export function MessageBubble({ message, isSelf, dialog = false }: Props) {
   const { user } = useAuth();
   const [menuAnchor, setMenuAnchor] = useState<HTMLButtonElement | null>(null);
   const [readsAnchor, setReadsAnchor] = useState<HTMLElement | null>(null);
@@ -59,7 +53,7 @@ export function MessageBubble({ message, isMe, dialog = false }: Props) {
   }, [hasRead, markRead, message, message.id, user, user?.id]);
 
   const handleToggleLike = async () => {
-    if (isMe) return;
+    if (isSelf) return;
     if (myLike) await removeLike(myLike.id);
     else await createLike({ userId: user?.id as number, messageId: message.id });
   };
@@ -69,24 +63,22 @@ export function MessageBubble({ message, isMe, dialog = false }: Props) {
     setEditing(false);
   };
 
-  const handleDelete = async () => await deleteMessage(message.id);
-
   const timestamp = new Date(message.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   const readCount = message.reads?.length || 0;
 
   const likeIcon = myLike ? (
-    <FavoriteIcon sx={{ height: 25, color: "lightblue" }} />
+    <Favorite sx={{ height: 25, color: "lightblue" }} />
   ) : likes.length > 0 ? (
-    <FavoriteIcon sx={{ height: 25, color: "#fff" }} />
+    <Favorite sx={{ height: 25, color: "#fff" }} />
   ) : (
-    <FavoriteBorderIcon sx={{ height: 25, color: "#fff" }} />
+    <FavoriteBorder sx={{ height: 25, color: "#fff" }} />
   );
 
   const likeColor = myLike ? "lightblue" : "#fff";
 
   return (
-    <Box display="flex" flexDirection="column" alignItems={isMe ? "flex-end" : "flex-start"} mb={dialog ? 0 : 2} gap={0.5}>
-      {!isMe ? (
+    <Box display="flex" flexDirection="column" alignItems={isSelf ? "flex-end" : "flex-start"} mb={dialog ? 0 : 2} gap={0.5}>
+      {!isSelf ? (
         <Stack direction="row" alignItems="center" spacing={1} mb={0.5}>
           <Avatar src={message.sender.avatarUrl} sx={{ width: 28, height: 28 }} />
           <Typography fontSize={13} color="#ccc">
@@ -104,7 +96,7 @@ export function MessageBubble({ message, isMe, dialog = false }: Props) {
         </Stack>
       )}
 
-      <Stack direction="row" alignItems="flex-end" spacing={0.7} justifyContent={isMe ? "flex-end" : "flex-start"} width="50%">
+      <Stack direction="row" alignItems="flex-end" spacing={0.7} justifyContent={isSelf ? "flex-end" : "flex-start"} width="50%">
         <Paper
           elevation={2}
           sx={{
@@ -141,7 +133,7 @@ export function MessageBubble({ message, isMe, dialog = false }: Props) {
                 }}
                 sx={{ color: "red" }}
               >
-                <CloseIcon />
+                <Close />
               </IconButton>
             </Stack>
           ) : (
@@ -155,9 +147,9 @@ export function MessageBubble({ message, isMe, dialog = false }: Props) {
         alignItems="center"
         spacing={1.2}
         mt={0.2}
-        sx={{ opacity: 0.9, width: "100%", justifyContent: isMe ? "flex-end" : "flex-start" }}
+        sx={{ opacity: 0.9, width: "100%", justifyContent: isSelf ? "flex-end" : "flex-start" }}
       >
-        {isMe && (
+        {isSelf && (
           <>
             <IconButton size="small" onClick={(e) => setMenuAnchor(e.currentTarget)} sx={{ color: "white", p: 0.3, pr: 0.75 }} disabled={editing}>
               <Settings />
@@ -184,8 +176,8 @@ export function MessageBubble({ message, isMe, dialog = false }: Props) {
                   Update <Edit sx={{ color: "lightblue", height: 20 }} />
                 </MenuItem>
                 <MenuItem
-                  onClick={() => {
-                    handleDelete();
+                  onClick={async () => {
+                    await deleteMessage(message.id)
                     setMenuAnchor(null);
                   }}
                   sx={{ display: "flex", justifyContent: "space-between", color: "white" }}
@@ -197,7 +189,7 @@ export function MessageBubble({ message, isMe, dialog = false }: Props) {
           </>
         )}
 
-        <ReactionPanel entityType="message" entityId={message.id} isSelf={isMe} direction="right" />
+        <ReactionPanel entityType="message" entityId={message.id} isSelf={isSelf} direction="right" />
 
         <Stack direction="row" alignItems="center" spacing={0.3}>
           <IconButton size="small" onClick={handleToggleLike} sx={{ p: 0.3 }}>
@@ -212,13 +204,12 @@ export function MessageBubble({ message, isMe, dialog = false }: Props) {
           <>
             <Stack direction="row" alignItems="center" spacing={0.3} ml={1}>
               <IconButton size="small" onClick={(e) => setReadsAnchor(e.currentTarget)} sx={{ p: 0.3 }}>
-                <VisibilityIcon sx={{ height: 25, color: "lightblue" }} />
+                <Visibility sx={{ height: 25, color: "lightblue" }} />
               </IconButton>
               <Typography fontSize={12} color="lightblue">
                 {readCount}
               </Typography>
             </Stack>
-
             <Popover
               anchorEl={readsAnchor}
               open={Boolean(readsAnchor)}

@@ -6,7 +6,7 @@ import { PostSection } from "./PostSection";
 import { useUserFindOne } from "../../../../../hooks";
 import type { UserResponseDto } from "../../../../../types";
 
-interface ProfileViewProps {
+interface Props {
   userId: number;
   self: UserResponseDto | null;
   onClickFollowers: () => void;
@@ -18,7 +18,7 @@ export function ProfileView({
   self,
   onClickFollowers,
   onClickFollowing,
-}: ProfileViewProps) {
+}: Props) {
   const { data: user, isLoading } = useUserFindOne(userId);
 
   const formatNumber = (num: number) => {
@@ -33,7 +33,13 @@ export function ProfileView({
 
   return (
     <Stack spacing={3} sx={{ p: 3 }}>
-      <Stack direction="row" alignItems="center" spacing={3} height="300px" overflow="auto">
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={3}
+        height="300px"
+        overflow="auto"
+      >
         <Stack
           alignItems="center"
           justifyContent="center"

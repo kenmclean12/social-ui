@@ -9,7 +9,8 @@ import {
 } from "@mui/material";
 import { useAuth } from "../../../../../../context";
 import { useUserFindOne } from "../../../../../../hooks";
-import { ProfileDialog } from "../../../../../../components/Profile/ProfileDialog";
+import { ProfileDialog } from "../../../../../../components";
+import { avatarStyles, menuListStyles } from "./styles";
 
 export function ProfileMenu() {
   const { user, logout } = useAuth();
@@ -20,10 +21,7 @@ export function ProfileMenu() {
   return (
     <>
       <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-        <Avatar
-          sx={{ width: 36, height: 36, border: "1px solid #444" }}
-          src={activeUser?.avatarUrl || ""}
-        />
+        <Avatar sx={avatarStyles} src={activeUser?.avatarUrl || ""} />
       </IconButton>
       <Popover
         open={!!anchorEl}
@@ -32,14 +30,7 @@ export function ProfileMenu() {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <MenuList
-          style={{
-            width: "175px",
-            backgroundColor: "#1e1e1e",
-            color: "#fff",
-            border: "1px solid #444",
-          }}
-        >
+        <MenuList sx={menuListStyles}>
           <MenuItem
             onClick={() => {
               setProfileOpen(true);

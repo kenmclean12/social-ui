@@ -6,3 +6,4 @@ export * from "./ReactionPanel";
 export * from "./UniversalDialog";
 export * from "./Follow";
 export * from "./User";
+export * from "./Profile";

@@ -1,6 +1,6 @@
 import { DialogTitle, IconButton } from "@mui/material";
 import { Close } from "@mui/icons-material";
-import { closeIconStyles } from "./styles";
+import { closeIconStyles, dialogTitleStyles } from "./styles";
 
 interface Props {
   title: string;
@@ -9,15 +9,7 @@ interface Props {
 
 export default function Header({ title, onClose }: Props) {
   return (
-    <DialogTitle
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        py: 1.5,
-        fontSize: "19px",
-        borderBottom: "1px solid #444",
-      }}
-    >
+    <DialogTitle sx={dialogTitleStyles}>
       {title}
       <IconButton onClick={onClose} sx={{ ...closeIconStyles }}>
         <Close />

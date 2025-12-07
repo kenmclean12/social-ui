@@ -126,7 +126,7 @@ export function LoginPage() {
             sx={authButtonStyles}
           >
             Login
-            <Login style={{ marginLeft: "2px", height: 16 }} />
+            <Login style={{ height: 16 }} />
           </Button>
           <Typography align="center" fontSize={12}>
             Don't have an account?{" "}

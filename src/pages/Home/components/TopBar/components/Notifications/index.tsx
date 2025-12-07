@@ -18,20 +18,21 @@ import {
   NotificationType,
   type NotificationResponseDto,
 } from "../../../../../../types";
-import { ProfileDialog } from "../../../../../../components/Profile/ProfileDialog";
-import { MessageDialog, PostDialog } from "../../../../../../components";
-import { UserRow } from "../../../../../../components/User/UserRow";
+import {
+  MessageDialog,
+  PostDialog,
+  ProfileDialog,
+  UserRow,
+} from "../../../../../../components";
+import { notificationIndicatorStyles, popoverStyles } from "./styles";
 
 export function Notifications() {
   const { user } = useAuth();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
   const [profileUserId, setProfileUserId] = useState<number | null>(null);
-
   const [postDialogOpen, setPostDialogOpen] = useState(false);
   const [postId, setPostId] = useState<number | null>(null);
-
   const [messageDialogOpen, setMessageDialogOpen] = useState(false);
   const [messageId, setMessageId] = useState<number | null>(null);
 
@@ -94,24 +95,12 @@ export function Notifications() {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         PaperProps={{
-          sx: {
-            maxHeight: 400,
-            width: 350,
-            overflowY: "auto",
-            backgroundColor: "#1e1e1e",
-            border: "1px solid #444",
-          },
+          sx: popoverStyles,
         }}
       >
         <Stack sx={{ overflowY: "auto" }}>
           {notifications.length === 0 ? (
-            <Typography
-              align="center"
-              fontSize={14}
-              pt={2}
-              pb={2}
-              color="#bbb"
-            >
+            <Typography align="center" fontSize={14} pt={2} pb={2} color="#bbb">
               No notifications found
             </Typography>
           ) : (
@@ -126,20 +115,7 @@ export function Notifications() {
                   showFollowButton={false}
                   message={notif.notificationMessage}
                 />
-                {!notif.read && (
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      right: 14,
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      width: 10,
-                      height: 10,
-                      borderRadius: "50%",
-                      backgroundColor: "lightblue",
-                    }}
-                  />
-                )}
+                {!notif.read && <Box sx={notificationIndicatorStyles} />}
               </Box>
             ))
           )}

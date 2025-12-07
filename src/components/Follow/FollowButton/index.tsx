@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Button, IconButton, Stack } from "@mui/material";
 import { Check, PersonAdd } from "@mui/icons-material";
 import { useAuth } from "../../../context";
@@ -6,7 +7,7 @@ import {
   useFollowRemove,
   useFollowGetFollowing,
 } from "../../../hooks";
-import { useMemo } from "react";
+import { buttonStyles, noTextButtonStyles } from "./styles";
 
 interface Props {
   targetUserId: number;
@@ -48,18 +49,7 @@ export function FollowButton({
 
   if (!displayText) {
     return (
-      <IconButton
-        onClick={handleClick}
-        sx={{
-          width: 35,
-          height: 35,
-          borderRadius: 1,
-          backgroundColor: "black",
-          border: "1px solid lightblue",
-          color: "lightblue",
-          "&:hover": { backgroundColor: "#111" },
-        }}
-      >
+      <IconButton onClick={handleClick} sx={noTextButtonStyles}>
         {isFollowing ? (
           <Check style={{ height: 20 }} />
         ) : (
@@ -74,12 +64,7 @@ export function FollowButton({
       variant="outlined"
       size={size}
       onClick={handleClick}
-      sx={{
-        backgroundColor: "black",
-        borderColor: "lightblue",
-        color: "lightblue",
-        ml: "auto",
-      }}
+      sx={buttonStyles}
     >
       <Stack direction="row" alignItems="center" spacing={0.5}>
         <span>{isFollowing ? "Following" : "Follow"}</span>

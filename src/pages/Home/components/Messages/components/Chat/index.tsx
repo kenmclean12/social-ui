@@ -27,8 +27,7 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
   const [content, setContent] = useState("");
 
   const { data: conversation } = useConversationFindOne(conversationId);
-  const { data = [], isLoading } =
-    useMessageFindByConversation(conversationId);
+  const { data = [], isLoading } = useMessageFindByConversation(conversationId);
   const { mutate: sendMessage } = useMessageCreate();
 
   const isClosed = conversation?.closed === true;
@@ -81,8 +80,7 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
         {data.length > 0 ? (
           data.map((msg, idx) => {
             const msgDate = new Date(msg.createdAt);
-            const prevDate =
-              idx > 0 ? new Date(data[idx - 1].createdAt) : null;
+            const prevDate = idx > 0 ? new Date(data[idx - 1].createdAt) : null;
 
             const showDivider =
               !prevDate || prevDate.toDateString() !== msgDate.toDateString();
@@ -107,7 +105,7 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
                 )}
                 <MessageBubble
                   message={msg}
-                  isMe={msg.sender.id === user?.id}
+                  isSelf={msg.sender.id === user?.id}
                 />
               </Box>
             );

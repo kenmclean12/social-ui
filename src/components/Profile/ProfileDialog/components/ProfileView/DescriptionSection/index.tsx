@@ -8,20 +8,15 @@ import {
   Button,
   Divider,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import CloseIcon from "@mui/icons-material/Close";
-import CheckIcon from "@mui/icons-material/Check";
 import { useUserUpdate } from "../../../../../../hooks";
+import { Check, Close, Edit } from "@mui/icons-material";
 
-interface DescriptionSectionProps {
+interface Props {
   description: string;
   isOwnUser: boolean;
 }
 
-export function DescriptionSection({
-  description,
-  isOwnUser,
-}: DescriptionSectionProps) {
+export function DescriptionSection({ description, isOwnUser }: Props) {
   const [editing, setEditing] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
   const { mutateAsync: update } = useUserUpdate();
@@ -64,7 +59,7 @@ export function DescriptionSection({
             onClick={startEditing}
             sx={{ position: "absolute", top: 8, right: 8, color: "white" }}
           >
-            <EditIcon />
+            <Edit />
           </IconButton>
         )}
         {editing ? (
@@ -99,7 +94,7 @@ export function DescriptionSection({
             <Stack direction="row" spacing={1} justifyContent="flex-end">
               <Button
                 onClick={() => setEditing(false)}
-                startIcon={<CloseIcon />}
+                startIcon={<Close />}
                 sx={{ color: "white" }}
               >
                 Cancel
@@ -108,7 +103,7 @@ export function DescriptionSection({
                 onClick={handleSave}
                 variant="contained"
                 disabled={!dirty}
-                startIcon={<CheckIcon />}
+                startIcon={<Check />}
                 sx={{
                   backgroundColor: dirty ? "lightblue" : "#555",
                   color: "#000",

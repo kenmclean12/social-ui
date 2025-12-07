@@ -1,8 +1,9 @@
 import { Avatar, Paper, Stack, Typography, Tooltip } from "@mui/material";
 import type { UserResponseDto } from "../../../types";
 import { FollowButton } from "../../Follow";
+import { paperStyles } from "./styles";
 
-interface UserRowProps {
+interface Props {
   user: UserResponseDto;
   showUserName?: boolean;
   showFollowButton?: boolean;
@@ -18,23 +19,14 @@ export function UserRow({
   showFollowButtonSmall = false,
   message,
   onClick,
-}: UserRowProps) {
-  const fullName = message
-    ? message
-    : `${user.firstName} ${user.lastName}`;
+}: Props) {
+  const fullName = message || `${user.firstName} ${user.lastName}`;
 
   return (
     <Paper
       sx={{
-        display: "flex",
-        alignItems: "center",
-        p: 1,
-        backgroundColor: "black",
+        ...paperStyles,
         cursor: onClick ? "pointer" : "default",
-        transition: "background-color 0.15s ease",
-        "&:hover": {
-          backgroundColor: "#101",
-        },
       }}
       onClick={() => onClick?.(user.id)}
     >
@@ -42,43 +34,40 @@ export function UserRow({
         direction="row"
         alignItems="center"
         spacing={2}
-        sx={{
-          flex: 1,
-          minWidth: 0,
-        }}
+        flex={1}
+        minWidth={0}
       >
         <Avatar src={user.avatarUrl} sx={{ width: 30, height: 30 }} />
         <Tooltip title={fullName}>
           <Typography
             color="white"
-            noWrap
+            fontSize={message ? "13px" : "14px"}
             sx={{
-              fontSize: message ? "13px" : "14px",
               overflow: "hidden",
               textOverflow: "ellipsis",
             }}
+            noWrap
           >
             {fullName} {showUserName && `(@${user.userName})`}
           </Typography>
         </Tooltip>
       </Stack>
       <Stack
-  flexDirection="row"
-  paddingLeft="12px"
-  style={{ pointerEvents: "auto" }}
-  onClick={(e) => e.stopPropagation()}
->
-  {showFollowButtonSmall ? (
-    <FollowButton
-      targetUserId={user.id}
-      size="small"
-      displayText={false}
-    />
-  ) : showFollowButton ? (
-    <FollowButton targetUserId={user.id} />
-  ) : null}
-</Stack>
-
+        flexDirection="row"
+        paddingLeft="12px"
+        onClick={(e) => e.stopPropagation()}
+        style={{ pointerEvents: "auto" }}
+      >
+        {showFollowButtonSmall ? (
+          <FollowButton
+            targetUserId={user.id}
+            size="small"
+            displayText={false}
+          />
+        ) : showFollowButton ? (
+          <FollowButton targetUserId={user.id} />
+        ) : null}
+      </Stack>
     </Paper>
   );
 }

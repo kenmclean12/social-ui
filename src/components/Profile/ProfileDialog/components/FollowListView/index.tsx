@@ -14,17 +14,13 @@ import {
 import { Close } from "@mui/icons-material";
 import { UserRow } from "../../../../User";
 
-interface FollowListViewProps {
+interface Props {
   userId: number;
   listType: "followers" | "following" | undefined;
   onClickUser: (id: number) => void;
 }
 
-export function FollowListView({
-  userId,
-  listType,
-  onClickUser,
-}: FollowListViewProps) {
+export function FollowListView({ userId, listType, onClickUser }: Props) {
   const [search, setSearch] = useState<string>("");
   const followersQuery = useFollowGetFollowers(userId, {
     enabled: listType === "followers",

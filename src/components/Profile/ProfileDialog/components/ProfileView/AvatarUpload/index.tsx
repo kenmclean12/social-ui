@@ -3,12 +3,12 @@ import { Avatar, Box } from "@mui/material";
 import { useUserUpdate } from "../../../../../../hooks";
 import { CameraAlt } from "@mui/icons-material";
 
-interface AvatarUploadProps {
+interface Props {
   currentUrl?: string;
   isOwnUser: boolean;
 }
 
-export function AvatarUpload({ currentUrl, isOwnUser }: AvatarUploadProps) {
+export function AvatarUpload({ currentUrl, isOwnUser }: Props) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [preview, setPreview] = useState<string | undefined>(currentUrl);
   const { mutateAsync: updateUser } = useUserUpdate();

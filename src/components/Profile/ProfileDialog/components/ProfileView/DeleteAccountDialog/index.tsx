@@ -3,12 +3,12 @@ import { useAuth } from "../../../../../../context";
 import { useUserDelete } from "../../../../../../hooks";
 import { UniversalDialog } from "../../../../../UniversalDialog";
 
-interface DeleteAccountProps {
+interface Props {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function DeleteAccountDialog({ open, setOpen }: DeleteAccountProps) {
+export function DeleteAccountDialog({ open, setOpen }: Props) {
   const { logout } = useAuth();
   const { mutateAsync: deleteUser, isPending } = useUserDelete();
 
@@ -44,8 +44,9 @@ export function DeleteAccountDialog({ open, setOpen }: DeleteAccountProps) {
     >
       <Stack spacing={3}>
         <Typography sx={{ color: "white" }}>
-          This action is <strong style={{ color: "red" }}>permanent</strong>. All your data will be
-          permanently deleted and cannot be recovered afterwards. Would you like to proceed?
+          This action is <strong style={{ color: "red" }}>permanent</strong>.
+          All your data will be permanently deleted and cannot be recovered
+          afterwards. Would you like to proceed?
         </Typography>
       </Stack>
     </UniversalDialog>

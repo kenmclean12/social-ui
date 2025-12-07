@@ -4,7 +4,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 
-interface EditableFieldProps {
+interface Props {
   label: string;
   value: string;
   onSave: (v: string) => void;
@@ -24,7 +24,7 @@ export function EditableField({
   isPhone = false,
   isNumber = false,
   isEmail = false,
-}: EditableFieldProps) {
+}: Props) {
   const [editing, setEditing] = useState<boolean>(false);
   const [temp, setTemp] = useState<string>(value);
   const [dirty, setDirty] = useState<boolean>(false);
@@ -161,7 +161,7 @@ export function EditableField({
           size="small"
           autoFocus
           fullWidth
-          inputProps={{ maxLength }} 
+          inputProps={{ maxLength }}
           sx={{
             "& .MuiOutlinedInput-root": {
               "& input": {
@@ -213,7 +213,7 @@ export function EditableField({
           variant="caption"
           sx={{
             display: "block",
-            color: "#f44336",
+            color: "red",
             mt: 0.5,
             fontSize: 11,
           }}

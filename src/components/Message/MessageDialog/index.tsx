@@ -1,7 +1,7 @@
+import { Stack } from "@mui/material";
 import { useMessageFindOne } from "../../../hooks";
 import { MessageBubble } from "../MessageBubble";
 import type { MessageResponseDto } from "../../../types";
-import { Stack } from "@mui/material";
 import { UniversalDialog } from "../../UniversalDialog";
 
 interface Props {
@@ -25,7 +25,7 @@ export function MessageDialog({ messageId, open, onClose }: Props) {
       <Stack>
         <MessageBubble
           message={message as MessageResponseDto}
-          isMe={true}
+          isSelf={true}
           dialog
         />
       </Stack>

@@ -35,13 +35,13 @@ interface StackItem {
   listType?: "followers" | "following";
 }
 
-interface ProfileDialogProps {
+interface Props {
   open: boolean;
   userId: number;
   onClose: () => void;
 }
 
-export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
+export function ProfileDialog({ open, userId, onClose }: Props) {
   const { user: self } = useAuth();
   const [resetOpen, setResetOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
