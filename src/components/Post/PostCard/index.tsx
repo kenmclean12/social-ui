@@ -60,7 +60,7 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
         height,
         width,
         minHeight: 400,
-        minWidth: 450,
+        minWidth: 400,
         maxHeight: 600,
         p: 2,
         backgroundColor: "#1e1e1e",

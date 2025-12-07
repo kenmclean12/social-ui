@@ -18,11 +18,13 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
         display: "flex",
         flex: 1,
         alignItems: "flex-start",
+        width: "100%",
+        minWidth: "300px",
         height: "100%",
         borderRadius: 2,
         backgroundColor: "black",
         color: "#fff",
-        border: "1px solid #444"
+        border: "1px solid #444",
       }}
     >
       <Box sx={{ flex: 1, width: "50%" }}>
@@ -90,7 +92,7 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
               mb: 2,
             }}
           >
-            Contact & Details
+            Contact Details
           </Box>
           <Divider sx={{ backgroundColor: "#ccc" }} />
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mt: 1, paddingInline: 1 }}>

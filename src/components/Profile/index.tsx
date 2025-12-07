@@ -92,7 +92,6 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
       PaperProps={{
         sx: {
           height: "90vh",
-          minWidth: "730px",
           backgroundColor: "#090909ff",
           color: "#fff",
           border: "1px solid #444",

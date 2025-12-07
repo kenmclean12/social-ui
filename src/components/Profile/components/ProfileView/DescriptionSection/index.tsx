@@ -78,7 +78,7 @@ export function DescriptionSection({
               onChange={(e) => setValue(e.target.value)}
               sx={(theme) => ({
                 "& .MuiInputBase-input": {
-                  color: theme.palette.primary.light,
+                  color: "white",
                 },
                 "& .MuiOutlinedInput-root": {
                   backgroundColor: "#111",

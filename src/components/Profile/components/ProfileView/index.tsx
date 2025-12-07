@@ -33,7 +33,7 @@ export function ProfileView({
 
   return (
     <Stack spacing={3} sx={{ p: 3 }}>
-      <Stack direction="row" alignItems="center" spacing={3} height="300px">
+      <Stack direction="row" alignItems="center" spacing={3} height="300px" overflow="auto">
         <Stack
           alignItems="center"
           justifyContent="center"
