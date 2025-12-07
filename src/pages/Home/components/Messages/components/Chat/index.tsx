@@ -146,6 +146,7 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
           }
           value={content}
           onChange={(e) => setContent(e.target.value)}
+          inputProps={{ maxLength: 500 }}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !isClosed) handleSend();
           }}

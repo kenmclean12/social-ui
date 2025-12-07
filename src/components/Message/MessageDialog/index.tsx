@@ -52,7 +52,7 @@ export function MessageDialog({ open, messageId, onClose }: MessageDialogProps) 
           </Typography>
         )}
         {!isLoading && message && (
-          <Stack spacing={1} p={1} pt={1.5}>
+          <Stack spacing={1} p={1}>
             <MessageBubble message={message} isMe={true} />
           </Stack>
         )}

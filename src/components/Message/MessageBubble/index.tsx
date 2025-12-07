@@ -109,9 +109,9 @@ export function MessageBubble({ message, isMe }: MessageBubbleProps) {
           sx={{
             maxWidth: "90%",
             p: 1.3,
-            background: "black",
-            color: "white",
-            border: "1px solid #444",
+            background: "lightblue",
+            border: "1px solid black",
+            color: "black",
             borderRadius: 3,
           }}
         >

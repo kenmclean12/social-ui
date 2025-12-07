@@ -74,7 +74,7 @@ export function CreatePost() {
         fullWidth
         sx={{
           "& .MuiPaper-root": {
-            backgroundColor: "black",
+            backgroundColor: "#070707ff",
             color: "white",
             border: "1px solid #444",
           },
