@@ -17,11 +17,11 @@ import {
 import { formatDayLabel } from "../../../../../../utils";
 import { MessageBubble } from "../../../../../../components";
 
-interface ChatWindowProps {
+interface Props {
   conversationId: number;
 }
 
-export function ChatWindow({ conversationId }: ChatWindowProps) {
+export function ChatWindow({ conversationId }: Props) {
   const { user } = useAuth();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [content, setContent] = useState("");
