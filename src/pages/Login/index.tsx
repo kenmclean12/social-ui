@@ -6,8 +6,12 @@ import type { LoginDto } from "../../types";
 import { useAuthLogin } from "../../hooks";
 import { useSnackbar } from "notistack";
 import type { Errors } from "./types";
-import { inputStyles } from "./styles";
 import { validateLogin } from "./utils";
+import {
+  authButtonStyles,
+  authInnerContainerStyles,
+  authInputStyles,
+} from "../styles";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -41,14 +45,12 @@ export function LoginPage() {
       justifyContent="center"
       height="100vh"
       width="100vw"
-      sx={{
-        backgroundColor: "black",
-      }}
+      sx={{ backgroundColor: "black" }}
     >
       <Stack
         width="50%"
         height="45%"
-        minHeight="300px"
+        minHeight="400px"
         minWidth="400px"
         maxHeight="400px"
         maxWidth="500px"
@@ -56,10 +58,7 @@ export function LoginPage() {
         color="white"
         border="2px solid lightblue"
         borderRadius="16px"
-        sx={{
-          backgroundColor: "black",
-          opacity: 0.9,
-        }}
+        sx={authInnerContainerStyles}
       >
         <Stack
           direction="row"
@@ -90,7 +89,7 @@ export function LoginPage() {
               }))
             }
             sx={{
-              ...inputStyles,
+              ...authInputStyles,
               border: errors.email ? "2px solid lightblue" : "1px solid #ccc",
             }}
             disableUnderline
@@ -104,7 +103,7 @@ export function LoginPage() {
               setForm((prev) => ({ ...prev, password: e.target.value }))
             }
             sx={{
-              ...inputStyles,
+              ...authInputStyles,
               border: errors.password
                 ? "2px solid lightblue"
                 : "1px solid #ccc",
@@ -124,12 +123,7 @@ export function LoginPage() {
           <Button
             variant="contained"
             onClick={handleLogin}
-            sx={{
-              backgroundColor: "black",
-              color: "lightblue",
-              border: "1.5px solid lightblue",
-              borderRadius: 2,
-            }}
+            sx={authButtonStyles}
           >
             Login
             <Login style={{ marginLeft: "2px", height: 16 }} />

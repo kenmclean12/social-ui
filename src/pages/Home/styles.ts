@@ -10,3 +10,10 @@ export const tabStyles = {
     backgroundColor: "rgba(173, 216, 230, 0.08)",
   },
 };
+
+export const tabsStyles = {
+  width: "100%",
+  backgroundColor: "black",
+  color: "white",
+  borderBottom: "1px solid lightblue",
+};

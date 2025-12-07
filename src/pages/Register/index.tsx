@@ -11,10 +11,14 @@ import type { UserCreateDto } from "../../types";
 import { useAuthRegister } from "../../hooks";
 import { formatPhoneNumber } from "../../utils";
 import { useSnackbar } from "notistack";
-import { buttonStyles, inputStyles } from "./styles";
 import { stepFields } from "./config";
 import { type FormErrors, Step } from "./types";
 import { nextStep, previousStep, update, validateStep } from "./utils";
+import {
+  authButtonStyles,
+  authInnerContainerStyles,
+  authInputStyles,
+} from "../styles";
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -91,7 +95,7 @@ export function RegisterPage() {
         type={field.type}
         onChange={(e) => handleChange(e.target.value)}
         sx={{
-          ...inputStyles,
+          ...authInputStyles,
           border: hasError ? "2px solid lightblue" : "1px solid #ccc",
         }}
         fullWidth
@@ -112,7 +116,7 @@ export function RegisterPage() {
         alignItems="center"
         width="50%"
         height="50%"
-        minHeight="300px"
+        minHeight="400px"
         minWidth="400px"
         maxHeight="400px"
         maxWidth="500px"
@@ -120,10 +124,7 @@ export function RegisterPage() {
         color="white"
         border="2px solid lightblue"
         borderRadius="16px"
-        sx={{
-          backgroundColor: "black",
-          opacity: 0.9,
-        }}
+        sx={authInnerContainerStyles}
       >
         <Stack
           direction="row"
@@ -165,7 +166,7 @@ export function RegisterPage() {
                 className="back-btn"
                 variant="contained"
                 onClick={() => setStep(previousStep)}
-                sx={{ ...buttonStyles }}
+                sx={authButtonStyles}
                 fullWidth
               >
                 <ArrowBackIos style={{ height: 16 }} />
@@ -176,7 +177,7 @@ export function RegisterPage() {
               <Button
                 variant="contained"
                 onClick={handleNext}
-                sx={{ ...buttonStyles }}
+                sx={authButtonStyles}
                 fullWidth
               >
                 Next
@@ -188,7 +189,7 @@ export function RegisterPage() {
                 variant="contained"
                 onClick={handleRegister}
                 fullWidth
-                sx={{ ...buttonStyles }}
+                sx={authButtonStyles}
               >
                 Register
                 <Check style={{ height: 16 }} />

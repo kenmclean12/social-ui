@@ -7,12 +7,12 @@ import {
   Button,
   Box,
 } from "@mui/material";
-import { useUserFindAll, useFollowGetFollowing } from "../../../../../hooks";
-import { ProfileDialog } from "../../../../../components/Profile/ProfileDialog";
-import { useAuth } from "../../../../../context";
-import type { UserResponseDto } from "../../../../../types";
+import { useUserFindAll, useFollowGetFollowing } from "../../../../../../hooks";
+import { ProfileDialog } from "../../../../../../components/Profile/ProfileDialog";
+import { useAuth } from "../../../../../../context";
+import type { UserResponseDto } from "../../../../../../types";
 import { Close } from "@mui/icons-material";
-import { UserRow } from "../../../../../components/User/UserRow";
+import { UserRow } from "../../../../../../components/User/UserRow";
 
 export function UserSearch() {
   const { user } = useAuth();

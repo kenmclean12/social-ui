@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Stack, Tabs, Typography, Box, Tab } from "@mui/material";
 import { ExploreFeed, Feed, Messages, TopBar } from "./components";
 import { useUnreadMessageCount } from "../../hooks";
-import { tabStyles } from "./styles";
+import { tabsStyles, tabStyles } from "./styles";
 import { HomePageTab } from "./types";
 
 export function HomePage() {
@@ -22,12 +22,7 @@ export function HomePage() {
         onChange={(_, val) => setTab(val)}
         textColor="inherit"
         variant="fullWidth"
-        sx={{
-          width: "100%",
-          backgroundColor: "black",
-          color: "white",
-          borderBottom: "1px solid lightblue",
-        }}
+        sx={tabsStyles}
       >
         <Tab label="Feed" value="feed" sx={tabStyles} />
         <Tab
@@ -46,9 +41,7 @@ export function HomePage() {
                   fontSize="0.75rem"
                   fontWeight={700}
                   borderRadius="50%"
-                  sx={{
-                    backgroundColor: "lightblue",
-                  }}
+                  sx={{ backgroundColor: "lightblue" }}
                 >
                   {unreadCount}
                 </Box>

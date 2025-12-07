@@ -8,19 +8,19 @@ import {
   Box,
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { useAuth } from "../../../../../context";
+import { useAuth } from "../../../../../../context";
 import {
   useNotificationFindAll,
   useNotificationStream,
   useNotificationUpdate,
-} from "../../../../../hooks/notification";
+} from "../../../../../../hooks/notification";
 import {
   NotificationType,
   type NotificationResponseDto,
-} from "../../../../../types";
-import { ProfileDialog } from "../../../../../components/Profile/ProfileDialog";
-import { MessageDialog, PostDialog } from "../../../../../components";
-import { UserRow } from "../../../../../components/User/UserRow";
+} from "../../../../../../types";
+import { ProfileDialog } from "../../../../../../components/Profile/ProfileDialog";
+import { MessageDialog, PostDialog } from "../../../../../../components";
+import { UserRow } from "../../../../../../components/User/UserRow";
 
 export function Notifications() {
   const { user } = useAuth();

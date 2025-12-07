@@ -3,8 +3,9 @@ import { AppBar, Toolbar, Box, Stack } from "@mui/material";
 import { NightsStay } from "@mui/icons-material";
 import { useAuth } from "../../../../context";
 import { Notifications, ProfileMenu, UserSearch } from "./components";
-import { ProfileDialog } from "../../../../components/Profile/ProfileDialog";
 import { PostCreate } from "../../../../components";
+import { ProfileDialog } from "../../../../components/Profile";
+import { toolbarStyles } from "./styles";
 
 export function TopBar() {
   const { user } = useAuth();
@@ -18,18 +19,7 @@ export function TopBar() {
         elevation={1}
         style={{ borderBottom: "1px solid lightblue" }}
       >
-        <Toolbar
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            height: "100%",
-            flexWrap: "wrap",
-            gap: 1.5,
-            px: 1,
-            backgroundColor: "black",
-          }}
-        >
+        <Toolbar sx={toolbarStyles}>
           <Stack
             direction="row"
             alignItems="center"

@@ -7,9 +7,9 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import { useAuth } from "../../../../../context";
-import { useUserFindOne } from "../../../../../hooks";
-import { ProfileDialog } from "../../../../../components/Profile/ProfileDialog";
+import { useAuth } from "../../../../../../context";
+import { useUserFindOne } from "../../../../../../hooks";
+import { ProfileDialog } from "../../../../../../components/Profile/ProfileDialog";
 
 export function ProfileMenu() {
   const { user, logout } = useAuth();
@@ -32,7 +32,14 @@ export function ProfileMenu() {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <MenuList style={{ width: "175px", backgroundColor: "#1e1e1e", color: "#fff", border: "1px solid #444" }}>
+        <MenuList
+          style={{
+            width: "175px",
+            backgroundColor: "#1e1e1e",
+            color: "#fff",
+            border: "1px solid #444",
+          }}
+        >
           <MenuItem
             onClick={() => {
               setProfileOpen(true);
