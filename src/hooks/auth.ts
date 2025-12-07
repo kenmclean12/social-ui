@@ -60,8 +60,10 @@ export function useAuthLogin() {
     onSuccess: (data) => {
       login(data.access_token, data.refresh_token, data.user);
     },
-    onError: (err) => {
-      enqueueSnackbar(err.message, { variant: "error" });
+    onError: () => {
+      enqueueSnackbar("Login failed, invalid credentials provided", {
+        variant: "error",
+      });
     },
   });
 }

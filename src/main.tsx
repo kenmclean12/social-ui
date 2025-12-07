@@ -15,7 +15,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <SnackbarProvider 
       maxSnack={3}
-      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       style={{ zIndex: 999999 }}
       preventDuplicate
     >
