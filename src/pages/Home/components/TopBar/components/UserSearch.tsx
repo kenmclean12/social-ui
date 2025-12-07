@@ -7,11 +7,13 @@ import {
   Avatar,
   Popper,
   Stack,
+  Button,
 } from "@mui/material";
 import { useUserFindAll, useFollowGetFollowing } from "../../../../../hooks";
 import { ProfileDialog } from "../../../../../components/Profile/ProfileDialog";
 import { useAuth } from "../../../../../context";
 import type { UserResponseDto } from "../../../../../types";
+import { Close } from "@mui/icons-material";
 
 export function UserSearch() {
   const { user } = useAuth();
@@ -87,28 +89,63 @@ export function UserSearch() {
           px: 2,
         }}
       >
-        <Input
-          inputRef={(el) => setAnchorEl(el)}
-          placeholder="Search users…"
-          disableUnderline
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          onFocus={() => setIsFocused(true)}
+        <Stack
+          direction="row"
+          flex={1}
           sx={{
-            height: "35px",
-            width: "100%",
-            minWidth: "300px",
-            padding: "2px 16px",
-            fontSize: "14px",
-            color: "white",
-            border: "1px solid white",
-            borderRadius: 4,
-            display: {
-              xs: "none",
-              sm: "block",
-            },
+            justifyContent: "center",
+            flex: 1,
+            flexShrink: 1,
+            minWidth: 200,
+            maxWidth: 800,
+            px: 2,
+            position: "relative",
           }}
-        />
+        >
+          <Input
+            inputRef={(el) => setAnchorEl(el)}
+            placeholder="Search users…"
+            disableUnderline
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            sx={{
+              height: "35px",
+              width: "100%",
+              minWidth: "300px",
+              padding: "2px 32px 2px 16px",
+              fontSize: "14px",
+              color: "white",
+              border: "1px solid white",
+              borderRadius: 4,
+              display: {
+                xs: "none",
+                sm: "block",
+              },
+            }}
+          />
+          {search.trim().length > 0 && (
+            <Button
+              onClick={() => {
+                setSearch("");
+                setIsFocused(false);
+              }}
+              style={{
+                position: "absolute",
+                right: 1,
+                top: "50%",
+                transform: "translateY(-50%)",
+                color: "white",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                lineHeight: 1,
+              }}
+            >
+              <Close sx={{ height: 20 }} />
+            </Button>
+          )}
+        </Stack>
         <Popper
           open={isOpen}
           anchorEl={anchorEl}
@@ -131,7 +168,6 @@ export function UserSearch() {
             <Paper
               sx={{
                 marginTop: "4px",
-                marginLeft: "-10px",
                 width: "100%",
                 maxHeight: 300,
                 overflowY: "auto",
@@ -159,7 +195,10 @@ export function UserSearch() {
                       setIsFocused(false);
                     }}
                   >
-                    <Avatar sx={{ height: 25, width: 25 }} src={user.avatarUrl} />
+                    <Avatar
+                      sx={{ height: 25, width: 25 }}
+                      src={user.avatarUrl}
+                    />
                     <span>
                       {user.firstName} {user.lastName} — @{user.userName}
                     </span>
