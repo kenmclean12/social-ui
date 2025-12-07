@@ -48,7 +48,9 @@ export function UniversalDialog({
         loading={loading}
         emptyMessage={emptyMessage}
       >
-        <Stack paddingInline={1}>{children}</Stack>
+        <Stack paddingInline={1} paddingBottom={footer ? 0 : 1.5}>
+          {children}
+        </Stack>
       </Content>
       {footer && (
         <Stack borderTop="1px solid #444" mt={2.5} pt={1.5} pb={1.5}>

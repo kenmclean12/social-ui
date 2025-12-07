@@ -60,7 +60,25 @@ export function PostCreate() {
       <IconButton onClick={() => setOpen(true)} sx={{ color: "white" }}>
         <Add />
       </IconButton>
-      <UniversalDialog open={open} onClose={handleClose} title="Create Post">
+      <UniversalDialog
+        open={open}
+        onClose={handleClose}
+        title="Create Post"
+        footer={
+          <Button
+            variant="outlined"
+            onClick={handleSubmit}
+            disabled={isPending}
+            sx={{
+              border: "1px solid #444",
+              color: "lightblue",
+              backgroundColor: "black",
+            }}
+          >
+            {isPending ? "Posting..." : "Submit"}
+          </Button>
+        }
+      >
         <Stack spacing={2}>
           <Input
             fullWidth
@@ -175,19 +193,6 @@ export function PostCreate() {
               </IconButton>
             </Stack>
           )}
-          <Button
-            variant="outlined"
-            onClick={handleSubmit}
-            disabled={isPending}
-            sx={{
-              mt: 1,
-              border: "1px solid #444",
-              color: "lightblue",
-              backgroundColor: "black",
-            }}
-          >
-            {isPending ? "Posting..." : "Submit"}
-          </Button>
         </Stack>
       </UniversalDialog>
     </>
