@@ -25,11 +25,12 @@ import { ReactionPanel } from "../../ReactionPanel";
 interface Props {
   message: MessageResponseDto;
   isMe: boolean;
+  dialog?: boolean;
 }
 
 const sentReadRequests = new Set<number>();
 
-export function MessageBubble({ message, isMe }: Props) {
+export function MessageBubble({ message, isMe, dialog = false }: Props) {
   const { user } = useAuth();
   const [menuAnchor, setMenuAnchor] = useState<HTMLButtonElement | null>(null);
   const [readsAnchor, setReadsAnchor] = useState<HTMLElement | null>(null);
@@ -84,7 +85,7 @@ export function MessageBubble({ message, isMe }: Props) {
   const likeColor = myLike ? "lightblue" : "#fff";
 
   return (
-    <Box display="flex" flexDirection="column" alignItems={isMe ? "flex-end" : "flex-start"} mb={2} gap={0.5}>
+    <Box display="flex" flexDirection="column" alignItems={isMe ? "flex-end" : "flex-start"} mb={dialog ? 0 : 2} gap={0.5}>
       {!isMe ? (
         <Stack direction="row" alignItems="center" spacing={1} mb={0.5}>
           <Avatar src={message.sender.avatarUrl} sx={{ width: 28, height: 28 }} />

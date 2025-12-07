@@ -7,7 +7,7 @@ interface Props {
   open: boolean;
   onClose: () => void;
   title?: string;
-  content: ReactNode;
+  children: ReactNode;
   loading?: boolean;
   hasContent?: boolean;
   emptyMessage?: string;
@@ -17,11 +17,11 @@ interface Props {
 export function UniversalDialog({
   open,
   onClose,
-  title,
-  content,
+  title = "",
+  children,
   loading = false,
   hasContent = true,
-  emptyMessage,
+  emptyMessage = "No content found",
   maxWidth = "sm",
 }: Props) {
   return (
@@ -42,10 +42,11 @@ export function UniversalDialog({
       {title && <Header title={title} onClose={onClose} />}
       <Content
         display={hasContent}
-        content={content}
         loading={loading}
         emptyMessage={emptyMessage}
-      />
+      >
+        {children}
+      </Content>
     </Dialog>
   );
 }

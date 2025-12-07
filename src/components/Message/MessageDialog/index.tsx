@@ -20,9 +20,12 @@ export function MessageDialog({ messageId, open, onClose }: Props) {
       hasContent={!!message}
       loading={isLoading}
       emptyMessage="Message not found"
-      content={
-        <MessageBubble message={message as MessageResponseDto} isMe={true} />
-      }
-    />
+    >
+      <MessageBubble
+        message={message as MessageResponseDto}
+        isMe={true}
+        dialog
+      />
+    </UniversalDialog>
   );
 }

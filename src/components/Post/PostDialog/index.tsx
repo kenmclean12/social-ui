@@ -20,7 +20,8 @@ export function PostDialog({ open, postId, onClose }: Props) {
       hasContent={!!post}
       loading={isLoading}
       emptyMessage="Post not found"
-      content={<PostCard post={post as PostResponseDto} width="100%" />}
-    />
+    >
+      <PostCard post={post as PostResponseDto} width="100%" />
+    </UniversalDialog>
   );
 }
