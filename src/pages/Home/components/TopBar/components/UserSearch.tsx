@@ -134,7 +134,7 @@ export function UserSearch() {
                 marginTop: "4px",
                 marginLeft: "-10px",
                 width: "100%",
-                maxHeight: 250,
+                maxHeight: 300,
                 overflowY: "auto",
                 background: "#1e1e1e",
                 border: "1px solid #444",
