@@ -16,7 +16,7 @@ export function TopBar() {
         position="static"
         color="default"
         elevation={1}
-        style={{ height: "10vh", borderBottom: "1px solid lightblue" }}
+        style={{ borderBottom: "1px solid lightblue" }}
       >
         <Toolbar
           sx={{

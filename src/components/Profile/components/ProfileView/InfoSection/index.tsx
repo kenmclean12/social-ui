@@ -41,7 +41,7 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
               mb: 2,
             }}
           >
-            Basic Information
+            Basic Info
           </Box>
           <Divider sx={{ backgroundColor: "#ccc" }} />
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mt: 1 }}>

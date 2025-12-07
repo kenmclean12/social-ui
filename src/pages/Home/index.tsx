@@ -36,7 +36,6 @@ export function HomePage() {
         textColor="inherit"
         variant="fullWidth"
         sx={{
-          height: "5vh",
           width: "100%",
           backgroundColor: "black",
           color: "white",

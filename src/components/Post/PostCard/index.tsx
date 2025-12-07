@@ -84,7 +84,7 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
           </Stack>
           <Divider sx={{ backgroundColor: "#444" }} />
           <MediaSection url={post.contentUrl} height={300} />
-          <Typography color="white">{post.textContent}</Typography>
+          <Typography color="white" p={1} pt={2} pb={2}>{post.textContent}</Typography>
           <Divider sx={{ backgroundColor: "#444" }} />
           <Stack
             direction="row"
