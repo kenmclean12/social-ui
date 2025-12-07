@@ -16,7 +16,7 @@ export function PostSection({ userId }: PostSectionProps) {
   }
 
   return (
-    <Stack spacing={2} maxHeight="600px" sx={{ p: 1, paddingInline: .5, overflowY: "auto" }}>
+    <Stack spacing={2} sx={{ p: 1, paddingInline: .5, overflowY: "auto" }}>
       {posts ? posts?.map((post) => (
         <PostCard key={post.id} post={post} width="100%" />
       )) : (

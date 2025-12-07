@@ -10,12 +10,8 @@ import {
   Divider,
 } from "@mui/material";
 import { Close, EmojiEmotions } from "@mui/icons-material";
-import { useAuth } from "../../../../../context";
-import {
-  useReactionCreate,
-  useReactionDelete,
-  useReactionFind,
-} from "../../../../../hooks";
+import { useAuth } from "../../context";
+import { useReactionCreate, useReactionDelete, useReactionFind } from "../../hooks";
 
 interface ReactionPanelProps {
   entityType: "post" | "message" | "comment";

@@ -20,7 +20,7 @@ import { useAuth } from "../../../context";
 import type { MessageResponseDto } from "../../../types";
 import { useLikeCreate, useLikeDelete, useLikeFind, useMessageDelete, useMessageMarkRead, useMessageUpdate } from "../../../hooks";
 import { Settings } from "@mui/icons-material";
-import { ReactionPanel } from "../../Post/PostCard/components";
+import { ReactionPanel } from "../../ReactionPanel";
 
 interface MessageBubbleProps {
   message: MessageResponseDto;

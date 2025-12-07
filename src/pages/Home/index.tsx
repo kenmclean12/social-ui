@@ -36,6 +36,7 @@ export function HomePage() {
         textColor="inherit"
         variant="fullWidth"
         sx={{
+          height: "5vh",
           width: "100%",
           backgroundColor: "black",
           color: "white",
@@ -72,7 +73,7 @@ export function HomePage() {
         />
         <Tab label="Explore" value="explore" sx={tabStyles} />
       </Tabs>
-      <Stack flexGrow={1}>
+      <Stack height="85vh">
         {tab === "feed" && <Feed />}
         {tab === "messages" && <Messages />}
         {tab === "explore" && <ExploreFeed />}

@@ -15,7 +15,7 @@ import {
   useConversationFindOne,
 } from "../../../../../../hooks";
 import { formatDayLabel } from "../../../../../../utils";
-import { MessageBubble } from "../../../../../../components/Message";
+import { MessageBubble } from "../../../../../../components";
 
 interface ChatWindowProps {
   conversationId: number;
@@ -24,10 +24,11 @@ interface ChatWindowProps {
 export function ChatWindow({ conversationId }: ChatWindowProps) {
   const { user } = useAuth();
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [content, setContent] = useState<string>("");
+  const [content, setContent] = useState("");
 
   const { data: conversation } = useConversationFindOne(conversationId);
-  const { data = [], isLoading } = useMessageFindByConversation(conversationId);
+  const { data = [], isLoading } =
+    useMessageFindByConversation(conversationId);
   const { mutate: sendMessage } = useMessageCreate();
 
   const isClosed = conversation?.closed === true;
@@ -39,7 +40,6 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
 
   const handleSend = () => {
     if (!content.trim() || isClosed) return;
-
     sendMessage(
       { content, senderId: user?.id as number, conversationId },
       { onSuccess: () => setContent("") }
@@ -49,7 +49,7 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
   if (isLoading) return <Box p={2}>Loading...</Box>;
 
   return (
-    <Box display="flex" flexDirection="column" height="100%">
+    <Box display="flex" flexDirection="column" width="100%" height="83.5vh">
       <Box
         ref={scrollRef}
         flex={1}
@@ -81,7 +81,8 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
         {data.length > 0 ? (
           data.map((msg, idx) => {
             const msgDate = new Date(msg.createdAt);
-            const prevDate = idx > 0 ? new Date(data[idx - 1].createdAt) : null;
+            const prevDate =
+              idx > 0 ? new Date(data[idx - 1].createdAt) : null;
 
             const showDivider =
               !prevDate || prevDate.toDateString() !== msgDate.toDateString();
@@ -122,12 +123,15 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
           </Typography>
         )}
       </Box>
+
       <Paper
         elevation={3}
         square
         sx={{
+          flexShrink: 0,
           display: "flex",
           alignItems: "center",
+          width: "100%",
           p: 1,
           borderTop: "1px solid #333",
           background: "#111",
@@ -136,7 +140,9 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
         <TextField
           fullWidth
           placeholder={
-            isClosed ? "Conversation is closed. You cannot send messages." : "Type a message…"
+            isClosed
+              ? "Conversation is closed. You cannot send messages."
+              : "Type a message…"
           }
           value={content}
           onChange={(e) => setContent(e.target.value)}

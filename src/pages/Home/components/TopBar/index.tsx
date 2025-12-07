@@ -16,13 +16,14 @@ export function TopBar() {
         position="static"
         color="default"
         elevation={1}
-        style={{ borderBottom: "1px solid lightblue" }}
+        style={{ height: "10vh", borderBottom: "1px solid lightblue" }}
       >
         <Toolbar
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            height: "100%",
             flexWrap: "wrap",
             gap: 1,
             px: 1,

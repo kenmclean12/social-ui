@@ -21,7 +21,7 @@ import {
   useLikeDelete,
   useLikeFind,
 } from "../../../../../../hooks";
-import { ReactionPanel } from "../../ReactionPanel";
+import { ReactionPanel } from "../../../../../ReactionPanel";
 
 interface CommentLineProps {
   comment: CommentResponseDto;

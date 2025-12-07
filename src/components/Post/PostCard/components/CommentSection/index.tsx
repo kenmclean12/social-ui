@@ -32,7 +32,7 @@ export function CommentSection({ comments, postId }: CommentSectionProps) {
     <Paper
       sx={{
         p: 2,
-        maxHeight: 250,
+        height: "100%",
         overflowY: "auto",
         backgroundColor: "#2a2a2a",
         border: "1px solid #444",
