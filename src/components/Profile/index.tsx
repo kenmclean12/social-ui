@@ -8,9 +8,15 @@ import {
   Popover,
   MenuItem,
 } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import CloseIcon from "@mui/icons-material/Close";
-import SettingsIcon from "@mui/icons-material/Settings";
+import {
+  Check,
+  Delete,
+  Password,
+  PersonAdd,
+  ArrowBack,
+  Close,
+  Settings,
+} from "@mui/icons-material";
 import { useState } from "react";
 import { useAuth } from "../../context";
 import { FollowListView, ProfileView } from "./components";
@@ -22,7 +28,6 @@ import {
 } from "../../hooks";
 import { ResetPassword } from "./components/ProfileView/ResetPassword";
 import { DeleteAccount } from "./components/ProfileView/DeleteAccount";
-import { Check, Delete, Password, PersonAdd } from "@mui/icons-material";
 
 interface StackItem {
   type: "profile" | "followList";
@@ -101,7 +106,7 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
       <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 2 }}>
         {stack.length > 1 && (
           <IconButton onClick={pop} sx={{ color: "lightblue" }}>
-            <ArrowBackIcon />
+            <ArrowBack />
           </IconButton>
         )}
         {title}
@@ -116,7 +121,7 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
                 sx={{ color: "white" }}
                 onClick={(e) => setMenuAnchor(e.currentTarget)}
               >
-                <SettingsIcon />
+                <Settings />
               </IconButton>
               <Popover
                 anchorEl={menuAnchor}
@@ -179,10 +184,7 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
               {isFollowing ? "Following" : "Follow"}
             </Button>
           )}
-          <CloseIcon
-            onClick={onClose}
-            sx={{ color: "red", cursor: "pointer" }}
-          />
+          <Close onClick={onClose} sx={{ color: "red", cursor: "pointer" }} />
         </Stack>
       </DialogTitle>
       <DialogContent sx={{ padding: 0 }}>

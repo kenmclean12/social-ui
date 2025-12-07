@@ -10,16 +10,15 @@ import {
   InputAdornment,
   Typography,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import CloseIcon from "@mui/icons-material/Close";
 import { useAuth } from "../../../context";
 import { usePostCreate } from "../../../hooks";
+import { Add, Close } from "@mui/icons-material";
 
 export function CreatePost() {
   const { user } = useAuth();
-  const [open, setOpen] = useState(false);
-  const [textContent, setTextContent] = useState("");
-  const [contentUrl, setContentUrl] = useState("");
+  const [open, setOpen] = useState<boolean>(false);
+  const [textContent, setTextContent] = useState<string>("");
+  const [contentUrl, setContentUrl] = useState<string>("");
   const [filePreview, setFilePreview] = useState<string>("");
   const { mutateAsync: createPost, isPending } = usePostCreate();
 
@@ -35,7 +34,6 @@ export function CreatePost() {
     if (!file) return;
 
     setContentUrl("");
-
     const reader = new FileReader();
     reader.onload = () => setFilePreview(reader.result as string);
     reader.readAsDataURL(file);
@@ -45,9 +43,6 @@ export function CreatePost() {
     setContentUrl(e.target.value);
     setFilePreview("");
   };
-
-  const clearFile = () => setFilePreview("");
-  const clearUrl = () => setContentUrl("");
 
   const handleSubmit = async () => {
     if (!user) return;
@@ -65,7 +60,7 @@ export function CreatePost() {
   return (
     <>
       <IconButton onClick={() => setOpen(true)} sx={{ color: "white" }}>
-        <AddIcon />
+        <Add />
       </IconButton>
       <Dialog
         open={open}
@@ -74,7 +69,7 @@ export function CreatePost() {
         fullWidth
         sx={{
           "& .MuiPaper-root": {
-            backgroundColor: "#070707ff",
+            backgroundColor: "black",
             color: "white",
             border: "1px solid #444",
           },
@@ -82,7 +77,7 @@ export function CreatePost() {
       >
         <DialogTitle sx={{ display: "flex", justifyContent: "space-between" }}>
           Create Post
-          <CloseIcon
+          <Close
             onClick={() => setOpen(false)}
             sx={{ marginLeft: "auto", color: "red", cursor: "pointer" }}
           />
@@ -96,7 +91,7 @@ export function CreatePost() {
               multiline
               minRows={3}
               value={textContent}
-              inputProps={{ maxLength: 100 }} 
+              inputProps={{ maxLength: 100 }}
               onChange={(e) => setTextContent(e.target.value)}
               sx={{
                 background: "#1e1e1e",
@@ -150,8 +145,11 @@ export function CreatePost() {
                 endAdornment={
                   contentUrl && (
                     <InputAdornment position="end">
-                      <IconButton onClick={clearUrl} size="small">
-                        <CloseIcon sx={{ color: "white" }} />
+                      <IconButton
+                        onClick={() => setContentUrl("")}
+                        size="small"
+                      >
+                        <Close sx={{ color: "white" }} />
                       </IconButton>
                     </InputAdornment>
                   )
@@ -188,7 +186,7 @@ export function CreatePost() {
                   />
                 )}
                 <IconButton
-                  onClick={clearFile}
+                  onClick={() => setFilePreview("")}
                   size="small"
                   sx={{
                     position: "absolute",
@@ -198,7 +196,7 @@ export function CreatePost() {
                     "&:hover": { backgroundColor: "rgba(0,0,0,0.7)" },
                   }}
                 >
-                  <CloseIcon sx={{ color: "white", fontSize: 16 }} />
+                  <Close sx={{ color: "white", fontSize: 16 }} />
                 </IconButton>
               </Stack>
             )}

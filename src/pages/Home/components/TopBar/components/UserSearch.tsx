@@ -30,7 +30,6 @@ export function UserSearch() {
     if (!users || !user || !search.trim()) return [];
 
     const q = search.toLowerCase();
-
     const followingIds = new Set(following?.map((f) => f.following.id));
 
     const priority = (u: UserResponseDto) => {
