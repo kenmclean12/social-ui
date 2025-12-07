@@ -63,16 +63,22 @@ export function UserRow({
         </Tooltip>
       </Stack>
       <Stack
-        flexDirection="row"
-        paddingLeft="12px"
-        style={{
-          pointerEvents: "auto",
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {showFollowButton && <FollowButton targetUserId={user.id} />}
-        {showFollowButtonSmall && <FollowButton targetUserId={user.id} size="small" displayText={false} />}
-      </Stack>
+  flexDirection="row"
+  paddingLeft="12px"
+  style={{ pointerEvents: "auto" }}
+  onClick={(e) => e.stopPropagation()}
+>
+  {showFollowButtonSmall ? (
+    <FollowButton
+      targetUserId={user.id}
+      size="small"
+      displayText={false}
+    />
+  ) : showFollowButton ? (
+    <FollowButton targetUserId={user.id} />
+  ) : null}
+</Stack>
+
     </Paper>
   );
 }

@@ -110,8 +110,8 @@ export function FollowListView({
               key={userObj.id}
               user={userObj}
               onClick={(id) => onClickUser(id)}
-              showFollowButton={true}
               showUserName={true}
+              showFollowButtonSmall
             />
           );
         })}
