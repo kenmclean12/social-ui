@@ -11,7 +11,7 @@ import { useMemo } from "react";
 interface Props {
   targetUserId: number;
   size?: "small" | "medium";
-  displayText?: boolean; // false = icon only
+  displayText?: boolean;
 }
 
 export function FollowButton({
@@ -82,7 +82,7 @@ export function FollowButton({
       }}
     >
       <Stack direction="row" alignItems="center" spacing={0.5}>
-        {isFollowing ? "Following" : "Follow"}
+        <span>{isFollowing ? "Following" : "Follow"}</span>
         {isFollowing ? <Check /> : <PersonAdd />}
       </Stack>
     </Button>
