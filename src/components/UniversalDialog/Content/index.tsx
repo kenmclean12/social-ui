@@ -20,7 +20,7 @@ export function Content({
   emptyMessage,
 }: Props) {
   return (
-    <DialogContent sx={{ padding: 2 }}>
+    <DialogContent sx={{ padding: 0 }}>
       <Stack pt={1}>
         {loading && (
           <CircularProgress size={30} sx={{ p: 3, color: "lightblue" }} />

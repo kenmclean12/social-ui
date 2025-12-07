@@ -26,8 +26,8 @@ import {
   useFollowRemove,
   useUserFindOne,
 } from "../../../hooks";
-import { ResetPassword } from "./components/ProfileView/ResetPassword";
-import { DeleteAccount } from "./components/ProfileView/DeleteAccount";
+import { ResetPasswordDialog } from "./components/ProfileView/ResetPasswordDialog";
+import { DeleteAccountDialog } from "./components/ProfileView/DeleteAccountDialog";
 
 interface StackItem {
   type: "profile" | "followList";
@@ -215,8 +215,8 @@ export function ProfileDialog({ open, userId, onClose }: ProfileDialogProps) {
           />
         )}
       </DialogContent>
-      <ResetPassword open={resetOpen} setOpen={setResetOpen} />
-      <DeleteAccount open={deleteOpen} setOpen={setDeleteOpen} />
+      <ResetPasswordDialog open={resetOpen} setOpen={setResetOpen} />
+      <DeleteAccountDialog open={deleteOpen} setOpen={setDeleteOpen} />
     </Dialog>
   );
 }

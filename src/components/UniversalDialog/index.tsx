@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Dialog } from "@mui/material";
+import { Dialog, Stack } from "@mui/material";
 import Header from "./Header";
 import { Content } from "./Content";
 
@@ -8,6 +8,7 @@ interface Props {
   onClose: () => void;
   title?: string;
   children: ReactNode;
+  footer?: ReactNode;
   loading?: boolean;
   hasContent?: boolean;
   emptyMessage?: string;
@@ -19,6 +20,7 @@ export function UniversalDialog({
   onClose,
   title = "",
   children,
+  footer,
   loading = false,
   hasContent = true,
   emptyMessage = "No content found",
@@ -46,8 +48,13 @@ export function UniversalDialog({
         loading={loading}
         emptyMessage={emptyMessage}
       >
-        {children}
+        <Stack paddingInline={1}>{children}</Stack>
       </Content>
+      {footer && (
+        <Stack borderTop="1px solid #444" mt={2.5} pt={1.5} pb={1.5}>
+          <Stack paddingInline={1}>{footer}</Stack>
+        </Stack>
+      )}
     </Dialog>
   );
 }
