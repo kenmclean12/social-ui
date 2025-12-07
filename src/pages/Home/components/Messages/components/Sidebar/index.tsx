@@ -30,16 +30,16 @@ export function Sidebar({ userId, selectedId, onSelect }: SidebarProps) {
         py={1.5}
         borderBottom="1px solid lightblue"
       >
-        <Typography variant="h6" color="white">Conversations</Typography>
+        <Typography fontSize="17px" color="white">Conversations</Typography>
         <IconButton onClick={() => setOpenDialog(true)}>
           <AddIcon sx={{ color: "lightblue" }} />
         </IconButton>
       </Box>
-      <Box flex={1} overflow="auto">
+      <Box flex={1} sx={{ overflowY: "auto" }}>
         {isLoading ? (
           <Typography px={2} py={2} color="gray">Loading...</Typography>
         ) : (
-          <List disablePadding>
+          <>
             {data && data.length > 0 ? data.map((c) => (
               <SidebarItem
                 key={c.id}
@@ -52,7 +52,7 @@ export function Sidebar({ userId, selectedId, onSelect }: SidebarProps) {
                 No Messages Found
               </Typography>
             )}
-          </List>
+          </>
         )}
       </Box>
       <StartConversationDialog

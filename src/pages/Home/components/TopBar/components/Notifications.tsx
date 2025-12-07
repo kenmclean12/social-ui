@@ -98,7 +98,7 @@ export function Notifications() {
           },
         }}
       >
-        <Stack spacing={1} maxHeight={400} sx={{ overflowY: "auto" }}>
+        <Stack maxHeight={400} sx={{ overflowY: "auto" }}>
           {notifications.length === 0 ? (
             <Typography align="center" fontSize={14} pt={2} pb={2}>
               No notifications found
@@ -114,9 +114,9 @@ export function Notifications() {
                 borderRadius={1}
                 onClick={() => handleNotificationClick(notif)}
                 sx={{
-                  backgroundColor: notif.read ? "transparent" : "#333",
+                  backgroundColor: notif.read ? "black" : "#101",
                   cursor: "pointer",
-                  "&:hover": { backgroundColor: "#444" },
+                  "&:hover": { backgroundColor: "#101" },
                 }}
               >
                 <Avatar

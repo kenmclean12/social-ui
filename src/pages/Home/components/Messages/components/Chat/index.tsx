@@ -49,14 +49,14 @@ export function ChatWindow({ conversationId }: ChatWindowProps) {
   if (isLoading) return <Box p={2}>Loading...</Box>;
 
   return (
-    <Box display="flex" flexDirection="column" width="100%" height="83.5vh">
+    <Box display="flex" flexDirection="column" width="100%" height="100%">
       <Box
         ref={scrollRef}
         flex={1}
         p={2}
         sx={{
           overflowY: "auto",
-          backgroundColor: "#000",
+          backgroundColor: "black",
         }}
       >
         {isClosed && (

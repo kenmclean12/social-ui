@@ -8,7 +8,7 @@ export function Messages() {
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
   return (
-    <Box display="flex" flex={1} width="100%" border="1px solid lightblue">
+    <Box display="flex" flex={1} height="100%" width="100%" border="1px solid lightblue">
       <Sidebar
         userId={user?.id as number}
         selectedId={selectedId as number}
