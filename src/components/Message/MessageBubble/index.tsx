@@ -22,14 +22,14 @@ import { useLikeCreate, useLikeDelete, useLikeFind, useMessageDelete, useMessage
 import { Settings } from "@mui/icons-material";
 import { ReactionPanel } from "../../ReactionPanel";
 
-interface MessageBubbleProps {
+interface Props {
   message: MessageResponseDto;
   isMe: boolean;
 }
 
 const sentReadRequests = new Set<number>();
 
-export function MessageBubble({ message, isMe }: MessageBubbleProps) {
+export function MessageBubble({ message, isMe }: Props) {
   const { user } = useAuth();
   const [menuAnchor, setMenuAnchor] = useState<HTMLButtonElement | null>(null);
   const [readsAnchor, setReadsAnchor] = useState<HTMLElement | null>(null);
