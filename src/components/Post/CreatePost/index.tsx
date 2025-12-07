@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   IconButton,
   Dialog,
-  DialogTitle,
   DialogContent,
   Button,
   Input,
@@ -13,6 +12,7 @@ import {
 import { useAuth } from "../../../context";
 import { usePostCreate } from "../../../hooks";
 import { Add, Close } from "@mui/icons-material";
+import DialogHeader from "../../DialogHeader";
 
 export function CreatePost() {
   const { user } = useAuth();
@@ -75,15 +75,9 @@ export function CreatePost() {
           },
         }}
       >
-        <DialogTitle sx={{ display: "flex", justifyContent: "space-between" }}>
-          Create Post
-          <Close
-            onClick={() => setOpen(false)}
-            sx={{ marginLeft: "auto", color: "red", cursor: "pointer" }}
-          />
-        </DialogTitle>
+        <DialogHeader title="Create Post" onClose={() => setOpen(false)} />
         <DialogContent>
-          <Stack spacing={2} mt={1}>
+          <Stack spacing={2} mt={2}>
             <Input
               fullWidth
               placeholder="Write something..."

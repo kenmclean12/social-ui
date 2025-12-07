@@ -23,12 +23,12 @@ import {
 } from "../../../../../../hooks";
 import { ReactionPanel } from "../../../../../ReactionPanel";
 
-interface CommentLineProps {
+interface Props {
   comment: CommentResponseDto;
   isReply?: boolean;
 }
 
-export function CommentLine({ comment, isReply }: CommentLineProps) {
+export function CommentLine({ comment, isReply }: Props) {
   const { user } = useAuth();
   const { mutateAsync: createLike } = useLikeCreate();
   const { mutateAsync: deleteLike } = useLikeDelete();

@@ -1,22 +1,15 @@
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  IconButton,
-  Stack,
-  Typography,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import { Dialog, DialogContent, Stack, Typography } from "@mui/material";
 import { usePostFindOne } from "../../../hooks";
 import { PostCard } from "../PostCard";
+import DialogHeader from "../../DialogHeader";
 
-interface PostDialogProps {
+interface Props {
   open: boolean;
   postId: number | null;
   onClose: () => void;
 }
 
-export function PostDialog({ open, postId, onClose }: PostDialogProps) {
+export function PostDialog({ open, postId, onClose }: Props) {
   const { data: post, isLoading } = usePostFindOne(postId as number);
 
   return (
@@ -27,26 +20,14 @@ export function PostDialog({ open, postId, onClose }: PostDialogProps) {
       fullWidth
       PaperProps={{
         sx: {
-          backgroundColor: "#090909",
-          border: "1px solid #333",
+          backgroundColor: "black",
+          border: "1px solid #444",
           color: "white",
           borderRadius: 2,
         },
       }}
     >
-      <DialogTitle
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          paddingY: 1.5,
-          borderBottom: "1px solid #222",
-        }}
-      >
-        <Typography sx={{ fontSize: 18, fontWeight: 600 }}>Post</Typography>
-        <IconButton onClick={onClose} sx={{ marginLeft: "auto", color: "red" }}>
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
+      <DialogHeader title="Post" onClose={onClose} />
       <DialogContent sx={{ padding: 2 }}>
         {isLoading && (
           <Typography align="center" p={3}>

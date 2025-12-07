@@ -8,12 +8,12 @@ import type {
 import { useCommentCreate } from "../../../../../hooks/comment";
 import { CommentLine } from "./components";
 
-interface CommentSectionProps {
+interface Props {
   comments: CommentResponseDto[] | undefined;
   postId: number;
 }
 
-export function CommentSection({ comments, postId }: CommentSectionProps) {
+export function CommentSection({ comments, postId }: Props) {
   const { user } = useAuth();
   const [newComment, setNewComment] = useState<string>("");
   const createComment = useCommentCreate();

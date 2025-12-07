@@ -21,13 +21,13 @@ import {
 } from "../../../hooks";
 import { ReactionPanel } from "../../ReactionPanel";
 
-interface PostProps {
+interface Props {
   post: PostResponseDto;
   width?: string | number;
   height?: string | number;
 }
 
-export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
+export function PostCard({ post, width = "100%", height = "auto" }: Props) {
   const { user } = useAuth();
   const [showComments, setShowComments] = useState(false);
   const { data: creator } = useUserFindOne(post.creatorId);
@@ -84,7 +84,9 @@ export function PostCard({ post, width = "100%", height = "auto" }: PostProps) {
           </Stack>
           <Divider sx={{ backgroundColor: "#444" }} />
           <MediaSection url={post.contentUrl} height={300} />
-          <Typography color="white" p={1} pt={2} pb={2}>{post.textContent}</Typography>
+          <Typography color="white" p={1} pt={2} pb={2}>
+            {post.textContent}
+          </Typography>
           <Divider sx={{ backgroundColor: "#444" }} />
           <Stack
             direction="row"
