@@ -96,6 +96,7 @@ export function CreatePost() {
               multiline
               minRows={3}
               value={textContent}
+              inputProps={{ maxLength: 100 }} 
               onChange={(e) => setTextContent(e.target.value)}
               sx={{
                 background: "#1e1e1e",

@@ -49,6 +49,7 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
               label="Username"
               value={user.userName}
               isOwnUser={isOwnUser}
+              maxLength={50}
               onSave={(v: string) => updateUser({ userName: v })}
             />
 
@@ -57,6 +58,7 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
                 label="First Name"
                 value={user.firstName}
                 isOwnUser={isOwnUser}
+                maxLength={30}
                 onSave={(v: string) => updateUser({ firstName: v })}
               />
             </Box>
@@ -65,6 +67,7 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
                 label="Last Name"
                 value={user.lastName}
                 isOwnUser={isOwnUser}
+                maxLength={30}
                 onSave={(v: string) => updateUser({ lastName: v })}
               />
             </Box>
@@ -98,6 +101,7 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
               label="Email"
               value={user.email}
               isOwnUser={isOwnUser}
+              maxLength={100}
               onSave={(v: string) => updateUser({ email: v })}
               isEmail
             />
@@ -105,6 +109,7 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
               label="Phone"
               value={user.phoneNumber || ""}
               isOwnUser={isOwnUser}
+              maxLength={11}
               onSave={(v: string) => updateUser({ phoneNumber: v })}
               isPhone
             />

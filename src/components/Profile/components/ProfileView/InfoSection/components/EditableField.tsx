@@ -8,6 +8,7 @@ interface EditableFieldProps {
   label: string;
   value: string;
   onSave: (v: string) => void;
+  maxLength?: number;
   isOwnUser: boolean;
   isPhone?: boolean;
   isNumber?: boolean;
@@ -18,6 +19,7 @@ export function EditableField({
   label,
   value,
   onSave,
+  maxLength,
   isOwnUser,
   isPhone = false,
   isNumber = false,
@@ -147,6 +149,7 @@ export function EditableField({
           size="small"
           fullWidth
           autoFocus
+          inputProps={{ maxLength }} 
           sx={{
             "& .MuiOutlinedInput-root": {
               "& input": {
