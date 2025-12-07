@@ -148,7 +148,9 @@ export function UserSearch() {
                     sx={{
                       display: "flex",
                       gap: 2,
+                      height: "50px",
                       color: "white",
+                      fontSize: "15px",
                       cursor: "pointer",
                       "&:hover": { background: "#333" },
                     }}
@@ -157,7 +159,7 @@ export function UserSearch() {
                       setIsFocused(false);
                     }}
                   >
-                    <Avatar src={user.avatarUrl} />
+                    <Avatar sx={{ height: 25, width: 25 }} src={user.avatarUrl} />
                     <span>
                       {user.firstName} {user.lastName} — @{user.userName}
                     </span>
