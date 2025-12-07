@@ -86,7 +86,7 @@ export function FollowListView({
           )
         }
         sx={{
-          height: 40,
+          height: 45,
           padding: "2px 12px",
           mb: 2,
           border: "1px solid black",
@@ -97,7 +97,7 @@ export function FollowListView({
         }}
       />
       <Stack
-        spacing={1}
+        spacing={.5}
         sx={{
           height: "100%",
           overflowY: "auto",
@@ -123,7 +123,7 @@ export function FollowListView({
                 transition:
                   "background-color 0.15s ease, border-color 0.15s ease",
                 "&:hover": {
-                  backgroundColor: "#252525",
+                  backgroundColor: "#101",
                   borderColor: "lightblue",
                 },
               }}

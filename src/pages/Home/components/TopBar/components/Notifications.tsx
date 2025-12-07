@@ -109,24 +109,38 @@ export function Notifications() {
                 key={notif.id}
                 direction="row"
                 alignItems="center"
+                justifyContent="space-between"
                 spacing={1.5}
                 p={2}
                 borderRadius={1}
                 onClick={() => handleNotificationClick(notif)}
                 sx={{
-                  backgroundColor: notif.read ? "black" : "#101",
+                  backgroundColor: "black",
                   cursor: "pointer",
                   "&:hover": { backgroundColor: "#101" },
                 }}
               >
-                <Avatar
-                  src={notif.actionUser.avatarUrl}
-                  alt={notif.actionUser.userName}
-                  sx={{ width: 25, height: 25 }}
-                />
-                <Typography sx={{ fontSize: 13, lineHeight: 1.2 }}>
-                  {notif.notificationMessage}
-                </Typography>
+                <Stack direction="row" alignItems="center" spacing={1.5}>
+                  <Avatar
+                    src={notif.actionUser.avatarUrl}
+                    alt={notif.actionUser.userName}
+                    sx={{ width: 25, height: 25 }}
+                  />
+                  <Typography sx={{ fontSize: 13, lineHeight: 1.2 }}>
+                    {notif.notificationMessage}
+                  </Typography>
+                </Stack>
+                {!notif.read && (
+                  <Stack
+                    sx={{
+                      width: 8,
+                      height: 8,
+                      marginLeft: "auto",
+                      borderRadius: "50%",
+                      backgroundColor: "lightblue",
+                    }}
+                  />
+                )}
               </Stack>
             ))
           )}

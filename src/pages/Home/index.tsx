@@ -1,25 +1,12 @@
 import { useState } from "react";
-import { Stack, Tabs, Tab, Typography, Box } from "@mui/material";
+import { Stack, Tabs, Typography, Box, Tab } from "@mui/material";
 import { ExploreFeed, Feed, Messages, TopBar } from "./components";
 import { useUnreadMessageCount } from "../../hooks";
-
-type Tab = "feed" | "messages" | "explore";
-
-const tabStyles = {
-  flex: 1,
-  color: "lightblue",
-  fontWeight: 500,
-  "&.Mui-selected": {
-    color: "white",
-    borderBottom: "3px solid lightblue",
-  },
-  "&:hover": {
-    backgroundColor: "rgba(173, 216, 230, 0.08)",
-  },
-};
+import { tabStyles } from "./styles";
+import { HomePageTab } from "./types";
 
 export function HomePage() {
-  const [tab, setTab] = useState<Tab>("feed");
+  const [tab, setTab] = useState<HomePageTab>(HomePageTab.Feed);
   const { data: unreadCount } = useUnreadMessageCount();
 
   return (
@@ -45,7 +32,6 @@ export function HomePage() {
         <Tab label="Feed" value="feed" sx={tabStyles} />
         <Tab
           value="messages"
-          sx={tabStyles}
           label={
             <Stack direction="row" alignItems="center" spacing={1}>
               <Typography>Messages</Typography>
@@ -69,13 +55,14 @@ export function HomePage() {
               )}
             </Stack>
           }
+          sx={tabStyles}
         />
         <Tab label="Explore" value="explore" sx={tabStyles} />
       </Tabs>
       <Stack height="85vh">
-        {tab === "feed" && <Feed />}
-        {tab === "messages" && <Messages />}
-        {tab === "explore" && <ExploreFeed />}
+        {tab === HomePageTab.Feed && <Feed />}
+        {tab === HomePageTab.Messages && <Messages />}
+        {tab === HomePageTab.Explore && <ExploreFeed />}
       </Stack>
     </Stack>
   );

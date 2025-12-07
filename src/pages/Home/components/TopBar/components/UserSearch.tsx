@@ -152,7 +152,8 @@ export function UserSearch() {
                       color: "white",
                       fontSize: "15px",
                       cursor: "pointer",
-                      "&:hover": { background: "#333" },
+                      backgroundColor: "black",
+                      "&:hover": { background: "#101" },
                     }}
                     onClick={() => {
                       setSelectedUserId(user.id);
