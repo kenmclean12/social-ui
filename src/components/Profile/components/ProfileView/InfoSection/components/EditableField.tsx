@@ -147,7 +147,6 @@ export function EditableField({
           error={error}
           variant="outlined"
           size="small"
-          fullWidth
           autoFocus
           inputProps={{ maxLength }} 
           sx={{

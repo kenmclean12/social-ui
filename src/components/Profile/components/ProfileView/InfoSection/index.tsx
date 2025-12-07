@@ -19,16 +19,14 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
         flex: 1,
         alignItems: "flex-start",
         height: "100%",
-        p: 3,
         borderRadius: 2,
         backgroundColor: "black",
         color: "#fff",
-        gap: 3,
         border: "1px solid #444"
       }}
     >
-      <Box sx={{ flex: 1 }}>
-        <Box sx={{ mb: 2 }}>
+      <Box sx={{ flex: 1, width: "50%" }}>
+        <Box sx={{ mb: 2, pt: 2 }}>
           <Box
             sx={{
               display: "flex",
@@ -52,7 +50,6 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
               maxLength={50}
               onSave={(v: string) => updateUser({ userName: v })}
             />
-
             <Box sx={{ flex: 1 }}>
               <EditableField
                 label="First Name"
@@ -79,7 +76,7 @@ export function InfoSection({ user, isOwnUser }: InfoSectionProps) {
         flexItem
         sx={{ backgroundColor: "#ccc" }}
       />
-      <Box sx={{ flex: 1 }}>
+      <Box sx={{ flex: 1, width: "50%", pt: 2 }}>
         <Box sx={{ mb: 2 }}>
           <Box
             sx={{
