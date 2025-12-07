@@ -1,8 +1,8 @@
 import { useMessageFindOne } from "../../../hooks";
 import { MessageBubble } from "../MessageBubble";
-import { UniversalDialog } from "../../UniversalDialog";
 import type { MessageResponseDto } from "../../../types";
 import { Stack } from "@mui/material";
+import { UniversalDialog } from "../../UniversalDialog";
 
 interface Props {
   messageId: number | null;

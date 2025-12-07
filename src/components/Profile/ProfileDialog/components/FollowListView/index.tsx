@@ -1,22 +1,18 @@
+import { useState, useMemo } from "react";
 import {
-  Avatar,
   IconButton,
-  Paper,
   Stack,
   Typography,
   Box,
   Input,
   InputAdornment,
-  Button,
 } from "@mui/material";
 import {
-  useFollowCreate,
   useFollowGetFollowers,
   useFollowGetFollowing,
 } from "../../../../../hooks";
 import { Close } from "@mui/icons-material";
-import { useState, useMemo } from "react";
-import { useAuth } from "../../../../../context";
+import { UserRow } from "../../../../User";
 
 interface FollowListViewProps {
   userId: number;
@@ -29,7 +25,6 @@ export function FollowListView({
   listType,
   onClickUser,
 }: FollowListViewProps) {
-  const { user } = useAuth();
   const [search, setSearch] = useState<string>("");
   const followersQuery = useFollowGetFollowers(userId, {
     enabled: listType === "followers",
@@ -39,7 +34,6 @@ export function FollowListView({
   });
   const query = listType === "followers" ? followersQuery : followingQuery;
   const { data: list, isLoading } = query;
-  const { mutateAsync: followUser } = useFollowCreate(user?.id as number);
 
   const normalize = (val: string) =>
     (val ?? "").toString().toLowerCase().trim().replace(/\s+/g, "");
@@ -90,14 +84,14 @@ export function FollowListView({
           padding: "2px 12px",
           mb: 2,
           border: "1px solid black",
-          backgroundColor: "#232222ff",
+          backgroundColor: "#1e1e1e",
           borderRadius: 2,
           color: "white",
           fontSize: 14,
         }}
       />
       <Stack
-        spacing={.5}
+        spacing={0.5}
         sx={{
           height: "100%",
           overflowY: "auto",
@@ -110,60 +104,15 @@ export function FollowListView({
           </Typography>
         )}
         {filtered.map((f) => {
-          const user = f.following ?? f.follower;
+          const userObj = f.following ?? f.follower;
           return (
-            <Paper
-              key={f.id}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                p: 1,
-                backgroundColor: "black",
-                cursor: "pointer",
-                transition:
-                  "background-color 0.15s ease, border-color 0.15s ease",
-                "&:hover": {
-                  backgroundColor: "#101",
-                  borderColor: "lightblue",
-                },
-              }}
-              onClick={() => onClickUser(user.id)}
-            >
-              <Avatar
-                src={user.avatarUrl}
-                style={{ width: 40, height: 40, borderRadius: "50%" }}
-              />
-              <Stack direction="row" alignItems="center" spacing={0.5} ml={2}>
-                <Typography color="white" sx={{ ml: 2 }}>
-                  {user.firstName}
-                </Typography>
-                <Typography color="white" sx={{ ml: 2 }}>
-                  {user.lastName}
-                </Typography>
-                <Typography color="white" sx={{ ml: 2 }}>
-                  (@{user.userName})
-                </Typography>
-              </Stack>
-              <Button
-                variant="outlined"
-                onClick={() => {
-                  if (user?.id !== user.id) {
-                    followUser({
-                      followerId: user?.id as number,
-                      followingId: user.id,
-                    })
-                  }
-                }}
-                sx={{
-                  border: "1px solid lightblue",
-                  color: "lightblue",
-                  marginLeft: "auto",
-                  cursor: "pointer",
-                }}
-              >
-                Follow
-              </Button>
-            </Paper>
+            <UserRow
+              key={userObj.id}
+              user={userObj}
+              onClick={(id) => onClickUser(id)}
+              showFollowButton={true}
+              showUserName={true}
+            />
           );
         })}
       </Stack>
