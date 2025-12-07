@@ -6,6 +6,7 @@ interface UserRowProps {
   user: UserResponseDto;
   showUserName?: boolean;
   showFollowButton?: boolean;
+  showFollowButtonSmall?: boolean;
   message?: string;
   onClick?: (id: number) => void;
 }
@@ -13,7 +14,8 @@ interface UserRowProps {
 export function UserRow({
   user,
   showUserName = false,
-  showFollowButton = true,
+  showFollowButton = false,
+  showFollowButtonSmall = false,
   message,
   onClick,
 }: UserRowProps) {
@@ -36,7 +38,6 @@ export function UserRow({
       }}
       onClick={() => onClick?.(user.id)}
     >
-      {/* Left side: avatar + name */}
       <Stack
         direction="row"
         alignItems="center"
@@ -46,13 +47,13 @@ export function UserRow({
           minWidth: 0,
         }}
       >
-        <Avatar src={user.avatarUrl} sx={{ width: 35, height: 35 }} />
-
+        <Avatar src={user.avatarUrl} sx={{ width: 30, height: 30 }} />
         <Tooltip title={fullName}>
           <Typography
             color="white"
             noWrap
             sx={{
+              fontSize: message ? "13px" : "14px",
               overflow: "hidden",
               textOverflow: "ellipsis",
             }}
@@ -70,6 +71,7 @@ export function UserRow({
         onClick={(e) => e.stopPropagation()}
       >
         {showFollowButton && <FollowButton targetUserId={user.id} />}
+        {showFollowButtonSmall && <FollowButton targetUserId={user.id} size="small" displayText={false} />}
       </Stack>
     </Paper>
   );

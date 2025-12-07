@@ -2,18 +2,17 @@ import { useMemo, useState, useEffect, useRef } from "react";
 import {
   Input,
   Paper,
-  List,
-  ListItem,
-  Avatar,
   Popper,
   Stack,
   Button,
+  Box,
 } from "@mui/material";
 import { useUserFindAll, useFollowGetFollowing } from "../../../../../hooks";
 import { ProfileDialog } from "../../../../../components/Profile/ProfileDialog";
 import { useAuth } from "../../../../../context";
 import type { UserResponseDto } from "../../../../../types";
 import { Close } from "@mui/icons-material";
+import { UserRow } from "../../../../../components/User/UserRow";
 
 export function UserSearch() {
   const { user } = useAuth();
@@ -146,6 +145,7 @@ export function UserSearch() {
             </Button>
           )}
         </Stack>
+
         <Popper
           open={isOpen}
           anchorEl={anchorEl}
@@ -176,35 +176,21 @@ export function UserSearch() {
                 borderTop: "none",
               }}
             >
-              <List>
-                {filtered.map((user) => (
-                  <ListItem
-                    key={user.id}
-                    sx={{
-                      display: "flex",
-                      gap: 2,
-                      height: "50px",
-                      color: "white",
-                      fontSize: "15px",
-                      cursor: "pointer",
-                      backgroundColor: "black",
-                      "&:hover": { background: "#101" },
-                    }}
-                    onClick={() => {
-                      setSelectedUserId(user.id);
-                      setIsFocused(false);
-                    }}
-                  >
-                    <Avatar
-                      sx={{ height: 25, width: 25 }}
-                      src={user.avatarUrl}
-                    />
-                    <span>
-                      {user.firstName} {user.lastName} — @{user.userName}
-                    </span>
-                  </ListItem>
-                ))}
-              </List>
+              {filtered.map((u) => (
+                <Box
+                  key={u.id}
+                  onClick={() => {
+                    setSelectedUserId(u.id);
+                    setIsFocused(false);
+                  }}
+                >
+                  <UserRow
+                    user={u}
+                    showFollowButtonSmall
+                    showUserName
+                  />
+                </Box>
+              ))}
             </Paper>
           </Stack>
         </Popper>

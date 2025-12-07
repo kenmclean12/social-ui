@@ -83,7 +83,7 @@ export function FollowListView({
           height: 45,
           padding: "2px 12px",
           mb: 2,
-          border: "1px solid black",
+          border: "1px solid #444",
           backgroundColor: "#1e1e1e",
           borderRadius: 2,
           color: "white",

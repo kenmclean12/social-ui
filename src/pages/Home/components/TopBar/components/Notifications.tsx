@@ -4,8 +4,8 @@ import {
   Popover,
   Badge,
   Stack,
-  Avatar,
   Typography,
+  Box,
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useAuth } from "../../../../../context";
@@ -20,14 +20,18 @@ import {
 } from "../../../../../types";
 import { ProfileDialog } from "../../../../../components/Profile/ProfileDialog";
 import { MessageDialog, PostDialog } from "../../../../../components";
+import { UserRow } from "../../../../../components/User/UserRow";
 
 export function Notifications() {
   const { user } = useAuth();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [profileDialogOpen, setProfileDialogOpen] = useState<boolean>(false);
+
+  const [profileDialogOpen, setProfileDialogOpen] = useState(false);
   const [profileUserId, setProfileUserId] = useState<number | null>(null);
-  const [postDialogOpen, setPostDialogOpen] = useState<boolean>(false);
+
+  const [postDialogOpen, setPostDialogOpen] = useState(false);
   const [postId, setPostId] = useState<number | null>(null);
+
   const [messageDialogOpen, setMessageDialogOpen] = useState(false);
   const [messageId, setMessageId] = useState<number | null>(null);
 
@@ -44,6 +48,7 @@ export function Notifications() {
       setProfileUserId(notif.actionUser.id);
       setProfileDialogOpen(true);
       setAnchorEl(null);
+      return;
     }
 
     if (
@@ -56,6 +61,7 @@ export function Notifications() {
         setPostDialogOpen(true);
         setAnchorEl(null);
       }
+      return;
     }
 
     if (
@@ -94,54 +100,47 @@ export function Notifications() {
             overflowY: "auto",
             backgroundColor: "#1e1e1e",
             border: "1px solid #444",
-            color: "#fff",
           },
         }}
       >
-        <Stack maxHeight={400} sx={{ overflowY: "auto" }}>
+        <Stack sx={{ overflowY: "auto" }}>
           {notifications.length === 0 ? (
-            <Typography align="center" fontSize={14} pt={2} pb={2}>
+            <Typography
+              align="center"
+              fontSize={14}
+              pt={2}
+              pb={2}
+              color="#bbb"
+            >
               No notifications found
             </Typography>
           ) : (
-            notifications.map((notif: NotificationResponseDto) => (
-              <Stack
+            notifications.map((notif) => (
+              <Box
                 key={notif.id}
-                direction="row"
-                alignItems="center"
-                justifyContent="space-between"
-                spacing={1.5}
-                p={2}
-                borderRadius={1}
+                sx={{ position: "relative" }}
                 onClick={() => handleNotificationClick(notif)}
-                sx={{
-                  backgroundColor: "black",
-                  cursor: "pointer",
-                  "&:hover": { backgroundColor: "#101" },
-                }}
               >
-                <Stack direction="row" alignItems="center" spacing={1.5}>
-                  <Avatar
-                    src={notif.actionUser.avatarUrl}
-                    alt={notif.actionUser.userName}
-                    sx={{ width: 25, height: 25 }}
-                  />
-                  <Typography sx={{ fontSize: 13, lineHeight: 1.2 }}>
-                    {notif.notificationMessage}
-                  </Typography>
-                </Stack>
+                <UserRow
+                  user={notif.actionUser}
+                  showFollowButton={false}
+                  message={notif.notificationMessage}
+                />
                 {!notif.read && (
-                  <Stack
+                  <Box
                     sx={{
-                      width: 8,
-                      height: 8,
-                      marginLeft: "auto",
+                      position: "absolute",
+                      right: 14,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      width: 10,
+                      height: 10,
                       borderRadius: "50%",
                       backgroundColor: "lightblue",
                     }}
                   />
                 )}
-              </Stack>
+              </Box>
             ))
           )}
         </Stack>
