@@ -25,7 +25,7 @@ export function PopoverMenuItem({
       }}
       sx={menuItemStyles}
     >
-      <Typography>{label}</Typography>
+      <Typography fontSize="15px">{label}</Typography>
       {iconRight && <Box>{iconRight}</Box>}
     </MenuItem>
   );

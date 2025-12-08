@@ -7,7 +7,13 @@ import {
   IconButton,
   Stack,
 } from "@mui/material";
-import { Delete, Edit, Settings } from "@mui/icons-material";
+import {
+  Delete,
+  Edit,
+  Settings,
+  ExitToApp,
+  DoorBack,
+} from "@mui/icons-material";
 import type { ConversationResponseDto } from "../../../../../../../types";
 import { useAuth } from "../../../../../../../context";
 import { ChatMembers } from "./ChatMembers";
@@ -22,7 +28,6 @@ import {
   listItemButtonStyles,
   unreadIndicatorContainerStyles,
 } from "./styles";
-
 import { PopoverMenu, PopoverMenuItem } from "../../../../../../../components";
 
 interface Props {
@@ -34,7 +39,6 @@ interface Props {
 export function SidebarItem({ conversation, selected, onClick }: Props) {
   const { user } = useAuth();
   const { participants, initiator } = conversation;
-
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [updateOpen, setUpdateOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
@@ -84,6 +88,8 @@ export function SidebarItem({ conversation, selected, onClick }: Props) {
     ? otherParticipants[0]?.avatarUrl
     : initiator?.avatarUrl;
 
+  const isOwner = user?.id === initiator?.id;
+
   return (
     <>
       <ListItemButton
@@ -125,32 +131,41 @@ export function SidebarItem({ conversation, selected, onClick }: Props) {
         </Box>
         <Stack direction="row" alignItems="center" spacing={1}>
           {hasUnreadMessages && <Box sx={unreadIndicatorContainerStyles} />}
-          {user?.id === conversation.initiator.id && (
-            <PopoverMenu
-              trigger={
-                <IconButton
-                  size="small"
-                  sx={{ color: "white" }}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <Settings />
-                </IconButton>
-              }
-            >
+          <PopoverMenu
+            trigger={
+              <IconButton
+                size="small"
+                sx={{ color: "white" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Settings />
+              </IconButton>
+            }
+          >
+            {isOwner ? (
+              <>
+                <PopoverMenuItem
+                  label="Update"
+                  iconRight={<Edit sx={{ color: "lightblue", height: 20 }} />}
+                  closeOnSelect
+                  onClick={() => setUpdateOpen(true)}
+                />
+                <PopoverMenuItem
+                  label="Delete"
+                  iconRight={<Delete sx={{ color: "red", height: 20 }} />}
+                  closeOnSelect
+                  onClick={() => setDeleteOpen(true)}
+                />
+              </>
+            ) : (
               <PopoverMenuItem
-                label="Update"
-                iconRight={<Edit sx={{ color: "lightblue", height: 20 }} />}
+                label="Leave Conversation"
+                iconRight={<ExitToApp sx={{ height: 20, ml: 1, mt: 0.5 }} />}
                 closeOnSelect
-                onClick={() => setUpdateOpen(true)}
+                onClick={() => {}}
               />
-              <PopoverMenuItem
-                label="Delete"
-                iconRight={<Delete sx={{ color: "red", height: 20 }} />}
-                closeOnSelect
-                onClick={() => setDeleteOpen(true)}
-              />
-            </PopoverMenu>
-          )}
+            )}
+          </PopoverMenu>
         </Stack>
       </ListItemButton>
       <UpdateConversationDialog
