@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Stack, TextField } from "@mui/material";
 import { useAuth } from "../../../../../../../context";
-import type { FollowResponseDto } from "../../../../../../../types";
+import type { UserResponseDto } from "../../../../../../../types";
 import {
   useConversationInitiate,
   useFollowGetFollowing,
@@ -18,31 +18,26 @@ import {
 } from "./styles";
 import { textFieldStyles } from "../../../../../../styles";
 
-interface StartConversationDialogProps {
+interface Props {
   open: boolean;
   onClose: () => void;
   userId: number;
 }
 
-export function StartConversationDialog({
-  open,
-  onClose,
-  userId,
-}: StartConversationDialogProps) {
+export function StartConversationDialog({ open, onClose, userId }: Props) {
   const { user } = useAuth();
-  const [selectedUsers, setSelectedUsers] = useState<FollowResponseDto[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<UserResponseDto[]>([]);
   const [message, setMessage] = useState<string>("");
   const { data = [] } = useFollowGetFollowing(userId);
   const { mutate: initiate } = useConversationInitiate();
 
   const handleStart = () => {
     if (selectedUsers.length === 0 || !message.trim()) return;
-
     initiate(
       {
         conversation: {
           initiatorId: user!.id,
-          recipientIds: selectedUsers.map((f) => f.following.id),
+          recipientIds: selectedUsers.map((u) => u.id),
         },
         firstMessage: {
           senderId: user!.id,
@@ -83,7 +78,7 @@ export function StartConversationDialog({
       <Stack sx={stackContainerStyles}>
         <UserMultiSelect
           label="Select Users"
-          data={data}
+          data={data?.map((f) => f.following)}
           value={selectedUsers}
           onChange={(selected) => setSelectedUsers(selected)}
         />

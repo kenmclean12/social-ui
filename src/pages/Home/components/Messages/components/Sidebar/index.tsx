@@ -9,13 +9,13 @@ import { useConversationFindByUser } from "../../../../../../hooks";
 import { StartConversationDialog } from "./StartConversationDialog";
 import { SidebarItem } from "./SidebarItem";
 
-interface SidebarProps {
+interface Props {
   userId: number;
   selectedId: number;
   onSelect: Dispatch<SetStateAction<number | null>>;
 }
 
-export function Sidebar({ userId, selectedId, onSelect }: SidebarProps) {
+export function Sidebar({ userId, selectedId, onSelect }: Props) {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const { data, isLoading } = useConversationFindByUser(userId);
 
@@ -29,7 +29,7 @@ export function Sidebar({ userId, selectedId, onSelect }: SidebarProps) {
         py={1.5}
         borderBottom="1px solid lightblue"
       >
-        <Typography fontSize="17px" color="white" pl={4}>Conversations</Typography>
+        <Typography fontSize="17px" color="white" pl={3}>Conversations</Typography>
         <IconButton onClick={() => setOpenDialog(true)}>
           <AddIcon sx={{ color: "lightblue" }} />
         </IconButton>

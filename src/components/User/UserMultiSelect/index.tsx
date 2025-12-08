@@ -18,25 +18,25 @@ import {
   checkboxStyles,
   extraCountStyles,
 } from "./styles";
-import type { FollowResponseDto } from "../../../types";
+import type { UserResponseDto } from "../../../types";
 import { UserRow } from "../UserRow";
 
 interface Props {
-  data: FollowResponseDto[];
-  value: FollowResponseDto[];
+  data: UserResponseDto[];
+  value: UserResponseDto[];
   label?: string;
-  onChange: (users: FollowResponseDto[]) => void;
+  onChange: (users: UserResponseDto[]) => void;
 }
 
 export function UserMultiSelect({ data, value, onChange, label }: Props) {
-  const selectedIds = value.map((v) => v.following.id);
+  const selectedIds = value.map((v) => v.id);
 
   const removeUser = (id: number) => {
-    onChange(value.filter((v) => v.following.id !== id));
+    onChange(value.filter((v) => v.id !== id));
   };
 
   const handleSelectChange = (ids: number[]) => {
-    const next = data.filter((d) => ids.includes(d.following.id));
+    const next = data.filter((d) => ids.includes(d.id));
     onChange(next);
   };
 
@@ -59,8 +59,8 @@ export function UserMultiSelect({ data, value, onChange, label }: Props) {
           if (selected.length === 1) {
             return (
               <Chip
-                label={`@${first.following.userName}`}
-                onDelete={() => removeUser(first.following.id)}
+                label={`@${first.userName}`}
+                onDelete={() => removeUser(first.id)}
                 onMouseDown={(e) => e.stopPropagation()}
                 sx={chipStyles}
               />
@@ -70,8 +70,8 @@ export function UserMultiSelect({ data, value, onChange, label }: Props) {
           return (
             <Stack direction="row" alignItems="center" spacing={1}>
               <Chip
-                label={`@${first.following.userName}`}
-                onDelete={() => removeUser(first.following.id)}
+                label={`@${first.userName}`}
+                onDelete={() => removeUser(first.id)}
                 onMouseDown={(e) => e.stopPropagation()}
                 sx={chipStyles}
               />
@@ -82,27 +82,25 @@ export function UserMultiSelect({ data, value, onChange, label }: Props) {
       >
         <Stack maxHeight="200px" sx={{ overflowY: "auto" }}>
           {data.map((item) => {
-            const isSelected = selectedIds.includes(item.following.id);
+            const isSelected = selectedIds.includes(item.id);
 
             const toggleUser = () => {
               if (isSelected) {
-                handleSelectChange(
-                  selectedIds.filter((id) => id !== item.following.id)
-                );
+                handleSelectChange(selectedIds.filter((id) => id !== item.id));
               } else {
-                handleSelectChange([...selectedIds, item.following.id]);
+                handleSelectChange([...selectedIds, item.id]);
               }
             };
 
             return (
               <MenuItem
-                key={item.following.id}
-                value={item.following.id}
+                key={item.id}
+                value={item.id}
                 onClick={toggleUser}
                 sx={{ p: 0 }}
               >
                 <UserRow
-                  user={item.following}
+                  user={item}
                   button={
                     <Checkbox
                       checked={isSelected}

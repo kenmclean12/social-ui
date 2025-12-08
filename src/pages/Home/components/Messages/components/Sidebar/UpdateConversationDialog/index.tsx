@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useAuth } from "../../../../../../../context";
 import type {
   ConversationResponseDto,
@@ -10,21 +10,27 @@ import {
   useFollowGetFollowing,
 } from "../../../../../../../hooks";
 import {
-  Autocomplete,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Stack,
   TextField,
   FormControlLabel,
   Switch,
-  Box,
-  Checkbox,
 } from "@mui/material";
+import {
+  UniversalDialog,
+  UserMultiSelect,
+} from "../../../../../../../components";
+import { textFieldStyles } from "../../../../../../styles";
+import {
+  cancelButtonStyles,
+  dialogFooterStackStyles,
+  stackContainerStyles,
+  switchLabelStyles,
+  switchStyles,
+  updateButtonStyles,
+} from "./styles";
 
-interface UpdateConversationDialogProps {
+interface Props {
   open: boolean;
   onClose: () => void;
   conversation: ConversationResponseDto;
@@ -34,19 +40,18 @@ export function UpdateConversationDialog({
   open,
   onClose,
   conversation,
-}: UpdateConversationDialogProps) {
+}: Props) {
   const { user } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
-  const [title, setTitle] = useState(conversation.name || "");
+  const [title, setTitle] = useState<string>(conversation.name || "");
+  const [closed, setClosed] = useState<boolean>(conversation.closed || false);
   const [selectedUsers, setSelectedUsers] = useState<UserResponseDto[]>(
     conversation.participants
   );
-  const [closed, setClosed] = useState(conversation.closed || false);
+
   const { data: following = [] } = useFollowGetFollowing(user!.id);
   const { mutateAsync: updateConversation } = useConversationUpdate();
   const { mutateAsync: alterParticipants } = useConversationAlterParticipants();
-
-  const userOptions = following.map((f) => f.following);
 
   const handleUpdate = async () => {
     setLoading(true);
@@ -82,146 +87,75 @@ export function UpdateConversationDialog({
     onClose();
   };
 
+  const hasChanges = useMemo(() => {
+    const initialIds = conversation.participants.map((u) => u.id).sort();
+    const selectedIds = selectedUsers.map((u) => u.id).sort();
+
+    const participantsChanged =
+      initialIds.length !== selectedIds.length ||
+      initialIds.some((id, idx) => id !== selectedIds[idx]);
+
+    return (
+      title !== (conversation.name || "") ||
+      closed !== (conversation.closed || false) ||
+      participantsChanged
+    );
+  }, [
+    conversation.participants,
+    conversation.name,
+    conversation.closed,
+    selectedUsers,
+    title,
+    closed,
+  ]);
+
   return (
-    <Dialog
+    <UniversalDialog
       open={open}
       onClose={onClose}
-      fullWidth
-      PaperProps={{
-        sx: {
-          backgroundColor: "#0e0e0e",
-          color: "#fff",
-          border: "1px solid #444",
-          boxShadow: "0 0 20px rgba(0,0,0,0.8)",
-        },
-      }}
-    >
-      <DialogTitle sx={{ color: "#fff", borderBottom: "1px solid #333" }}>
-        Update Conversation
-      </DialogTitle>
-      <DialogContent>
-        <Stack spacing={2} p={1}>
-          <TextField
-            label="Conversation title (optional)"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            fullWidth
-            InputLabelProps={{ sx: { color: "#aaa" } }}
-            sx={{
-              backgroundColor: "#1a1a1a",
-              borderRadius: "8px",
-              "& .MuiOutlinedInput-notchedOutline": { borderColor: "#444" },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#666",
-              },
-              "& .MuiInputBase-input": { color: "#fff" },
-            }}
-          />
-
-          <Autocomplete
-            multiple
-            options={userOptions}
-            value={selectedUsers}
-            getOptionLabel={(u) => u.userName}
-            onChange={(_, v) => setSelectedUsers(v)}
-            disableCloseOnSelect
-            PaperComponent={(props) => (
-              <Box
-                {...props}
-                sx={{
-                  maxHeight: "250px",
-                  overflowY: "auto",
-                  backgroundColor: "#1a1a1a",
-                  color: "#fff",
-                  border: "1px solid #444",
-                  borderRadius: 1,
-                  mt: 1,
-                  overflow: "hidden",
-                }}
-              />
-            )}
-            ListboxProps={{
-              sx: {
-                "& .MuiAutocomplete-option": {
-                  color: "#fff",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  "&.Mui-focused": { backgroundColor: "#222" },
-                  "&.Mui-selected": { backgroundColor: "#222" },
-                },
-              },
-            }}
-            renderOption={(props, option, { selected }) => (
-              <li {...props}>
-                {option.userName}
-                <Checkbox
-                  checked={selected}
-                  sx={{
-                    color: "#1976d2",
-                    "&.Mui-checked": { color: "#1976d2" },
-                  }}
-                />
-              </li>
-            )}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Participants"
-                InputLabelProps={{ sx: { color: "#aaa" } }}
-                sx={{
-                  backgroundColor: "#1a1a1a",
-                  borderRadius: "8px",
-                  "& .MuiOutlinedInput-notchedOutline": { borderColor: "#444" },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#666",
-                  },
-                  "& .MuiInputBase-input": { color: "#fff" },
-                  "& .MuiAutocomplete-tag": {
-                    backgroundColor: "#2a2a2a",
-                    color: "#fff",
-                    "& .MuiChip-deleteIcon": { color: "#fff" },
-                  },
-                }}
-              />
-            )}
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                checked={closed}
-                onChange={(_, v) => setClosed(v)}
-                sx={{
-                  "& .MuiSwitch-switchBase.Mui-checked": { color: "#1976d2" },
-                  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                    backgroundColor: "#1976d2",
-                  },
-                }}
-              />
-            }
-            label="Close Conversation"
-            sx={{ color: "#fff" }}
-          />
+      title="Update Conversation"
+      footer={
+        <Stack sx={dialogFooterStackStyles}>
+          <Button onClick={onClose} sx={cancelButtonStyles}>
+            Cancel
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={handleUpdate}
+            disabled={loading || !hasChanges}
+            sx={updateButtonStyles}
+          >
+            Update
+          </Button>
         </Stack>
-      </DialogContent>
-      <DialogActions sx={{ borderTop: "1px solid #333", padding: "12px" }}>
-        <Button
-          onClick={onClose}
-          sx={{ color: "#ccc", ":hover": { background: "#222" } }}
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={handleUpdate}
-          disabled={loading}
-          sx={{
-            color: "#fff",
-            backgroundColor: "#1976d2",
-            ":hover": { backgroundColor: "#1565c0" },
-          }}
-        >
-          Update
-        </Button>
-      </DialogActions>
-    </Dialog>
+      }
+    >
+      <Stack sx={stackContainerStyles}>
+        <TextField
+          label="Conversation title (optional)"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          fullWidth
+          sx={textFieldStyles}
+        />
+        <UserMultiSelect
+          label="Participants"
+          data={following.map((f) => f.following)}
+          value={selectedUsers}
+          onChange={setSelectedUsers}
+        />
+        <FormControlLabel
+          control={
+            <Switch
+              checked={closed}
+              onChange={(_, v) => setClosed(v)}
+              sx={switchStyles}
+            />
+          }
+          label="Close Conversation"
+          sx={switchLabelStyles}
+        />
+      </Stack>
+    </UniversalDialog>
   );
 }
