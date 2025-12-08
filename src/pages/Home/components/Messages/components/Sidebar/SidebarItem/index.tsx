@@ -7,13 +7,7 @@ import {
   IconButton,
   Stack,
 } from "@mui/material";
-import {
-  Delete,
-  Edit,
-  Settings,
-  ExitToApp,
-  DoorBack,
-} from "@mui/icons-material";
+import { Delete, Edit, Settings, ExitToApp } from "@mui/icons-material";
 import type { ConversationResponseDto } from "../../../../../../../types";
 import { useAuth } from "../../../../../../../context";
 import { ChatMembers } from "./ChatMembers";
