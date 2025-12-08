@@ -30,6 +30,7 @@ import {
   useMessageUpdate,
 } from "../../../hooks";
 import { ReactionPanel } from "../../ReactionPanel";
+import { ProfileDialog } from "../../Profile";
 
 interface Props {
   message: MessageResponseDto;
@@ -45,6 +46,7 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
   const [readsAnchor, setReadsAnchor] = useState<HTMLElement | null>(null);
   const [editing, setEditing] = useState<boolean>(false);
   const [editValue, setEditValue] = useState<string>(message.content);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
   const { data: likes = [] } = useLikeFind("message", message.id);
   const { mutateAsync: createLike } = useLikeCreate();
@@ -111,7 +113,14 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
       gap={0.5}
     >
       {!isSelf ? (
-        <Stack direction="row" alignItems="center" spacing={1} mb={0.5}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={1}
+          mb={0.5}
+          sx={{ cursor: dialog ? "default" : "pointer" }}
+          onClick={() => setSelectedUserId(message.sender.id)}
+        >
           <Avatar
             src={message.sender.avatarUrl}
             sx={{ width: 28, height: 28 }}
@@ -335,6 +344,13 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
           </>
         )}
       </Stack>
+      {selectedUserId !== null && (
+        <ProfileDialog
+          open={true}
+          userId={selectedUserId}
+          onClose={() => setSelectedUserId(null)}
+        />
+      )}
     </Box>
   );
 }

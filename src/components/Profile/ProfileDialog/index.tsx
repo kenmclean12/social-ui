@@ -1,3 +1,4 @@
+import { useState, type ReactNode } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -17,7 +18,6 @@ import {
   Close,
   Settings,
 } from "@mui/icons-material";
-import { useState } from "react";
 import { useAuth } from "../../../context";
 import { FollowListView, ProfileView } from "./components";
 import {
@@ -38,10 +38,18 @@ interface StackItem {
 interface Props {
   open: boolean;
   userId: number;
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  trigger?: ReactNode;
   onClose: () => void;
 }
 
-export function ProfileDialog({ open, userId, onClose }: Props) {
+export function ProfileDialog({
+  open,
+  userId,
+  setOpen,
+  trigger,
+  onClose,
+}: Props) {
   const { user: self } = useAuth();
   const [resetOpen, setResetOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
@@ -89,136 +97,148 @@ export function ProfileDialog({ open, userId, onClose }: Props) {
   if (!top) return null;
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth="lg"
-      fullWidth
-      PaperProps={{
-        sx: {
-          height: "90vh",
-          backgroundColor: "black",
-          color: "#fff",
-          border: "1px solid #444",
-        },
-      }}
-    >
-      <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        {stack.length > 1 && (
-          <IconButton onClick={pop} sx={{ color: "lightblue" }}>
-            <ArrowBack />
-          </IconButton>
-        )}
-        {title}
-        <Stack
-          direction="row"
-          spacing={1.25}
-          sx={{ marginLeft: "auto", alignItems: "center" }}
-        >
-          {isOwnProfile && (
-            <>
-              <IconButton
-                sx={{ color: "white" }}
-                onClick={(e) => setMenuAnchor(e.currentTarget)}
-              >
-                <Settings />
-              </IconButton>
-              <Popover
-                anchorEl={menuAnchor}
-                open={Boolean(menuAnchor)}
-                onClose={() => setMenuAnchor(null)}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                transformOrigin={{ vertical: "top", horizontal: "right" }}
-                PaperProps={{
-                  sx: {
-                    backgroundColor: "#1e1e1e",
-                    minWidth: 200,
-                    padding: "5px 0",
-                    border: "1px solid #444",
-                  },
-                }}
-              >
-                <Stack spacing={1}>
-                  <MenuItem
-                    onClick={() => {
-                      setResetOpen(true);
-                      setMenuAnchor(null);
-                    }}
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      color: "white",
-                    }}
-                  >
-                    Reset Password
-                    <Password sx={{ color: "lightblue", height: 20 }} />
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      setDeleteOpen(true);
-                      setMenuAnchor(null);
-                    }}
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      color: "white",
-                    }}
-                  >
-                    <span>Delete Account</span>
-                    <Delete sx={{ color: "red", height: 20 }} />
-                  </MenuItem>
-                </Stack>
-              </Popover>
-            </>
+    <>
+      {trigger && setOpen && (
+        <span onClick={() => setOpen(true)} style={{ display: "inline-block" }}>
+          {trigger}
+        </span>
+      )}
+      <Dialog
+        open={open}
+        onClose={onClose}
+        maxWidth="lg"
+        fullWidth
+        PaperProps={{
+          sx: {
+            height: "90vh",
+            backgroundColor: "black",
+            color: "#fff",
+            border: "1px solid #444",
+          },
+        }}
+      >
+        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          {stack.length > 1 && (
+            <IconButton onClick={pop} sx={{ color: "lightblue" }}>
+              <ArrowBack />
+            </IconButton>
           )}
-          <Stack direction="row" alignItems="center" spacing={2.5}>
-            {top.type === "profile" && !isOwnProfile && (
-              <Button
-                variant="outlined"
-                endIcon={isFollowing ? <Check /> : <PersonAdd />}
-                onClick={handleFollowToggle}
-                sx={{
-                  borderColor: "lightblue",
-                  color: "lightblue",
-                }}
-              >
-                {isFollowing ? "Following" : "Follow"}
-              </Button>
+          {title}
+          <Stack
+            direction="row"
+            spacing={1.25}
+            sx={{ marginLeft: "auto", alignItems: "center" }}
+          >
+            {isOwnProfile && (
+              <>
+                <IconButton
+                  sx={{ color: "white" }}
+                  onClick={(e) => setMenuAnchor(e.currentTarget)}
+                >
+                  <Settings />
+                </IconButton>
+                <Popover
+                  anchorEl={menuAnchor}
+                  open={Boolean(menuAnchor)}
+                  onClose={() => setMenuAnchor(null)}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                  transformOrigin={{ vertical: "top", horizontal: "right" }}
+                  PaperProps={{
+                    sx: {
+                      backgroundColor: "#1e1e1e",
+                      minWidth: 200,
+                      padding: "5px 0",
+                      border: "1px solid #444",
+                    },
+                  }}
+                >
+                  <Stack spacing={1}>
+                    <MenuItem
+                      onClick={() => {
+                        setResetOpen(true);
+                        setMenuAnchor(null);
+                      }}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        color: "white",
+                      }}
+                    >
+                      Reset Password
+                      <Password sx={{ color: "lightblue", height: 20 }} />
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        setDeleteOpen(true);
+                        setMenuAnchor(null);
+                      }}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        color: "white",
+                      }}
+                    >
+                      <span>Delete Account</span>
+                      <Delete sx={{ color: "red", height: 20 }} />
+                    </MenuItem>
+                  </Stack>
+                </Popover>
+              </>
             )}
-            <Close onClick={onClose} sx={{ color: "red", cursor: "pointer" }} />
+            <Stack direction="row" alignItems="center" spacing={2.5}>
+              {top.type === "profile" && !isOwnProfile && (
+                <Button
+                  variant="outlined"
+                  endIcon={isFollowing ? <Check /> : <PersonAdd />}
+                  onClick={handleFollowToggle}
+                  sx={{
+                    borderColor: "lightblue",
+                    color: "lightblue",
+                  }}
+                >
+                  {isFollowing ? "Following" : "Follow"}
+                </Button>
+              )}
+              <Close
+                onClick={onClose}
+                sx={{ color: "red", cursor: "pointer" }}
+              />
+            </Stack>
           </Stack>
-        </Stack>
-      </DialogTitle>
-      <DialogContent sx={{ padding: 0 }}>
-        {top.type === "profile" ? (
-          <ProfileView
-            userId={top.userId}
-            self={self}
-            onClickFollowers={() =>
-              push({
-                type: "followList",
-                userId: top.userId,
-                listType: "followers",
-              })
-            }
-            onClickFollowing={() =>
-              push({
-                type: "followList",
-                userId: top.userId,
-                listType: "following",
-              })
-            }
-          />
-        ) : (
-          <FollowListView
-            userId={top.userId}
-            listType={top.listType!}
-            onClickUser={(id: number) => push({ type: "profile", userId: id })}
-          />
-        )}
-      </DialogContent>
-      <ResetPasswordDialog open={resetOpen} setOpen={setResetOpen} />
-      <DeleteAccountDialog open={deleteOpen} setOpen={setDeleteOpen} />
-    </Dialog>
+        </DialogTitle>
+        <DialogContent sx={{ padding: 0 }}>
+          {top.type === "profile" ? (
+            <ProfileView
+              userId={top.userId}
+              self={self}
+              onClickFollowers={() =>
+                push({
+                  type: "followList",
+                  userId: top.userId,
+                  listType: "followers",
+                })
+              }
+              onClickFollowing={() =>
+                push({
+                  type: "followList",
+                  userId: top.userId,
+                  listType: "following",
+                })
+              }
+            />
+          ) : (
+            <FollowListView
+              userId={top.userId}
+              listType={top.listType!}
+              onClickUser={(id: number) =>
+                push({ type: "profile", userId: id })
+              }
+            />
+          )}
+        </DialogContent>
+        <ResetPasswordDialog open={resetOpen} setOpen={setResetOpen} />
+        <DeleteAccountDialog open={deleteOpen} setOpen={setDeleteOpen} />
+      </Dialog>
+    </>
   );
 }
