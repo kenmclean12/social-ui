@@ -1,23 +1,22 @@
 import { useState } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Autocomplete,
-  TextField,
-  Stack,
-  Box,
-  Checkbox,
-} from "@mui/material";
+import { Button, Stack, TextField } from "@mui/material";
 import { useAuth } from "../../../../../../../context";
 import type { FollowResponseDto } from "../../../../../../../types";
 import {
   useConversationInitiate,
   useFollowGetFollowing,
 } from "../../../../../../../hooks";
-import { UserRow } from "../../../../../../../components";
+import {
+  UniversalDialog,
+  UserMultiSelect,
+} from "../../../../../../../components";
+import {
+  dialogFooterStackStyles,
+  cancelButtonStyles,
+  startButtonStyles,
+  stackContainerStyles,
+} from "./styles";
+import { inputStyles } from "../../../../../../styles";
 
 interface StartConversationDialogProps {
   open: boolean;
@@ -61,140 +60,43 @@ export function StartConversationDialog({
   };
 
   return (
-    <Dialog
+    <UniversalDialog
       open={open}
       onClose={onClose}
-      fullWidth
-      PaperProps={{
-        sx: {
-          backgroundColor: "#0e0e0e",
-          color: "#fff",
-          border: "1px solid #444",
-          boxShadow: "0 0 20px rgba(0,0,0,0.8)",
-        },
-      }}
-    >
-      <DialogTitle sx={{ color: "#fff", borderBottom: "1px solid #333" }}>
-        Start Conversation
-      </DialogTitle>
-      <DialogContent sx={{ mt: 2 }}>
-        <Stack spacing={2} p={1}>
-          <Autocomplete
-            multiple
-            options={data}
-            value={selectedUsers}
-            getOptionLabel={(o) => o.following.userName}
-            onChange={(_, v) => setSelectedUsers(v)}
-            PaperComponent={(props) => (
-              <Box
-                {...props}
-                sx={{
-                  maxHeight: "250px",
-                  overflowY: "auto",
-                  backgroundColor: "#1a1a1a",
-                  color: "#fff",
-                  border: "1px solid #444",
-                  borderRadius: 1,
-                  mt: 1,
-                }}
-              />
-            )}
-            ListboxProps={{
-              sx: {
-                "& .MuiAutocomplete-option": {
-                  color: "#fff",
-                  "&.Mui-focused": { backgroundColor: "#1a1a1a" },
-                  "&.Mui-selected": { backgroundColor: "#1a1a1a" },
-                },
-              },
-            }}
-            renderOption={(props, option, { selected }) => (
-              <li {...props}>
-                <UserRow
-                  user={option.following}
-                  button={
-                    <Checkbox
-                      checked={selected}
-                      sx={{
-                        color: "#fff",
-                        "&.Mui-checked": { color: "#fff" },
-                      }}
-                    />
-                  }
-                />
-              </li>
-            )}
-            sx={{
-              "& .MuiInputBase-root": {
-                backgroundColor: "#1a1a1a",
-                color: "#fff",
-                borderRadius: "8px",
-                border: "1px solid #444",
-              },
-              "& .MuiSvgIcon-root": { color: "#ccc" },
-              "& .MuiAutocomplete-tag": {
-                backgroundColor: "#222",
-                color: "#fff",
-              },
-            }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Select users"
-                InputLabelProps={{ sx: { color: "#aaa" } }}
-                sx={{
-                  "& .MuiOutlinedInput-notchedOutline": { borderColor: "#444" },
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#666",
-                  },
-                  "& .MuiInputBase-input": { color: "#fff" },
-                }}
-              />
-            )}
-          />
-
-          <TextField
-            label="First message"
-            multiline
-            minRows={2}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            fullWidth
-            InputLabelProps={{ sx: { color: "#aaa" } }}
-            sx={{
-              backgroundColor: "#1a1a1a",
-              borderRadius: "8px",
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#444",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#666",
-              },
-              "& .MuiInputBase-input": { color: "#fff" },
-            }}
-          />
+      title="Start Conversation"
+      footer={
+        <Stack sx={dialogFooterStackStyles}>
+          <Button onClick={onClose} sx={cancelButtonStyles}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleStart}
+            variant="outlined"
+            disabled={selectedUsers.length === 0 || !message.trim()}
+            sx={startButtonStyles}
+          >
+            Start
+          </Button>
         </Stack>
-      </DialogContent>
-      <DialogActions sx={{ borderTop: "1px solid #333", padding: "12px" }}>
-        <Button
-          onClick={onClose}
-          sx={{ color: "#ccc", ":hover": { background: "#222" } }}
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={handleStart}
-          variant="contained"
-          disabled={selectedUsers.length === 0 || !message.trim()}
-          sx={{
-            backgroundColor: "lightblue",
-            color: "white",
-            ":hover": { backgroundColor: "lightblue" },
-          }}
-        >
-          Start
-        </Button>
-      </DialogActions>
-    </Dialog>
+      }
+    >
+      <Stack sx={stackContainerStyles}>
+        <UserMultiSelect
+          label="Select Users"
+          data={data}
+          value={selectedUsers}
+          onChange={(selected) => setSelectedUsers(selected)}
+        />
+        <TextField
+          label="First message"
+          multiline
+          minRows={3}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          sx={inputStyles}
+          fullWidth
+        />
+      </Stack>
+    </UniversalDialog>
   );
 }

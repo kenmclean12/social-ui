@@ -11,6 +11,8 @@ interface Props {
   showFollowButtonSmall?: boolean;
   button?: ReactNode;
   message?: string;
+  color?: string;
+  hoverColor?: string;
   onClick?: (id: number) => void;
 }
 
@@ -21,6 +23,8 @@ export function UserRow({
   showFollowButtonSmall = false,
   button,
   message,
+  color,
+  hoverColor,
   onClick,
 }: Props) {
   const fullName = message || `${user.firstName} ${user.lastName}`;
@@ -30,6 +34,10 @@ export function UserRow({
       sx={{
         ...paperStyles,
         cursor: onClick ? "pointer" : "default",
+        backgroundColor: color ?? "black",
+        "&:hover": {
+          backgroundColor: hoverColor ?? "#101",
+        },
       }}
       onClick={() => onClick?.(user.id)}
     >
@@ -65,11 +73,7 @@ export function UserRow({
           <FollowButton targetUserId={user.id} />
         ) : null}
       </Stack>
-      {button && !showFollowButton && !showFollowButtonSmall && (
-        <Stack direction="row" sx={{ pointerEvents: "auto" }}>
-          {button}
-        </Stack>
-      )}
+      {button && !showFollowButton && !showFollowButtonSmall && <>{button}</>}
     </Paper>
   );
 }

@@ -40,3 +40,28 @@ export const authButtonStyles = {
   border: "1.5px solid lightblue",
   borderRadius: 2,
 };
+
+export const inputStyles = {
+  backgroundColor: "#1a1a1a",
+  borderRadius: "8px",
+
+  "& .MuiOutlinedInput-notchedOutline": {
+    borderColor: "#444 !important",
+  },
+
+  "&:hover .MuiOutlinedInput-notchedOutline": {
+    borderColor: "#444 !important",
+  },
+
+  "& .MuiInputBase-input": {
+    color: "#fff",
+  },
+
+  "& .MuiInputLabel-root": {
+    color: "#aaa",
+  },
+
+  "& .MuiInputLabel-root.Mui-focused": {
+    color: "#aaa !important",
+  },
+};
