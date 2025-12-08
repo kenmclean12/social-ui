@@ -8,3 +8,12 @@ export const paperStyles = {
     backgroundColor: "#101",
   },
 };
+
+export const contentContainerStyles = {
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  gap: 8,
+  flex: 1,
+  minWidth: 0,
+};

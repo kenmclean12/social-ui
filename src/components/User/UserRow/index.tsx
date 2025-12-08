@@ -1,7 +1,7 @@
 import { Avatar, Paper, Stack, Typography, Tooltip } from "@mui/material";
 import type { UserResponseDto } from "../../../types";
 import { FollowButton } from "../../Follow";
-import { paperStyles } from "./styles";
+import { contentContainerStyles, paperStyles } from "./styles";
 
 interface Props {
   user: UserResponseDto;
@@ -30,13 +30,7 @@ export function UserRow({
       }}
       onClick={() => onClick?.(user.id)}
     >
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={2}
-        flex={1}
-        minWidth={0}
-      >
+      <Stack sx={contentContainerStyles}>
         <Avatar src={user.avatarUrl} sx={{ width: 30, height: 30 }} />
         <Tooltip title={fullName}>
           <Typography
@@ -53,10 +47,10 @@ export function UserRow({
         </Tooltip>
       </Stack>
       <Stack
-        flexDirection="row"
+        direction="row"
         paddingLeft="12px"
         onClick={(e) => e.stopPropagation()}
-        style={{ pointerEvents: "auto" }}
+        sx={{ pointerEvents: "auto" }}
       >
         {showFollowButtonSmall ? (
           <FollowButton

@@ -8,36 +8,26 @@ import { ChatWindow, Sidebar } from "./components";
 export function Messages() {
   const { user } = useAuth();
   const [selectedId, setSelectedId] = useState<number | null>(null);
-
-  const [sidebarWidth, setSidebarWidth] = useState(250);
-  const [collapsed, setCollapsed] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState<number>(250);
+  const [collapsed, setCollapsed] = useState<boolean>(false);
   const isResizing = useRef(false);
-
-  const MIN_WIDTH = 250;
-  const MAX_WIDTH = 400;
-
-  const handleMouseDown = () => {
-    isResizing.current = true;
-  };
 
   const handleMouseMove = (e: MouseEvent) => {
     if (!isResizing.current || collapsed) return;
-
-    const newWidth = Math.min(Math.max(e.clientX, MIN_WIDTH), MAX_WIDTH);
+    const newWidth = Math.min(Math.max(e.clientX, 250), 400);
     setSidebarWidth(newWidth);
-  };
-
-  const handleMouseUp = () => {
-    isResizing.current = false;
   };
 
   useEffect(() => {
     document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("mouseup", () => (isResizing.current = false));
 
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener(
+        "mouseup",
+        () => (isResizing.current = false)
+      );
     };
   });
 
@@ -50,7 +40,7 @@ export function Messages() {
           borderRight: "1px solid lightblue",
           position: "relative",
           overflow: "hidden",
-          background: "#0b0b0b"
+          background: "#0b0b0b",
         }}
       >
         <Box
@@ -71,7 +61,12 @@ export function Messages() {
         >
           <IconButton
             size="small"
-            sx={{ display: "flex", alignItems: "center", justifyContent: "center", color: "lightblue" }}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "lightblue",
+            }}
             onClick={() => setCollapsed((c) => !c)}
           >
             {collapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
@@ -87,7 +82,7 @@ export function Messages() {
       </Box>
       {!collapsed && (
         <Box
-          onMouseDown={handleMouseDown}
+          onMouseDown={() => (isResizing.current = true)}
           sx={{
             width: "6px",
             cursor: "ew-resize",
