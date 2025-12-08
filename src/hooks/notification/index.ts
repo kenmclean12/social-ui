@@ -19,6 +19,29 @@ export function useNotificationFindAll() {
   });
 }
 
+export function useNotificationMarkAllRead() {
+  const qc = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
+
+  return useMutation({
+    mutationFn: async () => {
+      const res = await api("/notification/mark-read/all", {
+        method: "PATCH",
+      });
+      if (!res?.ok) {
+        const err = await res?.json();
+        throw new Error(err.message || "Failed to mark all notifications read");
+      }
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["notifications"] });
+    },
+    onError: (err: Error) => {
+      enqueueSnackbar(err.message, { variant: "error" });
+    },
+  });
+}
+
 export function useNotificationUpdate() {
   const qc = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();

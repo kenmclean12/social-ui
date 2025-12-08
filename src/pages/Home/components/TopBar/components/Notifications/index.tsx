@@ -11,6 +11,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useAuth } from "../../../../../../context";
 import {
   useNotificationFindAll,
+  useNotificationMarkAllRead,
   useNotificationStream,
   useNotificationUpdate,
 } from "../../../../../../hooks";
@@ -29,12 +30,13 @@ import { notificationIndicatorStyles, popoverStyles } from "./styles";
 export function Notifications() {
   const { user } = useAuth();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [profileDialogOpen, setProfileDialogOpen] = useState(false);
+  const [profileDialogOpen, setProfileDialogOpen] = useState<boolean>(false);
   const [profileUserId, setProfileUserId] = useState<number | null>(null);
-  const [postDialogOpen, setPostDialogOpen] = useState(false);
+  const [postDialogOpen, setPostDialogOpen] = useState<boolean>(false);
   const [postId, setPostId] = useState<number | null>(null);
-  const [messageDialogOpen, setMessageDialogOpen] = useState(false);
+  const [messageDialogOpen, setMessageDialogOpen] = useState<boolean>(false);
   const [messageId, setMessageId] = useState<number | null>(null);
+  const { mutateAsync: markAllRead } = useNotificationMarkAllRead();
 
   const { data: notifications = [] } = useNotificationFindAll();
   const updateNotification = useNotificationUpdate();
@@ -78,7 +80,10 @@ export function Notifications() {
   return (
     <>
       <IconButton
-        onClick={(e) => setAnchorEl(e.currentTarget)}
+        onClick={(e) => {
+          setAnchorEl(e.currentTarget);
+          markAllRead();
+        }}
         sx={{ color: "lightblue" }}
       >
         <Badge
