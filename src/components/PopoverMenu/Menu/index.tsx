@@ -14,6 +14,7 @@ interface Props {
   onClose?: () => void;
   anchorOrigin?: PopoverOrigin;
   transformOrigin?: PopoverOrigin;
+  width?: string;
 }
 
 export function PopoverMenu({
@@ -22,6 +23,7 @@ export function PopoverMenu({
   onClose,
   anchorOrigin = { vertical: "bottom", horizontal: "right" },
   transformOrigin = { vertical: "top", horizontal: "right" },
+  width,
 }: Props) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -46,7 +48,12 @@ export function PopoverMenu({
         anchorOrigin={anchorOrigin}
         transformOrigin={transformOrigin}
       >
-        <MenuList sx={menuListStyles}>
+        <MenuList
+          sx={{
+            ...menuListStyles,
+            width: width ?? "auto",
+          }}
+        >
           {Array.isArray(children)
             ? children.map((child, i) =>
                 cloneElement(child as any, { closeMenu, key: i })

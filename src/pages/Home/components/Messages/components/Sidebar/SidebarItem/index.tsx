@@ -146,13 +146,13 @@ export function SidebarItem({ conversation, selected, onClick }: Props) {
               <>
                 <PopoverMenuItem
                   label="Update"
-                  iconRight={<Edit sx={{ color: "lightblue", height: 20 }} />}
+                  iconRight={<Edit sx={{ color: "lightblue", height: 16, mt: .5 }} />}
                   closeOnSelect
                   onClick={() => setUpdateOpen(true)}
                 />
                 <PopoverMenuItem
                   label="Delete"
-                  iconRight={<Delete sx={{ color: "red", height: 20 }} />}
+                  iconRight={<Delete sx={{ color: "red", height: 16, mt: .5 }} />}
                   closeOnSelect
                   onClick={() => setDeleteOpen(true)}
                 />
