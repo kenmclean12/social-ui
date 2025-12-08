@@ -1,3 +1,28 @@
+export const mainContainerStyles = {
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "center",
+  flex: 1,
+  flexShrink: 1,
+  minWidth: 200,
+  maxWidth: 800,
+  paddingLeft: 16,
+  paddingRight: 16,
+};
+
+export const inputContainerStyles = {
+  position: "relative",
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "center",
+  flex: 1,
+  flexShrink: 1,
+  minWidth: 200,
+  maxWidth: 800,
+  paddingLeft: 16,
+  paddingRight: 16,
+};
+
 export const userSearchInputStyles = {
   height: "35px",
   width: "100%",

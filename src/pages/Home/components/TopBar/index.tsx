@@ -4,7 +4,12 @@ import { NightsStay } from "@mui/icons-material";
 import { useAuth } from "../../../../context";
 import { Notifications, ProfileMenu, UserSearch } from "./components";
 import { PostCreate, ProfileDialog } from "../../../../components";
-import { toolbarStyles } from "./styles";
+import {
+  iconContainerStyles,
+  searchContainerStyles,
+  toolbarStyles,
+  topBarOptionsContainerStyles,
+} from "./styles";
 
 export function TopBar() {
   const { user } = useAuth();
@@ -19,20 +24,13 @@ export function TopBar() {
         style={{ borderBottom: "1px solid lightblue" }}
       >
         <Toolbar sx={toolbarStyles}>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="center"
-            spacing={1}
-            flexShrink={0}
-            pl={1}
-          >
+          <Stack sx={iconContainerStyles}>
             <NightsStay sx={{ color: "lightblue" }} />
           </Stack>
-          <Box display="flex" flex={1} justifyContent="center" minWidth={0}>
+          <Box sx={searchContainerStyles}>
             <UserSearch />
           </Box>
-          <Box display="flex" gap={1} flexShrink={0}>
+          <Box sx={topBarOptionsContainerStyles}>
             <PostCreate />
             <Notifications />
             <ProfileMenu />

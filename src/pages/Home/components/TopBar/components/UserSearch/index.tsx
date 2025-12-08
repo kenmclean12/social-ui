@@ -8,6 +8,8 @@ import { ProfileDialog, UserRow } from "../../../../../../components";
 import {
   clearSearchButtonStyles,
   dropdownMenuPaperStyles,
+  inputContainerStyles,
+  mainContainerStyles,
   userSearchInputStyles,
 } from "./styles";
 
@@ -73,25 +75,8 @@ export function UserSearch() {
 
   return (
     <>
-      <Stack
-        direction="row"
-        justifyContent="center"
-        flex={1}
-        flexShrink={1}
-        minWidth={200}
-        maxWidth={800}
-        px={2}
-      >
-        <Stack
-          position="relative"
-          direction="row"
-          justifyContent="center"
-          flex={1}
-          flexShrink={1}
-          minWidth={200}
-          maxWidth={800}
-          px={2}
-        >
+      <Stack sx={mainContainerStyles}>
+        <Stack sx={inputContainerStyles}>
           <Input
             inputRef={(el) => setAnchorEl(el)}
             placeholder="Search users…"
@@ -131,7 +116,7 @@ export function UserSearch() {
           ]}
           style={{ width: "100%", zIndex: 30 }}
         >
-          <Stack direction="row" ref={popperRef} width="100%">
+          <Stack ref={popperRef} direction="row" width="100%">
             <Paper sx={dropdownMenuPaperStyles}>
               {filtered.map((u) => (
                 <Box
