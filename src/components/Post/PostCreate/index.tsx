@@ -74,7 +74,7 @@ export function PostCreate() {
         }
       >
         <Stack spacing={2}>
-          <Stack spacing={3}>
+          <Stack spacing={2}>
           <TextField
             fullWidth
             placeholder="Write something..."

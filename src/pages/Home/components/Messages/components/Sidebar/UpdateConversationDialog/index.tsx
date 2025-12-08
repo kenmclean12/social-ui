@@ -1,11 +1,5 @@
 import { useMemo, useState } from "react";
-import {
-  Button,
-  Stack,
-  TextField,
-  FormControlLabel,
-  Switch,
-} from "@mui/material";
+import { Button, Stack, FormControlLabel, Switch } from "@mui/material";
 import { useAuth } from "../../../../../../../context";
 import type {
   ConversationResponseDto,
@@ -20,7 +14,6 @@ import {
   UniversalDialog,
   UserMultiSelect,
 } from "../../../../../../../components";
-import { textFieldStyles } from "../../../../../../styles";
 import {
   cancelButtonStyles,
   dialogFooterStackStyles,
@@ -43,7 +36,6 @@ export function UpdateConversationDialog({
 }: Props) {
   const { user } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
-  const [title, setTitle] = useState<string>(conversation.name || "");
   const [closed, setClosed] = useState<boolean>(conversation.closed || false);
   const [selectedUsers, setSelectedUsers] = useState<UserResponseDto[]>(
     conversation.participants
@@ -56,10 +48,10 @@ export function UpdateConversationDialog({
   const handleUpdate = async () => {
     setLoading(true);
 
-    if (title !== conversation.name || closed !== conversation.closed) {
+    if (closed !== conversation.closed) {
       await updateConversation({
         id: conversation.id,
-        dto: { name: title, closed },
+        dto: { closed },
       });
     }
 
@@ -95,19 +87,8 @@ export function UpdateConversationDialog({
       initialIds.length !== selectedIds.length ||
       initialIds.some((id, idx) => id !== selectedIds[idx]);
 
-    return (
-      title !== (conversation.name || "") ||
-      closed !== (conversation.closed || false) ||
-      participantsChanged
-    );
-  }, [
-    conversation.participants,
-    conversation.name,
-    conversation.closed,
-    selectedUsers,
-    title,
-    closed,
-  ]);
+    return closed !== (conversation.closed || false) || participantsChanged;
+  }, [conversation.participants, conversation.closed, selectedUsers, closed]);
 
   return (
     <UniversalDialog
@@ -131,13 +112,6 @@ export function UpdateConversationDialog({
       }
     >
       <Stack sx={stackContainerStyles}>
-        <TextField
-          label="Conversation title (optional)"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          fullWidth
-          sx={textFieldStyles}
-        />
         <UserMultiSelect
           label="Participants"
           data={following.map((f) => f.following)}

@@ -59,6 +59,7 @@ export function DescriptionSection({ description, isOwnUser }: Props) {
               minRows={3}
               maxRows={10}
               value={value}
+              inputProps={{ maxLength: 500 }}
               onChange={(e) => setValue(e.target.value)}
               sx={textFieldStyles}
             />

@@ -53,6 +53,7 @@ export function ResetPasswordDialog({ open, setOpen }: Props) {
         <TextField
           type="password"
           placeholder="Current Password"
+          inputProps={{ maxLength: 255 }}
           value={oldPassword}
           onChange={(e) => setOldPassword(e.target.value)}
           fullWidth
@@ -67,6 +68,7 @@ export function ResetPasswordDialog({ open, setOpen }: Props) {
         <TextField
           type="password"
           placeholder="New Password"
+          inputProps={{ maxLength: 255 }}
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
           fullWidth

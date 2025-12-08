@@ -17,6 +17,14 @@ import {
 import { formatDayLabel } from "../../../../../../utils";
 import { MessageBubble } from "../../../../../../components";
 import { textFieldStyles } from "../../../../../styles";
+import {
+  chatContainerStyles,
+  conversationClosedContainerStyles,
+  conversationClosedTextStyles,
+  dateLabelStyles,
+  inputContainerStyles,
+  mainContainerStyles,
+} from "./styles";
 
 interface Props {
   conversationId: number;
@@ -47,30 +55,11 @@ export function ChatWindow({ conversationId }: Props) {
   if (isLoading) return <Box p={2}>Loading...</Box>;
 
   return (
-    <Box display="flex" flexDirection="column" width="100%" height="100%">
-      <Box
-        ref={scrollRef}
-        flex={1}
-        p={2}
-        sx={{
-          overflowY: "auto",
-          backgroundColor: "black",
-        }}
-      >
+    <Box sx={mainContainerStyles}>
+      <Box ref={scrollRef} sx={chatContainerStyles}>
         {isClosed && (
-          <Box
-            sx={{
-              background: "#331111",
-              border: "1px solid #552222",
-              borderRadius: "6px",
-              p: 2,
-              mb: 2,
-            }}
-          >
-            <Typography
-              align="center"
-              sx={{ color: "#ff9999", fontSize: 14, fontWeight: 500 }}
-            >
+          <Box sx={conversationClosedContainerStyles}>
+            <Typography align="center" sx={conversationClosedTextStyles}>
               This conversation has been closed by{" "}
               <strong>{conversation?.initiator?.firstName}</strong>.
             </Typography>
@@ -80,23 +69,15 @@ export function ChatWindow({ conversationId }: Props) {
           data.map((msg, idx) => {
             const msgDate = new Date(msg.createdAt);
             const prevDate = idx > 0 ? new Date(data[idx - 1].createdAt) : null;
-
             const showDivider =
               !prevDate || prevDate.toDateString() !== msgDate.toDateString();
 
             return (
               <Box key={msg.id}>
                 {showDivider && (
-                  <Box my={1} display="flex" alignItems="center">
+                  <Box display="flex" alignItems="center" my={1}>
                     <Divider sx={{ flex: 1, borderColor: "#333" }} />
-                    <Typography
-                      sx={{
-                        mx: 1,
-                        color: "#777",
-                        fontSize: 12,
-                        userSelect: "none",
-                      }}
-                    >
+                    <Typography sx={dateLabelStyles}>
                       {formatDayLabel(msgDate)}
                     </Typography>
                     <Divider sx={{ flex: 1, borderColor: "#333" }} />
@@ -111,28 +92,16 @@ export function ChatWindow({ conversationId }: Props) {
           })
         ) : (
           <Typography
+            align="center"
             position="relative"
             top="45%"
-            align="center"
             color="white"
           >
             No messages found
           </Typography>
         )}
       </Box>
-      <Paper
-        elevation={3}
-        square
-        sx={{
-          flexShrink: 0,
-          display: "flex",
-          alignItems: "center",
-          width: "100%",
-          p: 1,
-          borderTop: "1px solid #333",
-          background: "#111",
-        }}
-      >
+      <Paper elevation={3} square sx={inputContainerStyles}>
         <TextField
           fullWidth
           placeholder={
@@ -152,7 +121,10 @@ export function ChatWindow({ conversationId }: Props) {
         <IconButton
           onClick={handleSend}
           disabled={!content.trim() || isClosed}
-          sx={{ color: isClosed ? "#555" : "lightblue", ml: 1 }}
+          sx={{
+            color: isClosed ? "#555" : "lightblue",
+            ml: 1,
+          }}
         >
           <SendIcon />
         </IconButton>

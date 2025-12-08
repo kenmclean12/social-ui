@@ -39,9 +39,21 @@ export const textFieldStyles = {
 };
 
 export const switchStyles = {
-  "& .MuiSwitch-switchBase.Mui-checked": { color: "lightblue" },
-  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": { backgroundColor: "lightblue" },
+  "& .MuiSwitch-switchBase": {
+    color: "white",
+    "&.Mui-checked": {
+      color: "lightblue",
+      "& + .MuiSwitch-track": {
+        backgroundColor: "lightblue",
+      },
+    },
+  },
+  "& .MuiSwitch-track": {
+    backgroundColor: "#444",
+    opacity: 1,
+  },
 };
+
 
 export const switchLabelStyles = {
   color: "#fff",
