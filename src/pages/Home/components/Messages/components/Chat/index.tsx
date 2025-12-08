@@ -16,6 +16,7 @@ import {
 } from "../../../../../../hooks";
 import { formatDayLabel } from "../../../../../../utils";
 import { MessageBubble } from "../../../../../../components";
+import { textFieldStyles } from "../../../../../styles";
 
 interface Props {
   conversationId: number;
@@ -121,7 +122,6 @@ export function ChatWindow({ conversationId }: Props) {
           </Typography>
         )}
       </Box>
-
       <Paper
         elevation={3}
         square
@@ -149,9 +149,7 @@ export function ChatWindow({ conversationId }: Props) {
             if (e.key === "Enter" && !isClosed) handleSend();
           }}
           disabled={isClosed}
-          sx={{
-            input: { color: isClosed ? "#777" : "white" },
-          }}
+          sx={textFieldStyles}
         />
         <IconButton
           onClick={handleSend}

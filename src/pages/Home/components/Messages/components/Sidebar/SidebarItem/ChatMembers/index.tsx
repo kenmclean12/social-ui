@@ -1,104 +1,71 @@
-import {
-  Popover,
-  Stack,
-  Avatar,
-  Typography,
-  Box,
-  Divider,
-} from "@mui/material";
-import type { UserResponseDto } from "../../../../../../../../types";
+import { useState } from "react";
+import { Popover, Stack, Divider, Typography } from "@mui/material";
 import { Group } from "@mui/icons-material";
+import type { UserResponseDto } from "../../../../../../../../types";
+import { ProfileDialog, UserRow } from "../../../../../../../../components";
+import { popoverPaperStyles } from "./styles";
 
-interface ChatMembersProps {
+interface Props {
   initiator: UserResponseDto;
   members: UserResponseDto[];
   anchorEl: HTMLElement | null;
   onClose: () => void;
 }
 
-export function ChatMembers({
-  initiator,
-  members,
-  anchorEl,
-  onClose,
-}: ChatMembersProps) {
+export function ChatMembers({ initiator, members, anchorEl, onClose }: Props) {
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+
   if (!members.length) return null;
 
   return (
-    <Popover
-      open={Boolean(anchorEl)}
-      anchorEl={anchorEl}
-      onClose={onClose}
-      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
-      PaperProps={{
-        sx: {
-          width: 240,
-          backgroundColor: "#111",
-          border: "1px solid #444",
-          color: "#fff",
-          p: 1,
-        },
-      }}
-    >
-      <Stack spacing={1}>
-        <Stack
-          direction="row"
-          alignSelf="center"
-          alignItems="center"
-          justifyContent="center"
-          spacing={0.5}
-        >
-          <Typography align="center" fontSize="13px" color="white">
-            Conversation Members
-          </Typography>
-          <Group sx={{ height: 20, color: "lightblue" }} />
-        </Stack>
-        <Divider sx={{ backgroundColor: "#444" }} />
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1.5,
-            p: 1,
-            borderRadius: 1,
-            backgroundColor: "rgba(100,150,255,0.1)",
-          }}
-        >
-          <Avatar src={initiator.avatarUrl} />
-          <Stack spacing={0}>
-            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-              {initiator.firstName} {initiator.lastName} (Owner)
-            </Typography>
-            <Typography sx={{ fontSize: 13, color: "#bbb" }}>
-              @{initiator.userName}
-            </Typography>
-          </Stack>
-        </Box>
-        {members.map((m) => (
-          <Box
-            key={m?.id}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1.5,
-              p: 1,
-              borderRadius: 1,
-              "&:hover": { backgroundColor: "rgba(100,150,255,0.15)" },
-            }}
+    <>
+      <Popover
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        onClose={onClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        PaperProps={{ sx: popoverPaperStyles }}
+      >
+        <Stack spacing={1}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="center"
+            spacing={0.5}
+            p={1}
           >
-            <Avatar src={m?.avatarUrl} />
-            <Stack spacing={0} sx={{ overflow: "hidden" }}>
-              <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
-                {m?.firstName} {m?.lastName}
-              </Typography>
-              <Typography sx={{ fontSize: 13, color: "#bbb" }}>
-                @{m?.userName}
-              </Typography>
-            </Stack>
-          </Box>
-        ))}
-      </Stack>
-    </Popover>
+            <Typography align="center" fontSize="15px" color="white">
+              Conversation Members
+            </Typography>
+            <Group sx={{ height: 20, color: "lightblue" }} />
+          </Stack>
+          <Divider sx={{ backgroundColor: "#444" }} />
+          <UserRow
+            user={initiator}
+            message={`${initiator.firstName} ${initiator.lastName} (Owner)`}
+            showUserName
+            color="rgba(100,150,255,0.1)"
+            onClick={(id) => setSelectedUserId(id)}
+          />
+          {members.map((m) => (
+            <UserRow
+              key={m.id}
+              user={m}
+              message={`${m.firstName} ${m.lastName}`}
+              showUserName
+              onClick={(id) => setSelectedUserId(id)}
+            />
+          ))}
+        </Stack>
+      </Popover>
+      {selectedUserId !== null && (
+        <ProfileDialog
+          open={true}
+          userId={selectedUserId}
+          onClose={() => setSelectedUserId(null)}
+        />
+      )}
+    </>
   );
 }
