@@ -2,8 +2,8 @@ import { useState } from "react";
 import { AppBar, Toolbar, Box, Stack } from "@mui/material";
 import { NightsStay } from "@mui/icons-material";
 import { useAuth } from "../../../../context";
-import { Notifications, ProfileMenu, UserSearch } from "./components";
-import { PostCreate, ProfileDialog } from "../../../../components";
+import { Notifications, ProfileMenu } from "./components";
+import { PostCreate, ProfileDialog, UserSearch } from "../../../../components";
 import {
   iconContainerStyles,
   searchContainerStyles,
