@@ -19,7 +19,8 @@ export function PopoverMenuItem({
 }: Props) {
   return (
     <MenuItem
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation();
         onClick?.();
         if (closeOnSelect) closeMenu?.();
       }}

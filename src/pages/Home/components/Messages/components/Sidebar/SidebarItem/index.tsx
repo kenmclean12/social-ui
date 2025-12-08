@@ -133,12 +133,8 @@ export function SidebarItem({ conversation, selected, onClick }: Props) {
         <Stack direction="row" alignItems="center" spacing={1}>
           <PopoverMenu
             trigger={
-              <IconButton
-                size="small"
-                sx={{ color: "white" }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Settings />
+              <IconButton onClick={e => e.stopPropagation()}>
+                <Settings sx={{ color: "white" }} />
               </IconButton>
             }
           >
