@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, Stack, Typography } from "@mui/material";
 import { useConversationDelete } from "../../../../../../../hooks";
 import { UniversalDialog } from "../../../../../../../components";
+import { cancelButtonStyles } from "./styles";
 
 interface Props {
   open: boolean;
@@ -31,23 +32,15 @@ export function DeleteConversationDialog({
       title="Delete Conversation"
       footer={
         <Stack direction="row" justifyContent="flex-end" spacing={2}>
-          <Button
-            variant="outlined"
-            onClick={onClose}
-            sx={{
-              border: "1px solid #333",
-              color: "#ccc",
-              ":hover": { background: "#222" },
-            }}
-          >
+          <Button variant="outlined" onClick={onClose} sx={cancelButtonStyles}>
             Cancel
           </Button>
           <Button
             variant="contained"
             onClick={handleDelete}
             color="error"
-            disabled={loading}
             sx={{ ":hover": { background: "#440000" } }}
+            disabled={loading}
           >
             Delete
           </Button>

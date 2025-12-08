@@ -1,6 +1,8 @@
 import { CircularProgress, Stack, Typography } from "@mui/material";
 import { usePostFindByUserId } from "../../../../../../hooks";
 import { PostCard } from "../../../../..";
+import { mainContainerStyles } from "../styles";
+import { spinnerStyles } from "./styles";
 
 interface Props {
   userId: number;
@@ -10,22 +12,17 @@ export function PostSection({ userId }: Props) {
   const { data: posts, isLoading } = usePostFindByUserId(userId);
 
   if (isLoading) {
-    return (
-      <CircularProgress
-        size={40}
-        sx={{ alignSelf: "center", mt: 2, color: "lightblue" }}
-      />
-    );
+    return <CircularProgress size={40} sx={spinnerStyles} />;
   }
 
   return (
-    <Stack spacing={2} sx={{ p: 1, paddingInline: 0.5, overflowY: "auto" }}>
+    <Stack sx={mainContainerStyles}>
       {posts ? (
         posts?.map((post) => (
           <PostCard key={post.id} post={post} width="100%" />
         ))
       ) : (
-        <Typography align="center">No posts.</Typography>
+        <Typography align="center">No posts</Typography>
       )}
     </Stack>
   );

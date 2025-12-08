@@ -2,6 +2,11 @@ import { useState, useRef } from "react";
 import { Avatar, Box } from "@mui/material";
 import { useUserUpdate } from "../../../../../../hooks";
 import { CameraAlt } from "@mui/icons-material";
+import {
+  avatarStyles,
+  cameraIconContainerStyles,
+  mainContainerStyles,
+} from "./styles";
 
 interface Props {
   currentUrl?: string;
@@ -33,31 +38,12 @@ export function AvatarUpload({ currentUrl, isOwnUser }: Props) {
 
   return (
     <Box
-      sx={{
-        position: "relative",
-        display: "inline-block",
-        cursor: isOwnUser ? "pointer" : "default",
-      }}
       onClick={triggerFileSelect}
+      sx={{ ...mainContainerStyles, cursor: isOwnUser ? "pointer" : "default" }}
     >
-      <Avatar
-        src={preview}
-        sx={{ width: 110, height: 110, border: "1px solid #444" }}
-      />
+      <Avatar src={preview} sx={avatarStyles} />
       {isOwnUser && (
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: 0,
-            right: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: "lightblue",
-            borderRadius: "50%",
-            p: 0.5,
-          }}
-        >
+        <Box sx={cameraIconContainerStyles}>
           <CameraAlt sx={{ fontSize: 18, color: "#fff" }} />
         </Box>
       )}

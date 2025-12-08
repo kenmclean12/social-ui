@@ -1,59 +1,33 @@
 import { useState } from "react";
-import {
-  IconButton,
-  Avatar,
-  Popover,
-  MenuList,
-  MenuItem,
-  Typography,
-} from "@mui/material";
+import { IconButton, Avatar } from "@mui/material";
 import { useAuth } from "../../../../../../context";
 import { useUserFindOne } from "../../../../../../hooks";
 import { ProfileDialog } from "../../../../../../components/Profile/ProfileDialog";
-import { avatarStyles, menuListStyles } from "./styles";
+import { avatarStyles } from "./styles";
+import { PopoverMenu, PopoverMenuItem } from "../../../../../../components";
 
 export function ProfileMenu() {
   const { user, logout } = useAuth();
-  const { data: activeUser } = useUserFindOne(Number(user?.id));
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [profileOpen, setProfileOpen] = useState<boolean>(false);
+  const { data: activeUser } = useUserFindOne(Number(user?.id));
 
   return (
     <>
-      <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-        <Avatar
-          sx={avatarStyles}
-          src={activeUser?.avatarUrl || ""}
-        />
-      </IconButton>
-      <Popover
-        open={!!anchorEl}
-        anchorEl={anchorEl}
-        onClose={() => setAnchorEl(null)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
+      <PopoverMenu
+        trigger={
+          <IconButton>
+            <Avatar src={activeUser?.avatarUrl || ""} sx={avatarStyles} />
+          </IconButton>
+        }
       >
-        <MenuList sx={menuListStyles}>
-          <MenuItem
-            onClick={() => {
-              setProfileOpen(true);
-              setAnchorEl(null);
-            }}
-          >
-            <Typography>Profile</Typography>
-          </MenuItem>
-          <MenuItem onClick={logout}>
-            <Typography>Logout</Typography>
-          </MenuItem>
-        </MenuList>
-      </Popover>
-      {profileOpen && (
-        <ProfileDialog
-          open={profileOpen}
-          userId={user?.id as number}
-          onClose={() => setProfileOpen(false)}
-        />
-      )}
+        <PopoverMenuItem label="Profile" onClick={() => setProfileOpen(true)} />
+        <PopoverMenuItem label="Logout" onClick={logout} />
+      </PopoverMenu>
+      <ProfileDialog
+        open={profileOpen}
+        userId={user?.id as number}
+        onClose={() => setProfileOpen(false)}
+      />
     </>
   );
 }

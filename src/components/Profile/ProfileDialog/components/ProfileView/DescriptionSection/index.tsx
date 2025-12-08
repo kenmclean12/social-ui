@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import { useUserUpdate } from "../../../../../../hooks";
 import { Check, Close, Edit } from "@mui/icons-material";
+import { textFieldStyles } from "../../../../../../pages/styles";
+import { editButtonStyles, paperStyles } from "./styles";
 
 interface Props {
   description: string;
@@ -43,22 +45,9 @@ export function DescriptionSection({ description, isOwnUser }: Props) {
   return (
     <>
       <Divider sx={{ borderColor: "#333" }} />
-      <Paper
-        elevation={1}
-        sx={{
-          p: 2,
-          backgroundColor: "#1e1e1e",
-          border: "1px solid #444",
-          color: "#fff",
-          position: "relative",
-        }}
-      >
+      <Paper elevation={1} sx={paperStyles}>
         {isOwnUser && !editing && (
-          <IconButton
-            size="small"
-            onClick={startEditing}
-            sx={{ position: "absolute", top: 8, right: 8, color: "white" }}
-          >
+          <IconButton size="small" onClick={startEditing} sx={editButtonStyles}>
             <Edit />
           </IconButton>
         )}
@@ -71,27 +60,9 @@ export function DescriptionSection({ description, isOwnUser }: Props) {
               maxRows={10}
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              sx={(theme) => ({
-                "& .MuiInputBase-input": {
-                  color: "white",
-                },
-                "& .MuiOutlinedInput-root": {
-                  backgroundColor: "#111",
-                  borderRadius: "6px",
-                  "& fieldset": {
-                    borderColor: "rgba(255,255,255,0.25)",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "rgba(255,255,255,0.35)",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: theme.palette.primary.light,
-                    borderWidth: 2,
-                  },
-                },
-              })}
+              sx={textFieldStyles}
             />
-            <Stack direction="row" spacing={1} justifyContent="flex-end">
+            <Stack direction="row" justifyContent="flex-end" spacing={2}>
               <Button
                 onClick={() => setEditing(false)}
                 startIcon={<Close />}
@@ -100,18 +71,14 @@ export function DescriptionSection({ description, isOwnUser }: Props) {
                 Cancel
               </Button>
               <Button
+                variant="outlined"
                 onClick={handleSave}
-                variant="contained"
-                disabled={!dirty}
                 startIcon={<Check />}
                 sx={{
-                  backgroundColor: dirty ? "lightblue" : "#555",
-                  color: "#000",
-                  "&:disabled": {
-                    backgroundColor: "#333",
-                    color: "#999",
-                  },
+                  border: `1px solid ${dirty ? "lightblue" : "#555"}`,
+                  color: "lightblue",
                 }}
+                disabled={!dirty}
               >
                 Save
               </Button>

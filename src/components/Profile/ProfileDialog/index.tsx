@@ -5,29 +5,26 @@ import {
   DialogContent,
   IconButton,
   Stack,
-  Button,
-  Popover,
-  MenuItem,
 } from "@mui/material";
 import {
-  Check,
   Delete,
   Password,
-  PersonAdd,
   ArrowBack,
   Close,
   Settings,
 } from "@mui/icons-material";
 import { useAuth } from "../../../context";
 import { FollowListView, ProfileView } from "./components";
-import {
-  useFollowCreate,
-  useFollowGetFollowing,
-  useFollowRemove,
-  useUserFindOne,
-} from "../../../hooks";
 import { ResetPasswordDialog } from "./components/ProfileView/ResetPasswordDialog";
 import { DeleteAccountDialog } from "./components/ProfileView/DeleteAccountDialog";
+import { PopoverMenu, PopoverMenuItem } from "../../PopoverMenu";
+import { FollowButton } from "../../Follow";
+import {
+  dialogPaperStyles,
+  dialogTitleActionsContainerStyles,
+  dialogTitleActionsInnerContainerStyles,
+  dialogTitleStyles,
+} from "./styles";
 
 interface StackItem {
   type: "profile" | "followList";
@@ -53,28 +50,19 @@ export function ProfileDialog({
   const { user: self } = useAuth();
   const [resetOpen, setResetOpen] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
-  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [stack, setStack] = useState<StackItem[]>([
     { type: "profile", userId },
   ]);
+
   const top = stack[stack.length - 1];
-
-  const { data: followingListRaw, error } = useFollowGetFollowing(
-    self?.id as number
-  );
-  const followingList = error ? [] : followingListRaw ?? [];
-  const { data: user } = useUserFindOne(top.userId);
-  const followRecord = followingList?.find(
-    (f) => f.following.id === top.userId
-  );
-  const isFollowing = !!followRecord;
-  const followCreate = useFollowCreate(self?.id as number);
-  const followRemove = useFollowRemove(self?.id as number);
-
-  const push = (item: StackItem) => setStack((prev) => [...prev, item]);
-  const pop = () =>
-    setStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
   const isOwnProfile = top.type === "profile" && top.userId === self?.id;
+
+  const push = (item: StackItem) => {
+    setStack((prev) => [...prev, item]);
+  };
+  const pop = () => {
+    setStack((prev) => (prev.length > 1 ? prev.slice(0, -1) : prev));
+  };
 
   const getTitle = (item: StackItem) => {
     if (item.type === "profile") return "Profile";
@@ -82,18 +70,7 @@ export function ProfileDialog({
     return "Following";
   };
 
-  const handleFollowToggle = () => {
-    if (!user || !self) return;
-    if (isFollowing)
-      followRemove.mutate({
-        id: followRecord?.id as number,
-        followingId: user.id,
-      });
-    else followCreate.mutate({ followerId: self.id, followingId: user.id });
-  };
-
   const title = getTitle(top);
-
   if (!top) return null;
 
   return (
@@ -108,96 +85,41 @@ export function ProfileDialog({
         onClose={onClose}
         maxWidth="lg"
         fullWidth
-        PaperProps={{
-          sx: {
-            height: "90vh",
-            backgroundColor: "black",
-            color: "#fff",
-            border: "1px solid #444",
-          },
-        }}
+        PaperProps={{ sx: dialogPaperStyles }}
       >
-        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <DialogTitle sx={dialogTitleStyles}>
           {stack.length > 1 && (
             <IconButton onClick={pop} sx={{ color: "lightblue" }}>
               <ArrowBack />
             </IconButton>
           )}
           {title}
-          <Stack
-            direction="row"
-            spacing={1.25}
-            sx={{ marginLeft: "auto", alignItems: "center" }}
-          >
+          <Stack sx={dialogTitleActionsContainerStyles}>
             {isOwnProfile && (
-              <>
-                <IconButton
-                  sx={{ color: "white" }}
-                  onClick={(e) => setMenuAnchor(e.currentTarget)}
-                >
-                  <Settings />
-                </IconButton>
-                <Popover
-                  anchorEl={menuAnchor}
-                  open={Boolean(menuAnchor)}
-                  onClose={() => setMenuAnchor(null)}
-                  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                  transformOrigin={{ vertical: "top", horizontal: "right" }}
-                  PaperProps={{
-                    sx: {
-                      backgroundColor: "#1e1e1e",
-                      minWidth: 200,
-                      padding: "5px 0",
-                      border: "1px solid #444",
-                    },
-                  }}
-                >
-                  <Stack spacing={1}>
-                    <MenuItem
-                      onClick={() => {
-                        setResetOpen(true);
-                        setMenuAnchor(null);
-                      }}
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        color: "white",
-                      }}
-                    >
-                      Reset Password
-                      <Password sx={{ color: "lightblue", height: 20 }} />
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        setDeleteOpen(true);
-                        setMenuAnchor(null);
-                      }}
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        color: "white",
-                      }}
-                    >
-                      <span>Delete Account</span>
-                      <Delete sx={{ color: "red", height: 20 }} />
-                    </MenuItem>
-                  </Stack>
-                </Popover>
-              </>
+              <PopoverMenu
+                trigger={
+                  <IconButton sx={{ color: "white", mr: 1 }}>
+                    <Settings />
+                  </IconButton>
+                }
+              >
+                <PopoverMenuItem
+                  label="Reset Password"
+                  iconRight={
+                    <Password sx={{ color: "lightblue", height: 20 }} />
+                  }
+                  onClick={() => setResetOpen(true)}
+                />
+                <PopoverMenuItem
+                  label="Delete Account"
+                  iconRight={<Delete sx={{ color: "red", height: 20 }} />}
+                  onClick={() => setDeleteOpen(true)}
+                />
+              </PopoverMenu>
             )}
-            <Stack direction="row" alignItems="center" spacing={2.5}>
+            <Stack sx={dialogTitleActionsInnerContainerStyles}>
               {top.type === "profile" && !isOwnProfile && (
-                <Button
-                  variant="outlined"
-                  endIcon={isFollowing ? <Check /> : <PersonAdd />}
-                  onClick={handleFollowToggle}
-                  sx={{
-                    borderColor: "lightblue",
-                    color: "lightblue",
-                  }}
-                >
-                  {isFollowing ? "Following" : "Follow"}
-                </Button>
+                <FollowButton targetUserId={top.userId} />
               )}
               <Close
                 onClick={onClose}
@@ -236,9 +158,9 @@ export function ProfileDialog({
             />
           )}
         </DialogContent>
-        <ResetPasswordDialog open={resetOpen} setOpen={setResetOpen} />
-        <DeleteAccountDialog open={deleteOpen} setOpen={setDeleteOpen} />
       </Dialog>
+      <ResetPasswordDialog open={resetOpen} setOpen={setResetOpen} />
+      <DeleteAccountDialog open={deleteOpen} setOpen={setDeleteOpen} />
     </>
   );
 }

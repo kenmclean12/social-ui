@@ -5,6 +5,7 @@ import { DescriptionSection } from "./DescriptionSection";
 import { PostSection } from "./PostSection";
 import { useUserFindOne } from "../../../../../hooks";
 import type { UserResponseDto } from "../../../../../types";
+import { mainContainerStyles } from "./styles";
 
 interface Props {
   userId: number;
@@ -32,7 +33,7 @@ export function ProfileView({
   if (!user) return null;
 
   return (
-    <Stack spacing={3} sx={{ p: 3 }}>
+    <Stack sx={mainContainerStyles}>
       <Stack
         direction="row"
         alignItems="center"

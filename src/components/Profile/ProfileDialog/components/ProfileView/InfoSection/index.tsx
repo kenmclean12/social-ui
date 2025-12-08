@@ -2,6 +2,7 @@ import { Divider, Paper, Box } from "@mui/material";
 import type { UserWithCountsResponseDto } from "../../../../../../types";
 import { useUserUpdate } from "../../../../../../hooks";
 import { EditableField } from "./components";
+import { basicInfoTextContainerStyles, contactDetailsTextContainerStyles, editableFieldContainerStyles, mainContainerStyles } from "./styles";
 
 interface Props {
   user: UserWithCountsResponseDto;
@@ -12,47 +13,14 @@ export function InfoSection({ user, isOwnUser }: Props) {
   const { mutateAsync: updateUser } = useUserUpdate();
 
   return (
-    <Paper
-      elevation={1}
-      sx={{
-        display: "flex",
-        flex: 1,
-        alignItems: "flex-start",
-        width: "100%",
-        minWidth: "300px",
-        height: "100%",
-        borderRadius: 2,
-        backgroundColor: "black",
-        color: "#fff",
-        border: "1px solid #444",
-      }}
-    >
+    <Paper elevation={1} sx={mainContainerStyles}>
       <Box sx={{ flex: 1, width: "50%" }}>
         <Box sx={{ mb: 2, pt: 2 }}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 12,
-              color: "#999",
-              textTransform: "uppercase",
-              letterSpacing: 1,
-              mb: 2,
-            }}
-          >
+          <Box sx={basicInfoTextContainerStyles}>
             Basic Info
           </Box>
           <Divider sx={{ backgroundColor: "#ccc" }} />
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 1.5,
-              mt: 1,
-              paddingInline: 1,
-            }}
-          >
+          <Box sx={editableFieldContainerStyles}>
             <EditableField
               label="Username"
               value={user.userName}
@@ -83,35 +51,16 @@ export function InfoSection({ user, isOwnUser }: Props) {
       </Box>
       <Divider
         orientation="vertical"
-        flexItem
         sx={{ backgroundColor: "#ccc" }}
+        flexItem
       />
       <Box sx={{ flex: 1, width: "50%", pt: 2 }}>
         <Box sx={{ mb: 2 }}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 12,
-              color: "#999",
-              textTransform: "uppercase",
-              letterSpacing: 1,
-              mb: 2,
-            }}
-          >
+          <Box sx={contactDetailsTextContainerStyles}>
             Contact Details
           </Box>
           <Divider sx={{ backgroundColor: "#ccc" }} />
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 1.5,
-              mt: 1,
-              paddingInline: 1,
-            }}
-          >
+          <Box sx={editableFieldContainerStyles}>
             <EditableField
               label="Email"
               value={user.email}

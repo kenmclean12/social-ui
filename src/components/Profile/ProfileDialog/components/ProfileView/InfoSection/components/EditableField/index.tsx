@@ -1,8 +1,15 @@
 import { useState, useEffect } from "react";
 import { Box, TextField, Typography, IconButton, Tooltip } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
+import { Check, Close, Edit } from "@mui/icons-material";
+import {
+  editButtonStyles,
+  errorTextStyles,
+  labelStyles,
+  mainContainerStyles,
+  nonEditableMainContainerStyles,
+  valueStyles,
+} from "./styles";
+import { textFieldStyles } from "../../../../../../../../pages/styles";
 
 interface Props {
   label: string;
@@ -83,11 +90,7 @@ export function EditableField({
     return (
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          p: 1,
-          borderRadius: 1,
+          ...nonEditableMainContainerStyles,
           "&:hover": {
             backgroundColor: isOwnUser
               ? "rgba(255, 255, 255, 0.05)"
@@ -95,45 +98,20 @@ export function EditableField({
           },
         }}
       >
-        <Box sx={{ minWidth: 0, flex: 1 }}>
-          <Typography
-            variant="caption"
-            sx={{
-              display: "block",
-              color: "#888",
-              fontSize: 12,
-              textTransform: "uppercase",
-              letterSpacing: 0.5,
-              mb: 0.5,
-            }}
-          >
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Typography variant="caption" sx={labelStyles}>
             {label}
           </Typography>
-          <Typography
-            sx={{
-              color: "lightblue",
-              fontSize: 14,
-              fontWeight: 500,
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {value || "—"}
-          </Typography>
+          <Typography sx={valueStyles}>{value || "—"}</Typography>
         </Box>
         {isOwnUser && (
           <Tooltip title="Edit">
             <IconButton
               size="small"
               onClick={() => setEditing(true)}
-              sx={{
-                ml: 1,
-                color: "#666",
-                "&:hover": { color: "#6BB6FF" },
-              }}
+              sx={editButtonStyles}
             >
-              <EditIcon fontSize="small" />
+              <Edit fontSize="small" />
             </IconButton>
           </Tooltip>
         )}
@@ -142,14 +120,7 @@ export function EditableField({
   }
 
   return (
-    <Box
-      sx={{
-        p: 1.5,
-        borderRadius: 1,
-        backgroundColor: "rgba(255, 255, 255, 0.05)",
-        border: "1px solid rgba(107, 182, 255, 0.3)",
-      }}
-    >
+    <Box sx={mainContainerStyles}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
         <TextField
           type="text"
@@ -162,28 +133,7 @@ export function EditableField({
           autoFocus
           fullWidth
           inputProps={{ maxLength }}
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              "& input": {
-                color: "white",
-                py: 0.75,
-                fontSize: 14,
-              },
-              "& fieldset": {
-                borderColor: error
-                  ? "rgba(244, 67, 54, 0.5)"
-                  : "rgba(107, 182, 255, 0.3)",
-              },
-              "&:hover fieldset": {
-                borderColor: error
-                  ? "rgba(244, 67, 54, 0.8)"
-                  : "rgba(107, 182, 255, 0.5)",
-              },
-              "&.Mui-focused fieldset": {
-                borderColor: error ? "#f44336" : "#6BB6FF",
-              },
-            },
-          }}
+          sx={textFieldStyles}
         />
         <Tooltip title="Save">
           <IconButton
@@ -191,11 +141,11 @@ export function EditableField({
             onClick={handleSave}
             disabled={!dirty || error}
             sx={{
-              color: dirty && !error ? "#6BB6FF" : "#555",
+              color: dirty && !error ? "#lightblue" : "#555",
               "&:disabled": { color: "#555", opacity: 0.5 },
             }}
           >
-            <CheckIcon fontSize="small" />
+            <Check fontSize="small" />
           </IconButton>
         </Tooltip>
         <Tooltip title="Cancel">
@@ -204,20 +154,12 @@ export function EditableField({
             onClick={handleCancel}
             sx={{ color: "#888" }}
           >
-            <CloseIcon fontSize="small" />
+            <Close fontSize="small" />
           </IconButton>
         </Tooltip>
       </Box>
       {error && (
-        <Typography
-          variant="caption"
-          sx={{
-            display: "block",
-            color: "red",
-            mt: 0.5,
-            fontSize: 11,
-          }}
-        >
+        <Typography variant="caption" sx={errorTextStyles}>
           Please enter a valid email address
         </Typography>
       )}

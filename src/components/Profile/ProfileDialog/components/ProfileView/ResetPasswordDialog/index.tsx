@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Stack, Button, Input, Box } from "@mui/material";
+import { Stack, Button, Box, TextField } from "@mui/material";
 import { useUserResetPassword } from "../../../../../../hooks";
 import type { PasswordResetDto } from "../../../../../../types";
 import { UniversalDialog } from "../../../../../UniversalDialog";
+import { textFieldStyles } from "../../../../../../pages/styles";
+import { buttonStyles } from "./styles";
 
 interface Props {
   open: boolean;
@@ -43,11 +45,7 @@ export function ResetPasswordDialog({ open, setOpen }: Props) {
             variant="outlined"
             onClick={handleSubmit}
             disabled={isPending}
-            sx={{
-              border: "1px solid #444",
-              color: "lightblue",
-              backgroundColor: "black",
-            }}
+            sx={buttonStyles}
             fullWidth
           >
             {isPending ? "Resetting..." : "Submit"}
@@ -56,39 +54,21 @@ export function ResetPasswordDialog({ open, setOpen }: Props) {
       }
     >
       <Stack spacing={2}>
-        <Input
+        <TextField
           type="password"
           placeholder="Current Password"
           value={oldPassword}
           onChange={(e) => setOldPassword(e.target.value)}
           fullWidth
-          disableUnderline
-          sx={{
-            height: "40px",
-            background: "#1e1e1e",
-            color: "white",
-            px: 1.5,
-            py: 1,
-            borderRadius: 1,
-            border: "1px solid #444",
-          }}
+          sx={{ ...textFieldStyles }}
         />
-        <Input
+        <TextField
           type="password"
           placeholder="New Password"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
           fullWidth
-          disableUnderline
-          sx={{
-            height: "40px",
-            background: "#1e1e1e",
-            color: "white",
-            px: 1.5,
-            py: 1,
-            borderRadius: 1,
-            border: "1px solid #444",
-          }}
+          sx={{ ...textFieldStyles }}
         />
       </Stack>
     </UniversalDialog>

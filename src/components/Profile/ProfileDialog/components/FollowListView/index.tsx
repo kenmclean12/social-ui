@@ -13,6 +13,7 @@ import {
 } from "../../../../../hooks";
 import { Close } from "@mui/icons-material";
 import { UserRow } from "../../../../User";
+import { innerContainerStyles, inputStyles } from "./styles";
 
 interface Props {
   userId: number;
@@ -36,23 +37,21 @@ export function FollowListView({ userId, listType, onClickUser }: Props) {
 
   const filtered = useMemo(() => {
     if (!list) return [];
-
     const s = normalize(search);
-
     if (!s) return list;
 
     return list.filter((f) => {
       const u = f.following ?? f.follower;
-
       const fields = [u?.firstName, u?.lastName, u?.userName, u?.email];
-
       return fields.some((field) => normalize(field).includes(s));
     });
   }, [list, search]);
 
   if (isLoading) return <Typography sx={{ p: 2 }}>Loading...</Typography>;
-  if (!list || list.length === 0)
+
+  if (!list || list.length === 0) {
     return <Typography sx={{ p: 2 }}>No users</Typography>;
+  }
 
   return (
     <Box sx={{ height: "100%", p: 2 }}>
@@ -75,25 +74,9 @@ export function FollowListView({ userId, listType, onClickUser }: Props) {
             </InputAdornment>
           )
         }
-        sx={{
-          height: 45,
-          padding: "2px 12px",
-          mb: 2,
-          border: "1px solid #444",
-          backgroundColor: "#1e1e1e",
-          borderRadius: 2,
-          color: "white",
-          fontSize: 14,
-        }}
+        sx={inputStyles}
       />
-      <Stack
-        spacing={0.5}
-        sx={{
-          height: "100%",
-          overflowY: "auto",
-          borderRadius: "8px",
-        }}
-      >
+      <Stack sx={innerContainerStyles}>
         {filtered.length === 0 && (
           <Typography align="center" sx={{ p: 2 }}>
             No matching users
