@@ -28,7 +28,6 @@ export function ExploreFeed() {
       height="100%"
       width="100%"
       pt={1}
-      border="1px solid lightblue"
       boxSizing="border-box"
       sx={{
         overflowY: "auto",

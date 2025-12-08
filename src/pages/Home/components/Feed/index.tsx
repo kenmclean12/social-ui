@@ -26,7 +26,6 @@ export function Feed() {
       height="100%"
       width="100%"
       p={2}
-      border="1px solid lightblue"
       sx={{
         overflowY: "auto",
         "&::-webkit-scrollbar": { width: 8 },

@@ -96,7 +96,7 @@ export function PostCreate() {
               }}
               fullWidth
             >
-              Upload File
+              Upload a Photo
               <input
                 type="file"
                 hidden
