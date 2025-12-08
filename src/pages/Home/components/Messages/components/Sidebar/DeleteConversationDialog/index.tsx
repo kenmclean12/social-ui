@@ -1,15 +1,9 @@
 import { useState } from "react";
+import { Button, Stack, Typography } from "@mui/material";
 import { useConversationDelete } from "../../../../../../../hooks";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Typography,
-} from "@mui/material";
+import { UniversalDialog } from "../../../../../../../components";
 
-interface DeleteConversationDialogProps {
+interface Props {
   open: boolean;
   onClose: () => void;
   conversationId: number;
@@ -19,7 +13,7 @@ export function DeleteConversationDialog({
   open,
   onClose,
   conversationId,
-}: DeleteConversationDialogProps) {
+}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
   const { mutateAsync: deleteConversation } = useConversationDelete();
 
@@ -31,45 +25,38 @@ export function DeleteConversationDialog({
   };
 
   return (
-    <Dialog
+    <UniversalDialog
       open={open}
       onClose={onClose}
-      fullWidth
-      PaperProps={{
-        sx: {
-          backgroundColor: "#0e0e0e",
-          color: "#fff",
-          border: "1px solid #444",
-          boxShadow: "0 0 20px rgba(0,0,0,0.8)",
-        },
-      }}
+      title="Delete Conversation"
+      footer={
+        <Stack direction="row" justifyContent="flex-end" spacing={2}>
+          <Button
+            variant="outlined"
+            onClick={onClose}
+            sx={{
+              border: "1px solid #333",
+              color: "#ccc",
+              ":hover": { background: "#222" },
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleDelete}
+            color="error"
+            disabled={loading}
+            sx={{ ":hover": { background: "#440000" } }}
+          >
+            Delete
+          </Button>
+        </Stack>
+      }
     >
-      <DialogTitle sx={{ color: "#fff" }}>
-        Delete Conversation
-      </DialogTitle>
-      <DialogContent>
-        <Typography sx={{ color: "#fff" }}>
-          Are you sure you want to delete this conversation?
-        </Typography>
-      </DialogContent>
-      <DialogActions sx={{ padding: "12px" }}>
-        <Button
-          variant="outlined"
-          onClick={onClose}
-          sx={{ border: "1px solid #333", color: "#ccc", ":hover": { background: "#222" } }}
-        >
-          Cancel
-        </Button>
-        <Button
-          variant="contained"
-          onClick={handleDelete}
-          color="error"
-          disabled={loading}
-          sx={{ ":hover": { background: "#440000" } }}
-        >
-          Delete
-        </Button>
-      </DialogActions>
-    </Dialog>
+      <Typography sx={{ color: "#fff" }}>
+        Are you sure you want to delete this conversation?
+      </Typography>
+    </UniversalDialog>
   );
 }

@@ -1,13 +1,18 @@
-import {
-  Box,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useState, type Dispatch, type SetStateAction } from "react";
 import { useConversationFindByUser } from "../../../../../../hooks";
 import { StartConversationDialog } from "./StartConversationDialog";
 import { SidebarItem } from "./SidebarItem";
+import {
+  sidebarContainerStyles,
+  sidebarHeaderStyles,
+  headerTitleStyles,
+  addButtonIconStyles,
+  sidebarListStyles,
+  loadingTextStyles,
+  emptyTextStyles,
+} from "./styles";
 
 interface Props {
   userId: number;
@@ -20,36 +25,29 @@ export function Sidebar({ userId, selectedId, onSelect }: Props) {
   const { data, isLoading } = useConversationFindByUser(userId);
 
   return (
-    <Box display="flex" flexDirection="column" height="100%" width="100%" minWidth={250}>
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="space-between"
-        px={2}
-        py={1.5}
-        borderBottom="1px solid lightblue"
-      >
-        <Typography fontSize="17px" color="white" pl={3}>Conversations</Typography>
+    <Box sx={sidebarContainerStyles}>
+      <Box sx={sidebarHeaderStyles}>
+        <Typography sx={headerTitleStyles}>Conversations</Typography>
         <IconButton onClick={() => setOpenDialog(true)}>
-          <AddIcon sx={{ color: "lightblue" }} />
+          <AddIcon sx={addButtonIconStyles} />
         </IconButton>
       </Box>
-      <Box flex={1} sx={{ overflowY: "auto" }}>
+      <Box sx={sidebarListStyles}>
         {isLoading ? (
-          <Typography px={2} py={2} color="gray">Loading...</Typography>
+          <Typography sx={loadingTextStyles}>Loading...</Typography>
         ) : (
           <>
-            {data && data.length > 0 ? data.map((c) => (
-              <SidebarItem
-                key={c.id}
-                conversation={c}
-                selected={selectedId === c.id}
-                onClick={() => onSelect(c.id)}
-              />
-            )) : (
-              <Typography align="center" p={3} color="white" fontSize={13}>
-                No Messages Found
-              </Typography>
+            {data && data.length > 0 ? (
+              data.map((c) => (
+                <SidebarItem
+                  key={c.id}
+                  conversation={c}
+                  selected={selectedId === c.id}
+                  onClick={() => onSelect(c.id)}
+                />
+              ))
+            ) : (
+              <Typography sx={emptyTextStyles}>No Messages Found</Typography>
             )}
           </>
         )}

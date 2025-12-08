@@ -17,17 +17,13 @@ import { UpdateConversationDialog } from "../UpdateConversationDialog";
 import { DeleteConversationDialog } from "../DeleteConversationDialog";
 import { useUnreadMessageCountByConversation } from "../../../../../../../hooks";
 
-interface SidebarItemProps {
+interface Props {
   conversation: ConversationResponseDto;
   selected: boolean;
   onClick: () => void;
 }
 
-export function SidebarItem({
-  conversation,
-  selected,
-  onClick,
-}: SidebarItemProps) {
+export function SidebarItem({ conversation, selected, onClick }: Props) {
   const { user } = useAuth();
   const { participants, initiator } = conversation;
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -76,11 +72,9 @@ export function SidebarItem({
           borderBottom: "1px solid #222",
           py: 1.5,
           color: "white",
-          backgroundColor: selected ? "rgba(100,170,255,0.15)" : "transparent",
+          backgroundColor: "#1e1e1e",
           "&:hover": {
-            backgroundColor: selected
-              ? "rgba(100,170,255,0.22)"
-              : "rgba(255,255,255,0.05)",
+            backgroundColor: selected ? "#101" : "rgba(255,255,255,0.05)",
           },
         }}
       >
