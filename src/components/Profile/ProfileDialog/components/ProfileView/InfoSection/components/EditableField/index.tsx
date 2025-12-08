@@ -141,7 +141,7 @@ export function EditableField({
             onClick={handleSave}
             disabled={!dirty || error}
             sx={{
-              color: dirty && !error ? "#lightblue" : "#555",
+              color: dirty && !error ? "lightblue" : "#555",
               "&:disabled": { color: "#555", opacity: 0.5 },
             }}
           >
