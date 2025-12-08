@@ -5,7 +5,7 @@ export const mainContainerStyles = {
   width: "100%",
   minWidth: "300px",
   height: "100%",
-  borderRadius: "16px",
+  borderRadius: "8px",
   backgroundColor: "black",
   color: "#fff",
   border: "1px solid #444",
