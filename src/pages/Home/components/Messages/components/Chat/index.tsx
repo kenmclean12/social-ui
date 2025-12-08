@@ -25,12 +25,10 @@ interface Props {
 export function ChatWindow({ conversationId }: Props) {
   const { user } = useAuth();
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [content, setContent] = useState("");
-
+  const [content, setContent] = useState<string>("");
   const { data: conversation } = useConversationFindOne(conversationId);
   const { data = [], isLoading } = useMessageFindByConversation(conversationId);
   const { mutate: sendMessage } = useMessageCreate();
-
   const isClosed = conversation?.closed === true;
 
   useEffect(() => {
