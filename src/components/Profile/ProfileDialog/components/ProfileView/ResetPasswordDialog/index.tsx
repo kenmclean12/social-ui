@@ -60,7 +60,13 @@ export function ResetPasswordDialog({ open, setOpen }: Props) {
           value={oldPassword}
           onChange={(e) => setOldPassword(e.target.value)}
           fullWidth
-          sx={{ ...textFieldStyles }}
+          sx={{
+            ...textFieldStyles,
+            "& .MuiInputBase-input": {
+              height: "10px",
+              color: "white",
+            },
+          }}
         />
         <TextField
           type="password"
@@ -68,7 +74,13 @@ export function ResetPasswordDialog({ open, setOpen }: Props) {
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
           fullWidth
-          sx={{ ...textFieldStyles }}
+          sx={{
+            ...textFieldStyles,
+            "& .MuiInputBase-input": {
+              height: "10px",
+              color: "white",
+            },
+          }}
         />
       </Stack>
     </UniversalDialog>

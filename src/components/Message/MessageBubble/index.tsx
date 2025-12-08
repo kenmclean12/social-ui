@@ -7,8 +7,7 @@ import {
   Stack,
   IconButton,
   Popover,
-  MenuItem,
-  Input,
+  TextField,
 } from "@mui/material";
 import {
   Close,
@@ -30,6 +29,8 @@ import {
 } from "../../../hooks";
 import { ReactionPanel } from "../../ReactionPanel";
 import { ProfileDialog } from "../../Profile";
+import { PopoverMenu, PopoverMenuItem } from "../../PopoverMenu";
+import { textFieldStyles } from "../../../pages/styles";
 
 interface Props {
   message: MessageResponseDto;
@@ -41,7 +42,6 @@ const sentReadRequests = new Set<number>();
 
 export function MessageBubble({ message, isSelf, dialog = false }: Props) {
   const { user } = useAuth();
-  const [menuAnchor, setMenuAnchor] = useState<HTMLButtonElement | null>(null);
   const [readsAnchor, setReadsAnchor] = useState<HTMLElement | null>(null);
   const [editing, setEditing] = useState<boolean>(false);
   const [editValue, setEditValue] = useState<string>(message.content);
@@ -157,25 +157,36 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
           elevation={2}
           sx={{
             maxWidth: "90%",
+            width: "fit-content",
             p: 1.3,
-            background: "lightblue",
-            border: "1px solid black",
-            color: "black",
+            background: "black",
+            border: "1px solid #444",
+            color: "white",
             borderRadius: 3,
+            wordBreak: "break-word",
+            whiteSpace: "pre-wrap", 
+            overflowWrap: "anywhere",
           }}
         >
           {editing ? (
-            <Stack direction="row" spacing={1}>
-              <Input
+            <Stack direction="row" spacing={1} alignItems="flex-start">
+              <TextField
+                multiline
+                maxRows={5} // optional limit for bubble height
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
-                style={{
-                  padding: 6,
-                  background: "#111",
-                  color: "white",
-                  borderRadius: 6,
-                  border: "1px solid #444",
-                  width: "100%",
+                sx={{
+                  ...textFieldStyles,
+                  flex: 1,
+                  "& .MuiInputBase-input": {
+                    color: "white",
+                    padding: "8px 10px",
+                    lineHeight: 1.4,
+                  },
+                  "& .MuiOutlinedInput-root": {
+                    background: "#111",
+                    borderRadius: 2,
+                  },
                 }}
               />
               <IconButton
@@ -197,7 +208,15 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
               </IconButton>
             </Stack>
           ) : (
-            <Typography fontSize={15}>{message.content}</Typography>
+            <Typography
+              fontSize={15}
+              sx={{
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-word",
+              }}
+            >
+              {message.content}
+            </Typography>
           )}
         </Paper>
       </Stack>
@@ -214,61 +233,37 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
         }}
       >
         {isSelf && (
-          <>
-            <IconButton
-              size="small"
-              onClick={(e) => setMenuAnchor(e.currentTarget)}
-              sx={{ color: "white", p: 0.3, pr: 0.75 }}
-              disabled={editing}
-            >
-              <Settings />
-            </IconButton>
-            <Popover
-              anchorEl={menuAnchor}
-              open={Boolean(menuAnchor)}
-              onClose={() => setMenuAnchor(null)}
-              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-              transformOrigin={{ vertical: "top", horizontal: "right" }}
-              PaperProps={{
-                sx: {
-                  backgroundColor: "#1e1e1e",
-                  minWidth: 200,
-                  padding: "5px 0",
-                  border: "1px solid #444",
-                },
+          <PopoverMenu
+            trigger={
+              <IconButton
+                size="small"
+                sx={{ color: "white", p: 0.3 }}
+                disabled={editing}
+              >
+                <Settings />
+              </IconButton>
+            }
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+          >
+            <PopoverMenuItem
+              label="Update"
+              iconRight={<Edit sx={{ color: "lightblue", height: 20 }} />}
+              closeOnSelect
+              onClick={() => {
+                setEditing(true);
+                setEditValue(message.content);
               }}
-            >
-              <Stack spacing={1}>
-                <MenuItem
-                  onClick={() => {
-                    setEditing(true);
-                    setEditValue(message.content);
-                    setMenuAnchor(null);
-                  }}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    color: "white",
-                  }}
-                >
-                  Update <Edit sx={{ color: "lightblue", height: 20 }} />
-                </MenuItem>
-                <MenuItem
-                  onClick={async () => {
-                    await deleteMessage(message.id);
-                    setMenuAnchor(null);
-                  }}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    color: "white",
-                  }}
-                >
-                  Delete <Delete sx={{ color: "red", height: 20 }} />
-                </MenuItem>
-              </Stack>
-            </Popover>
-          </>
+            />
+            <PopoverMenuItem
+              label="Delete"
+              iconRight={<Delete sx={{ color: "red", height: 20 }} />}
+              closeOnSelect
+              onClick={async () => {
+                await deleteMessage(message.id);
+              }}
+            />
+          </PopoverMenu>
         )}
         <ReactionPanel
           entityType="message"
@@ -287,7 +282,7 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
               <FavoriteBorder sx={{ height: 25, color: "#fff" }} />
             )}
           </IconButton>
-          <Typography fontSize={13} color={myLike ? "lightblue" : "#fff"}>
+          <Typography color={myLike ? "lightblue" : "#fff"}>
             {likes.length}
           </Typography>
         </Stack>
@@ -301,9 +296,7 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
               >
                 <Visibility sx={{ height: 25, color: "lightblue" }} />
               </IconButton>
-              <Typography fontSize={12} color="lightblue">
-                {readCount}
-              </Typography>
+              <Typography color="lightblue">{readCount}</Typography>
             </Stack>
             <Popover
               anchorEl={readsAnchor}

@@ -98,7 +98,8 @@ export function SidebarItem({ conversation, selected, onClick }: Props) {
         sx={listItemButtonStyles}
       >
         <Box display="flex" alignItems="center" overflow="hidden">
-          <Box display="flex" alignItems="center" mr={isGroup ? 2 : 1.6}>
+          <Box display="flex" alignItems="center" mr={1.6}>
+            {hasUnreadMessages && <Box sx={unreadIndicatorContainerStyles} />}
             {isGroup ? (
               <Box
                 onClick={(e) => {
@@ -130,7 +131,6 @@ export function SidebarItem({ conversation, selected, onClick }: Props) {
           </Typography>
         </Box>
         <Stack direction="row" alignItems="center" spacing={1}>
-          {hasUnreadMessages && <Box sx={unreadIndicatorContainerStyles} />}
           <PopoverMenu
             trigger={
               <IconButton

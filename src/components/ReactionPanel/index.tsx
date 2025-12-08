@@ -69,10 +69,10 @@ export function ReactionPanel({
 
   return (
     <>
-      <Stack direction="row" alignItems="center" spacing={0.5}>
+      <Stack direction="row" alignItems="center">
         <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} size="small">
           <EmojiEmotions
-            sx={{ color: userReaction && !isSelf ? "lightblue" : "white" }}
+            sx={{ height: 25, color: userReaction && !isSelf ? "lightblue" : "white" }}
           />
         </IconButton>
         <Typography

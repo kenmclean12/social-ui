@@ -29,7 +29,7 @@ export const unreadIndicatorContainerStyles = {
   height: 10,
   borderRadius: "50%",
   backgroundColor: "lightblue",
-  mr: 1.5,
+  mr: 1,
 };
 
 export const popoverPaperStyles = {
@@ -45,21 +45,21 @@ export const menuItemStyles = {
   color: "white",
 };
 
-export const avatarStyles = {
-  position: "absolute",
-  left: 8,
-  width: 30,
-  height: 30,
-  border: "2px solid #111",
-  zIndex: 1,
-};
-
 export const avatarSecondaryStyles = {
-  marginLeft: "4px",
   width: 35,
   height: 35,
   border: "2px solid #111",
   cursor: "pointer",
+};
+
+export const avatarStyles = {
+  position: "absolute",
+  left: 8,
+  top: 4,
+  width: 27.5,
+  height: 27.5,
+  border: "2px solid #111",
+  zIndex: 1,
 };
 
 export const extraCountStyles = {
@@ -67,9 +67,10 @@ export const extraCountStyles = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  left: 24,
-  width: 30,
-  height: 30,
+  top: 4,
+  left: 22,
+  width: 27.5,
+  height: 27.5,
   borderRadius: "50%",
   border: "2px solid #111",
   bgcolor: "gray",
