@@ -11,6 +11,7 @@ import { menuListStyles } from "./styles";
 interface Props {
   trigger: ReactElement<any>;
   children: ReactNode;
+  onClose?: () => void;
   anchorOrigin?: PopoverOrigin;
   transformOrigin?: PopoverOrigin;
 }
@@ -18,10 +19,16 @@ interface Props {
 export function PopoverMenu({
   trigger,
   children,
+  onClose,
   anchorOrigin = { vertical: "bottom", horizontal: "right" },
   transformOrigin = { vertical: "top", horizontal: "right" },
 }: Props) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  const closeMenu = () => {
+    setAnchorEl(null);
+    onClose?.();
+  };
 
   return (
     <>
@@ -35,11 +42,17 @@ export function PopoverMenu({
       <Popover
         open={!!anchorEl}
         anchorEl={anchorEl}
-        onClose={() => setAnchorEl(null)}
+        onClose={closeMenu}
         anchorOrigin={anchorOrigin}
         transformOrigin={transformOrigin}
       >
-        <MenuList sx={menuListStyles}>{children}</MenuList>
+        <MenuList sx={menuListStyles}>
+          {Array.isArray(children)
+            ? children.map((child, i) =>
+                cloneElement(child as any, { closeMenu, key: i })
+              )
+            : cloneElement(children as any, { closeMenu })}
+        </MenuList>
       </Popover>
     </>
   );

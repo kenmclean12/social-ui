@@ -5,11 +5,9 @@ import {
   ListItemButton,
   Typography,
   IconButton,
-  Popover,
   Stack,
-  MenuItem,
 } from "@mui/material";
-import { Edit, Delete, Settings } from "@mui/icons-material";
+import { Delete, Edit, Settings } from "@mui/icons-material";
 import type { ConversationResponseDto } from "../../../../../../../types";
 import { useAuth } from "../../../../../../../context";
 import { ChatMembers } from "./ChatMembers";
@@ -22,10 +20,10 @@ import {
   contentContainerStyles,
   extraCountStyles,
   listItemButtonStyles,
-  menuItemStyles,
-  popoverPaperStyles,
   unreadIndicatorContainerStyles,
 } from "./styles";
+
+import { PopoverMenu, PopoverMenuItem } from "../../../../../../../components";
 
 interface Props {
   conversation: ConversationResponseDto;
@@ -36,10 +34,10 @@ interface Props {
 export function SidebarItem({ conversation, selected, onClick }: Props) {
   const { user } = useAuth();
   const { participants, initiator } = conversation;
+
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  const [updateAnchor, setUpdateAnchor] = useState<HTMLElement | null>(null);
-  const [deleteAnchor, setDeleteAnchor] = useState<HTMLElement | null>(null);
+  const [updateOpen, setUpdateOpen] = useState<boolean>(false);
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
 
   const { data: unreadCount } = useUnreadMessageCountByConversation(
     conversation.id
@@ -63,15 +61,17 @@ export function SidebarItem({ conversation, selected, onClick }: Props) {
         primaryName: target
           ? `${target.firstName ?? ""} ${target.lastName ?? ""}`.trim()
           : "Unknown User",
-        extraParticipants: [] as typeof otherParticipants,
+        extraParticipants: [],
       };
     } else {
       const displayed = otherParticipants
         .slice(0, 2)
         .map((o) => o?.firstName ?? "Unknown")
         .join(", ");
+
       const extras = otherParticipants.slice(1);
       const extraCount = extras.length;
+
       return {
         primaryName:
           extraCount > 0 ? `${displayed}, +${extraCount} more…` : displayed,
@@ -119,66 +119,49 @@ export function SidebarItem({ conversation, selected, onClick }: Props) {
               />
             )}
           </Box>
-          <Box sx={{ overflow: "hidden" }}>
-            <Typography fontSize={13} color="white" noWrap>
-              {primaryName}
-            </Typography>
-          </Box>
+          <Typography fontSize={13} color="white" noWrap>
+            {primaryName}
+          </Typography>
         </Box>
         <Stack direction="row" alignItems="center" spacing={1}>
           {hasUnreadMessages && <Box sx={unreadIndicatorContainerStyles} />}
           {user?.id === conversation.initiator.id && (
-            <IconButton
-              size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                setMenuAnchor(e.currentTarget);
-              }}
-              sx={{ color: "white" }}
+            <PopoverMenu
+              trigger={
+                <IconButton
+                  size="small"
+                  sx={{ color: "white" }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Settings />
+                </IconButton>
+              }
             >
-              <Settings />
-            </IconButton>
+              <PopoverMenuItem
+                label="Update"
+                iconRight={<Edit sx={{ color: "lightblue", height: 20 }} />}
+                closeOnSelect
+                onClick={() => setUpdateOpen(true)}
+              />
+              <PopoverMenuItem
+                label="Delete"
+                iconRight={<Delete sx={{ color: "red", height: 20 }} />}
+                closeOnSelect
+                onClick={() => setDeleteOpen(true)}
+              />
+            </PopoverMenu>
           )}
         </Stack>
       </ListItemButton>
-      <Popover
-        anchorEl={menuAnchor}
-        open={Boolean(menuAnchor)}
-        onClose={() => setMenuAnchor(null)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
-        PaperProps={{ sx: popoverPaperStyles }}
-      >
-        <Stack spacing={1}>
-          <MenuItem
-            onClick={() => {
-              setUpdateAnchor(menuAnchor);
-              setMenuAnchor(null);
-            }}
-            sx={menuItemStyles}
-          >
-            Update <Edit sx={{ color: "lightblue", height: 20 }} />
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              setDeleteAnchor(menuAnchor);
-              setMenuAnchor(null);
-            }}
-            sx={menuItemStyles}
-          >
-            Delete <Delete sx={{ color: "red", height: 20 }} />
-          </MenuItem>
-        </Stack>
-      </Popover>
       <UpdateConversationDialog
-        open={Boolean(updateAnchor)}
-        onClose={() => setUpdateAnchor(null)}
+        open={updateOpen}
         conversation={conversation}
+        onClose={() => setUpdateOpen(false)}
       />
       <DeleteConversationDialog
-        open={Boolean(deleteAnchor)}
-        onClose={() => setDeleteAnchor(null)}
+        open={deleteOpen}
         conversationId={conversation.id}
+        onClose={() => setDeleteOpen(false)}
       />
       <ChatMembers
         initiator={initiator}

@@ -6,11 +6,25 @@ interface Props {
   label: string;
   iconRight?: ReactNode;
   onClick?: () => void;
+  closeOnSelect?: boolean;
+  closeMenu?: () => void;
 }
 
-export function PopoverMenuItem({ label, iconRight, onClick }: Props) {
+export function PopoverMenuItem({
+  label,
+  iconRight,
+  onClick,
+  closeOnSelect,
+  closeMenu,
+}: Props) {
   return (
-    <MenuItem onClick={onClick} sx={menuItemStyles}>
+    <MenuItem
+      onClick={() => {
+        onClick?.();
+        if (closeOnSelect) closeMenu?.();
+      }}
+      sx={menuItemStyles}
+    >
       <Typography>{label}</Typography>
       {iconRight && <Box>{iconRight}</Box>}
     </MenuItem>

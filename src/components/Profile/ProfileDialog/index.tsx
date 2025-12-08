@@ -109,11 +109,13 @@ export function ProfileDialog({
                     <Password sx={{ color: "lightblue", height: 20 }} />
                   }
                   onClick={() => setResetOpen(true)}
+                  closeOnSelect
                 />
                 <PopoverMenuItem
                   label="Delete Account"
                   iconRight={<Delete sx={{ color: "red", height: 20 }} />}
                   onClick={() => setDeleteOpen(true)}
+                  closeOnSelect
                 />
               </PopoverMenu>
             )}

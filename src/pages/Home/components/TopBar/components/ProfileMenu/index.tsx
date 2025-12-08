@@ -20,8 +20,12 @@ export function ProfileMenu() {
           </IconButton>
         }
       >
-        <PopoverMenuItem label="Profile" onClick={() => setProfileOpen(true)} />
-        <PopoverMenuItem label="Logout" onClick={logout} />
+        <PopoverMenuItem
+          label="Profile"
+          onClick={() => setProfileOpen(true)}
+          closeOnSelect
+        />
+        <PopoverMenuItem label="Logout" onClick={logout} closeOnSelect />
       </PopoverMenu>
       <ProfileDialog
         open={profileOpen}
