@@ -24,7 +24,6 @@ import type { MessageResponseDto } from "../../../types";
 import {
   useLikeCreate,
   useLikeDelete,
-  useLikeFind,
   useMessageDelete,
   useMessageMarkRead,
   useMessageUpdate,
@@ -47,8 +46,8 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
   const [editing, setEditing] = useState<boolean>(false);
   const [editValue, setEditValue] = useState<string>(message.content);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [likes, setLikes] = useState(message.likes || []);
 
-  const { data: likes = [] } = useLikeFind("message", message.id);
   const { mutateAsync: createLike } = useLikeCreate();
   const { mutateAsync: removeLike } = useLikeDelete();
   const { mutateAsync: updateMessage } = useMessageUpdate();
@@ -77,9 +76,17 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
 
   const handleToggleLike = async () => {
     if (isSelf) return;
-    if (myLike) await removeLike(myLike.id);
-    else
-      await createLike({ userId: user?.id as number, messageId: message.id });
+
+    if (myLike) {
+      await removeLike(myLike.id);
+      setLikes((prev) => prev.filter((l) => l.id !== myLike.id));
+    } else {
+      const newLike = await createLike({
+        userId: user?.id as number,
+        messageId: message.id,
+      });
+      setLikes((prev) => [...prev, newLike]);
+    }
   };
 
   const handleUpdate = async () => {
@@ -93,16 +100,8 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
         minute: "2-digit",
       })
     : "n/a";
-  const readCount = message.reads?.length || 0;
 
-  const likeColor = myLike ? "lightblue" : "#fff";
-  const likeIcon = myLike ? (
-    <Favorite sx={{ height: 25, color: "lightblue" }} />
-  ) : likes.length > 0 ? (
-    <Favorite sx={{ height: 25, color: "#fff" }} />
-  ) : (
-    <FavoriteBorder sx={{ height: 25, color: "#fff" }} />
-  );
+  const readCount = message.reads?.length || 0;
 
   return (
     <Box
@@ -271,23 +270,27 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
             </Popover>
           </>
         )}
-
         <ReactionPanel
           entityType="message"
+          reactionEntries={message.reactions}
           entityId={message.id}
           isSelf={isSelf}
           direction="right"
         />
-
         <Stack direction="row" alignItems="center" spacing={0.3}>
           <IconButton size="small" onClick={handleToggleLike} sx={{ p: 0.3 }}>
-            {likeIcon}
+            {myLike ? (
+              <Favorite sx={{ height: 25, color: "lightblue" }} />
+            ) : likes.length > 0 ? (
+              <Favorite sx={{ height: 25, color: "#fff" }} />
+            ) : (
+              <FavoriteBorder sx={{ height: 25, color: "#fff" }} />
+            )}
           </IconButton>
-          <Typography fontSize={13} color={likeColor}>
+          <Typography fontSize={13} color={myLike ? "lightblue" : "#fff"}>
             {likes.length}
           </Typography>
         </Stack>
-
         {readCount > 0 && (
           <>
             <Stack direction="row" alignItems="center" spacing={0.3} ml={1}>

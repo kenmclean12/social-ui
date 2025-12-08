@@ -42,12 +42,6 @@ export function useLikeCreate() {
         });
       }
 
-      if (data?.messageId) {
-        qc.invalidateQueries({
-          queryKey: ["likes", "message", data.messageId],
-        });
-      }
-
       if (data?.commentId) {
         qc.invalidateQueries({
           queryKey: ["likes", "comment", data.commentId],
@@ -75,12 +69,6 @@ export function useLikeDelete() {
       if (data?.postId) {
         qc.invalidateQueries({
           queryKey: ["likes", "post", data.postId],
-        });
-      }
-
-      if (data?.messageId) {
-        qc.invalidateQueries({
-          queryKey: ["likes", "message", data.messageId],
         });
       }
 

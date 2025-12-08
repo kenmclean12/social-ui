@@ -35,27 +35,15 @@ export function useReactionCreate() {
       }
       return res.json() as Promise<ReactionResponseDto>;
     },
-
     onSuccess: (data) => {
-      if (data?.postId) {
-        qc.invalidateQueries({ queryKey: ["reactions", "post", data.postId] });
-        qc.refetchQueries({ queryKey: ["reactions", "post", data.postId] });
-      }
-
       if (data?.messageId) {
         qc.invalidateQueries({
-          queryKey: ["reactions", "message", data.messageId],
-        });
-        qc.refetchQueries({
           queryKey: ["reactions", "message", data.messageId],
         });
       }
 
       if (data?.commentId) {
         qc.invalidateQueries({
-          queryKey: ["reactions", "comment", data.commentId],
-        });
-        qc.refetchQueries({
           queryKey: ["reactions", "comment", data.commentId],
         });
       }
@@ -75,12 +63,7 @@ export function useReactionDelete() {
       }
       return res.json() as Promise<ReactionResponseDto>;
     },
-
     onSuccess: (data) => {
-      if (data?.postId) {
-        qc.invalidateQueries({ queryKey: ["reactions", "post", data.postId] });
-      }
-
       if (data?.messageId) {
         qc.invalidateQueries({
           queryKey: ["reactions", "message", data.messageId],

@@ -11,10 +11,12 @@ import {
 } from "@mui/material";
 import { Close, EmojiEmotions } from "@mui/icons-material";
 import { useAuth } from "../../context";
-import { useReactionCreate, useReactionDelete, useReactionFind } from "../../hooks";
+import { useReactionCreate, useReactionDelete } from "../../hooks";
+import type { ReactionResponseDto } from "../../types";
 
 interface ReactionPanelProps {
   entityType: "post" | "message" | "comment";
+  reactionEntries: ReactionResponseDto[] | undefined;
   entityId: number;
   isSelf: boolean;
   direction?: "left" | "right";
@@ -24,29 +26,43 @@ const EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "😡"];
 
 export function ReactionPanel({
   entityType,
+  reactionEntries,
   entityId,
   isSelf,
   direction,
 }: ReactionPanelProps) {
   const { user } = useAuth();
-  const { data: reactions = [] } = useReactionFind(entityType, entityId);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [reactions, setReactions] = useState<ReactionResponseDto[]>(
+    reactionEntries ?? []
+  );
+
   const { mutate: createReaction } = useReactionCreate();
   const { mutate: removeReaction } = useReactionDelete();
-
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const handleOpen = (event: React.MouseEvent<HTMLElement>) =>
-    setAnchorEl(event.currentTarget);
-  const handleClose = () => setAnchorEl(null);
-
   const userReaction = reactions.find((r) => r.user.id === user?.id);
-  const handleReact = (emoji: string) => {
+
+  const handleReact = async (emoji: string) => {
     if (isSelf) return;
-    createReaction({
-      userId: user?.id as number,
-      [entityType + "Id"]: entityId,
-      reaction: emoji,
-    });
-    handleClose();
+
+    if (userReaction) {
+      await removeReaction(userReaction.id);
+      setReactions((prev) => prev.filter((r) => r.id !== userReaction.id));
+    } else {
+      createReaction(
+        {
+          userId: user?.id as number,
+          [entityType + "Id"]: entityId,
+          reaction: emoji,
+        },
+        {
+          onSuccess: (newReaction: ReactionResponseDto) => {
+            setReactions((prev) => [...prev, newReaction]);
+          },
+        }
+      );
+    }
+
+   setAnchorEl(null);
   };
 
   const open = Boolean(anchorEl);
@@ -54,7 +70,7 @@ export function ReactionPanel({
   return (
     <>
       <Stack direction="row" alignItems="center" spacing={0.5}>
-        <IconButton onClick={handleOpen} size="small">
+        <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} size="small">
           <EmojiEmotions
             sx={{ color: userReaction && !isSelf ? "lightblue" : "white" }}
           />
@@ -62,20 +78,20 @@ export function ReactionPanel({
         <Typography
           sx={{ color: userReaction && !isSelf ? "lightblue" : "white" }}
         >
-          {reactions ? reactions.length : 0}
+          {reactions.length}
         </Typography>
       </Stack>
       <Popover
         open={open}
         anchorEl={anchorEl}
-        onClose={handleClose}
+        onClose={() => setAnchorEl(null)}
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: direction && direction === "right" ? "left" : "right",
+          horizontal: direction === "right" ? "left" : "right",
         }}
         transformOrigin={{
           vertical: "top",
-          horizontal: direction && direction === "right" ? "left" : "right",
+          horizontal: direction === "right" ? "left" : "right",
         }}
       >
         <Paper
@@ -134,19 +150,22 @@ export function ReactionPanel({
                   }}
                 >
                   <Typography fontSize={14} color="white">
-                    {r.user.id === user?.id ? "You" : `${r.user.firstName}`}{" "}
-                    reacted with{" "}
+                    {r.user.id === user?.id ? "You" : r.user.firstName} reacted
+                    with{" "}
                   </Typography>
                   <Stack direction="row" alignItems="center" gap={1}>
-                    <Typography
-                      component="span"
-                      fontSize={24}
-                      marginLeft="auto"
-                    >
+                    <Typography component="span" fontSize={24}>
                       {r.reaction}
                     </Typography>
                     {r.user.id === user?.id && (
-                      <Close onClick={() => removeReaction(r.id)} />
+                      <Close
+                        onClick={async () => {
+                          await removeReaction(r.id);
+                          setReactions((prev) =>
+                            prev.filter((x) => x.id !== r.id)
+                          );
+                        }}
+                      />
                     )}
                   </Stack>
                 </ListItem>
