@@ -1,13 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import {
-  type UserCreateDto,
   type UserWithCountsResponseDto,
   type UserUpdateDto,
   type PasswordResetDto,
   type UserResponseDto,
-} from "../types";
-import { api } from "../lib/api";
+} from "../../types";
+import { api } from "../../lib/api";
 
 export function useUserFindOne(id: number) {
   return useQuery({
@@ -38,32 +37,6 @@ export function useUserFindAll() {
   });
 }
 
-export function useUserCreate() {
-  const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
-
-  return useMutation({
-    mutationFn: async (dto: UserCreateDto) => {
-      const res = await api("/user", {
-        method: "POST",
-        body: JSON.stringify(dto),
-      });
-
-      if (!res?.ok) {
-        const err = await res?.json();
-        throw new Error(err.message || "Failed to create user");
-      }
-
-      return res.json() as Promise<UserResponseDto>;
-    },
-    onSuccess: () => {
-      enqueueSnackbar("User created!", { variant: "success" });
-      qc.invalidateQueries({ queryKey: ["users"] });
-    },
-    onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
-  });
-}
-
 export function useUserUpdate() {
   const qc = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
@@ -91,9 +64,6 @@ export function useUserUpdate() {
 }
 
 export function useUserDelete() {
-  const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
-
   return useMutation({
     mutationFn: async () => {
       const res = await api("/user/self", { method: "DELETE" });
@@ -104,11 +74,6 @@ export function useUserDelete() {
 
       return res.json() as Promise<UserResponseDto>;
     },
-    onSuccess: () => {
-      enqueueSnackbar("User deleted!", { variant: "success" });
-      qc.invalidateQueries({ queryKey: ["users"] });
-    },
-    onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
 

@@ -1,7 +1,7 @@
 import { Stack, Button, Typography } from "@mui/material";
 import { useAuth } from "../../../../../../context";
-import { useUserDelete } from "../../../../../../hooks";
 import { UniversalDialog } from "../../../../../UniversalDialog";
+import { useUserDelete } from "../../../../../../hooks";
 
 interface Props {
   open: boolean;

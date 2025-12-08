@@ -1,9 +1,9 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSnackbar } from "notistack";
-import { api } from "../lib/api";
-import type { NotificationCreateDto, NotificationResponseDto } from "../types";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSnackbar } from "notistack";
+import { api } from "../../lib/api";
+import type { NotificationResponseDto } from "../../types";
 
 export function useNotificationFindAll() {
   return useQuery({
@@ -16,30 +16,6 @@ export function useNotificationFindAll() {
       }
       return res.json() as Promise<NotificationResponseDto[]>;
     },
-  });
-}
-
-export function useNotificationCreate() {
-  const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
-
-  return useMutation({
-    mutationFn: async (dto: NotificationCreateDto) => {
-      const res = await api("/notification", {
-        method: "POST",
-        body: JSON.stringify(dto),
-      });
-      if (!res?.ok) {
-        const err = await res?.json();
-        throw new Error(err.message || "Failed to create notification");
-      }
-      return res.json() as Promise<NotificationResponseDto>;
-    },
-    onSuccess: () => {
-      enqueueSnackbar("Notification created!", { variant: "success" });
-      qc.invalidateQueries({ queryKey: ["notifications"] });
-    },
-    onError: (err: Error) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
 
@@ -81,7 +57,6 @@ export function useNotificationStream(userId: number) {
       qc.setQueryData<NotificationResponseDto[]>(["notifications"], (old) => {
         return [notif, ...(old ?? [])];
       });
-      enqueueSnackbar("New notification", { variant: "info" });
     });
 
     return () => {

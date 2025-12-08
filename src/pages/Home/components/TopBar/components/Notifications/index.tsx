@@ -13,7 +13,7 @@ import {
   useNotificationFindAll,
   useNotificationStream,
   useNotificationUpdate,
-} from "../../../../../../hooks/notification";
+} from "../../../../../../hooks";
 import {
   NotificationType,
   type NotificationResponseDto,

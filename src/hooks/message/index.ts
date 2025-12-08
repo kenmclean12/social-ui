@@ -5,8 +5,8 @@ import type {
   MessageReadResponseDto,
   MessageResponseDto,
   MessageUpdateDto,
-} from "../types";
-import { api } from "../lib/api";
+} from "../../types";
+import { api } from "../../lib/api";
 
 export function useMessageFindOne(id: number) {
   return useQuery({
@@ -74,7 +74,6 @@ export function useUnreadMessageCountByConversation(conversationId: number) {
 
 export function useMessageCreate() {
   const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
     mutationFn: async (dto: MessageCreateDto) => {
@@ -91,8 +90,6 @@ export function useMessageCreate() {
     },
 
     onSuccess: (data) => {
-      enqueueSnackbar("Message sent!", { variant: "success" });
-
       qc.invalidateQueries({
         queryKey: ["messages", "conversation", data.conversationId],
       });
@@ -140,7 +137,6 @@ export function useMessageMarkRead() {
           data.conversationId,
         ],
       });
-
       enqueueSnackbar("Message marked as read", { variant: "info" });
     },
   });
@@ -165,7 +161,6 @@ export function useMessageUpdate() {
 
     onSuccess: (data) => {
       enqueueSnackbar("Message updated", { variant: "success" });
-
       qc.invalidateQueries({ queryKey: ["message", data.id] });
       qc.invalidateQueries({
         queryKey: ["messages", "conversation", data.conversationId],
@@ -190,7 +185,6 @@ export function useMessageDelete() {
 
     onSuccess: (data) => {
       enqueueSnackbar("Message deleted", { variant: "success" });
-
       qc.invalidateQueries({
         queryKey: ["messages", "conversation", data.conversationId],
       });

@@ -1,5 +1,4 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSnackbar } from "notistack";
 import type {
   AlterParticipantsDto,
   ConversationCreateDto,
@@ -7,8 +6,8 @@ import type {
   ConversationUpdateDto,
   InitiateConversationDto,
   InitiateConversationResponseDto,
-} from "../types";
-import { api } from "../lib/api";
+} from "../../types";
+import { api } from "../../lib/api";
 
 export function useConversationFindOne(id: number) {
   return useQuery({
@@ -44,7 +43,6 @@ export function useConversationFindByUser(userId: number) {
 
 export function useConversationCreate() {
   const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
     mutationFn: async (dto: ConversationCreateDto) => {
@@ -58,9 +56,7 @@ export function useConversationCreate() {
       }
       return res.json() as Promise<ConversationResponseDto>;
     },
-
     onSuccess: (data) => {
-      enqueueSnackbar("Conversation created", { variant: "success" });
       qc.invalidateQueries({
         queryKey: ["conversations", "user", data.initiator.id],
       });
@@ -70,7 +66,6 @@ export function useConversationCreate() {
 
 export function useConversationInitiate() {
   const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
     mutationFn: async (dto: InitiateConversationDto) => {
@@ -88,22 +83,17 @@ export function useConversationInitiate() {
     },
 
     onSuccess: (data) => {
-      enqueueSnackbar("Conversation started", { variant: "success" });
-
       qc.invalidateQueries({
         queryKey: ["conversations", "user", data.conversation.initiator.id],
       });
-
       qc.invalidateQueries({
         queryKey: ["conversation", data.conversation.id],
       });
     },
   });
 }
-
 export function useConversationAlterParticipants() {
   const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
     mutationFn: async (params: { id: number; dto: AlterParticipantsDto }) => {
@@ -117,9 +107,7 @@ export function useConversationAlterParticipants() {
       }
       return res.json() as Promise<ConversationResponseDto>;
     },
-
     onSuccess: (data) => {
-      enqueueSnackbar("Participants updated", { variant: "info" });
       qc.invalidateQueries({ queryKey: ["conversation", data.id] });
       qc.invalidateQueries({
         queryKey: ["conversations", "user", data.initiator.id],
@@ -130,8 +118,6 @@ export function useConversationAlterParticipants() {
 
 export function useConversationUpdate() {
   const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
-
   return useMutation({
     mutationFn: async (params: { id: number; dto: ConversationUpdateDto }) => {
       const res = await api(`/conversation/${params.id}`, {
@@ -144,9 +130,7 @@ export function useConversationUpdate() {
       }
       return res.json() as Promise<ConversationResponseDto>;
     },
-
     onSuccess: (data) => {
-      enqueueSnackbar("Conversation updated", { variant: "success" });
       qc.invalidateQueries({ queryKey: ["conversation", data.id] });
       qc.invalidateQueries({
         queryKey: ["conversations", "user", data.initiator.id],
@@ -157,7 +141,6 @@ export function useConversationUpdate() {
 
 export function useConversationDelete() {
   const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
     mutationFn: async (id: number) => {
@@ -168,9 +151,7 @@ export function useConversationDelete() {
       }
       return res.json() as Promise<ConversationResponseDto>;
     },
-
     onSuccess: (data) => {
-      enqueueSnackbar("Conversation deleted", { variant: "success" });
       qc.invalidateQueries({
         queryKey: ["conversations", "user", data.initiator.id],
       });

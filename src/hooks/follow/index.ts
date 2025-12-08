@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSnackbar } from "notistack";
-import { api } from "../lib/api";
-import type { FollowDto, FollowResponseDto } from "../types";
+import { api } from "../../lib/api";
+import type { FollowDto, FollowResponseDto } from "../../types";
 
 export function useFollowGetFollowers(
   userId: number,
@@ -42,7 +41,6 @@ export function useFollowGetFollowing(
 
 export function useFollowCreate(selfId: number) {
   const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
     mutationFn: async (dto: FollowDto) => {
@@ -60,7 +58,6 @@ export function useFollowCreate(selfId: number) {
     },
 
     onSuccess: (_, dto) => {
-      enqueueSnackbar("Followed user!", { variant: "success" });
       qc.invalidateQueries({
         queryKey: ["follow", "following", selfId],
       });
@@ -71,23 +68,17 @@ export function useFollowCreate(selfId: number) {
         queryKey: ["follow", "followers", dto.followingId],
       });
     },
-
-    onError: (err: Error) => {
-      enqueueSnackbar(err.message, { variant: "error" });
-    },
   });
 }
 
 export function useFollowRemove(selfId: number) {
   const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
     mutationFn: async (vars: { id: number; followingId: number }) => {
       const { id } = vars;
 
       const res = await api(`/follow/${id}`, { method: "DELETE" });
-
       if (!res?.ok) {
         const err = await res?.json();
         throw new Error(err.message || "Failed to unfollow user");
@@ -95,10 +86,7 @@ export function useFollowRemove(selfId: number) {
 
       return vars;
     },
-
     onSuccess: ({ followingId }) => {
-      enqueueSnackbar("Unfollowed user!", { variant: "success" });
-
       qc.invalidateQueries({
         queryKey: ["follow", "following", selfId],
       });
@@ -108,10 +96,6 @@ export function useFollowRemove(selfId: number) {
       qc.invalidateQueries({
         queryKey: ["follow", "followers", followingId],
       });
-    },
-
-    onError: (err: Error) => {
-      enqueueSnackbar(err.message, { variant: "error" });
     },
   });
 }

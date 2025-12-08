@@ -5,8 +5,8 @@ import type {
   CommentCreateDto,
   CommentResponseDto,
 } from "../../../../../types";
-import { useCommentCreate } from "../../../../../hooks/comment";
 import { CommentLine } from "./components";
+import { useCommentCreate } from "../../../../../hooks";
 
 interface Props {
   comments: CommentResponseDto[] | undefined;

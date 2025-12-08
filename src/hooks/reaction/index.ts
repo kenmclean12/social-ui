@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSnackbar } from "notistack";
-import type { ReactionCreateDto, ReactionResponseDto } from "../types";
-import { api } from "../lib/api";
+import type { ReactionCreateDto, ReactionResponseDto } from "../../types";
+import { api } from "../../lib/api";
 
 export function useReactionFind(
   type: "message" | "post" | "comment",
@@ -23,7 +22,6 @@ export function useReactionFind(
 
 export function useReactionCreate() {
   const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
     mutationFn: async (dto: ReactionCreateDto) => {
@@ -37,29 +35,36 @@ export function useReactionCreate() {
       }
       return res.json() as Promise<ReactionResponseDto>;
     },
+
     onSuccess: (data) => {
-      enqueueSnackbar("Reaction added!", { variant: "success" });
+      if (data?.postId) {
+        qc.invalidateQueries({ queryKey: ["reactions", "post", data.postId] });
+        qc.refetchQueries({ queryKey: ["reactions", "post", data.postId] });
+      }
 
-      const key = data.postId
-        ? ["reactions", "post", data.postId]
-        : data.messageId
-        ? ["reactions", "message", data.messageId]
-        : data.commentId
-        ? ["reactions", "comment", data.commentId]
-        : undefined;
+      if (data?.messageId) {
+        qc.invalidateQueries({
+          queryKey: ["reactions", "message", data.messageId],
+        });
+        qc.refetchQueries({
+          queryKey: ["reactions", "message", data.messageId],
+        });
+      }
 
-      if (key) {
-        qc.invalidateQueries({ queryKey: key });
-        qc.refetchQueries({ queryKey: key });
+      if (data?.commentId) {
+        qc.invalidateQueries({
+          queryKey: ["reactions", "comment", data.commentId],
+        });
+        qc.refetchQueries({
+          queryKey: ["reactions", "comment", data.commentId],
+        });
       }
     },
-    onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
 
 export function useReactionDelete() {
   const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
     mutationFn: async (id: number) => {
@@ -70,21 +75,23 @@ export function useReactionDelete() {
       }
       return res.json() as Promise<ReactionResponseDto>;
     },
-    onSuccess: (data) => {
-      enqueueSnackbar("Reaction removed", { variant: "success" });
-      const key = data.postId
-        ? ["reactions", "post", data.postId]
-        : data.messageId
-        ? ["reactions", "message", data.messageId]
-        : data.commentId
-        ? ["reactions", "comment", data.commentId]
-        : undefined;
 
-      if (key) {
-        qc.invalidateQueries({ queryKey: key });
-        qc.refetchQueries({ queryKey: key });
+    onSuccess: (data) => {
+      if (data?.postId) {
+        qc.invalidateQueries({ queryKey: ["reactions", "post", data.postId] });
+      }
+
+      if (data?.messageId) {
+        qc.invalidateQueries({
+          queryKey: ["reactions", "message", data.messageId],
+        });
+      }
+
+      if (data?.commentId) {
+        qc.invalidateQueries({
+          queryKey: ["reactions", "comment", data.commentId],
+        });
       }
     },
-    onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }

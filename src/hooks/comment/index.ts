@@ -1,7 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSnackbar } from "notistack";
-import { api } from "../lib/api";
-import type { CommentCreateDto, CommentResponseDto, CommentUpdateDto } from "../types";
+import { api } from "../../lib/api";
+import type {
+  CommentCreateDto,
+  CommentResponseDto,
+  CommentUpdateDto,
+} from "../../types";
 
 export function useCommentFindByPost(postId: number) {
   return useQuery({
@@ -20,7 +23,6 @@ export function useCommentFindByPost(postId: number) {
 
 export function useCommentCreate() {
   const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
     mutationFn: async (dto: CommentCreateDto) => {
@@ -35,22 +37,22 @@ export function useCommentCreate() {
       return res.json() as Promise<CommentResponseDto>;
     },
     onSuccess: (data) => {
-      enqueueSnackbar("Comment created!", { variant: "success" });
       qc.invalidateQueries({ queryKey: ["comments", data.postId] });
     },
-    onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
 
 export function useCommentUpdate(id: number) {
   const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
     mutationFn: async ({ content }: CommentUpdateDto) => {
-      const res = await api(`/comment/${id}?content=${encodeURIComponent(content)}`, {
-        method: "PATCH",
-      });
+      const res = await api(
+        `/comment/${id}?content=${encodeURIComponent(content)}`,
+        {
+          method: "PATCH",
+        }
+      );
       if (!res?.ok) {
         const err = await res?.json();
         throw new Error(err.message || "Failed to update comment");
@@ -58,16 +60,13 @@ export function useCommentUpdate(id: number) {
       return res.json() as Promise<CommentResponseDto>;
     },
     onSuccess: (data) => {
-      enqueueSnackbar("Comment updated!", { variant: "success" });
       qc.invalidateQueries({ queryKey: ["comments", data.postId] });
     },
-    onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
 
 export function useCommentDelete() {
   const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
     mutationFn: async (id: number) => {
@@ -79,9 +78,7 @@ export function useCommentDelete() {
       return res.json() as Promise<CommentResponseDto>;
     },
     onSuccess: (data) => {
-      enqueueSnackbar("Comment deleted!", { variant: "success" });
       qc.invalidateQueries({ queryKey: ["comments", data.postId] });
     },
-    onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }

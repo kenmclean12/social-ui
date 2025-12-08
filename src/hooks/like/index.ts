@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSnackbar } from "notistack";
-import type { LikeCreateDto, LikeResponseDto } from "../types";
-import { api } from "../lib/api";
+import type { LikeCreateDto, LikeResponseDto } from "../../types";
+import { api } from "../../lib/api";
 
 export function useLikeFind(type: string, id: number) {
   return useQuery({
@@ -21,7 +20,6 @@ export function useLikeFind(type: string, id: number) {
 
 export function useLikeCreate() {
   const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
     mutationFn: async (dto: LikeCreateDto) => {
@@ -38,8 +36,6 @@ export function useLikeCreate() {
       return res.json() as Promise<LikeResponseDto>;
     },
     onSuccess: (data) => {
-      enqueueSnackbar("Liked!", { variant: "success" });
-
       if (data?.postId) {
         qc.invalidateQueries({
           queryKey: ["likes", "post", data.postId],
@@ -58,13 +54,11 @@ export function useLikeCreate() {
         });
       }
     },
-    onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }
 
 export function useLikeDelete() {
   const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
     mutationFn: async (id: number) => {
@@ -78,8 +72,6 @@ export function useLikeDelete() {
     },
 
     onSuccess: (data) => {
-      enqueueSnackbar("Like removed", { variant: "success" });
-
       if (data?.postId) {
         qc.invalidateQueries({
           queryKey: ["likes", "post", data.postId],
@@ -98,6 +90,5 @@ export function useLikeDelete() {
         });
       }
     },
-    onError: (err) => enqueueSnackbar(err.message, { variant: "error" }),
   });
 }

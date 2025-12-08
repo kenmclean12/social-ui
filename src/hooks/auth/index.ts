@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
-import { api } from "../lib/api";
-import type { UserCreateDto, LoginDto, TokenResponseDto } from "../types";
-import { useAuth } from "../context";
+import { api } from "../../lib/api";
+import type { UserCreateDto, LoginDto, TokenResponseDto } from "../../types";
+import { useAuth } from "../../context";
 import { useSnackbar } from "notistack";
 
 export function useAuthRegister() {

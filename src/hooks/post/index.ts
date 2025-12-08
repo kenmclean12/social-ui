@@ -4,8 +4,8 @@ import {
   type PostCreateDto,
   type PostUpdateDto,
   type PostResponseDto,
-} from "../types";
-import { api } from "../lib/api";
+} from "../../types";
+import { api } from "../../lib/api";
 
 export function usePostFindOne(id: number) {
   return useQuery({
