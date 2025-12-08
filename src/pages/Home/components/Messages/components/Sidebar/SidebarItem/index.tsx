@@ -13,7 +13,10 @@ import { useAuth } from "../../../../../../../context";
 import { ChatMembers } from "./ChatMembers";
 import { UpdateConversationDialog } from "../UpdateConversationDialog";
 import { DeleteConversationDialog } from "../DeleteConversationDialog";
-import { useUnreadMessageCountByConversation } from "../../../../../../../hooks";
+import {
+  useConversationLeave,
+  useUnreadMessageCountByConversation,
+} from "../../../../../../../hooks";
 import {
   avatarSecondaryStyles,
   avatarStyles,
@@ -39,6 +42,9 @@ export function SidebarItem({ conversation, selected, onClick }: Props) {
 
   const { data: unreadCount } = useUnreadMessageCountByConversation(
     conversation.id
+  );
+  const { mutateAsync: leaveConversation } = useConversationLeave(
+    user?.id as number
   );
   const hasUnreadMessages = (unreadCount ?? 0) > 0;
 
@@ -156,7 +162,7 @@ export function SidebarItem({ conversation, selected, onClick }: Props) {
                 label="Leave Conversation"
                 iconRight={<ExitToApp sx={{ height: 20, ml: 1, mt: 0.5 }} />}
                 closeOnSelect
-                onClick={() => {}}
+                onClick={() => leaveConversation(conversation.id)}
               />
             )}
           </PopoverMenu>

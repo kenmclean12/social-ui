@@ -108,7 +108,6 @@ export function useMessageCreate() {
 
 export function useMessageMarkRead() {
   const qc = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
 
   return useMutation({
     mutationFn: async (params: { messageId: number; userId: number }) => {
@@ -137,7 +136,6 @@ export function useMessageMarkRead() {
           data.conversationId,
         ],
       });
-      enqueueSnackbar("Message marked as read", { variant: "info" });
     },
   });
 }

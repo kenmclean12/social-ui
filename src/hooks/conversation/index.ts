@@ -41,6 +41,31 @@ export function useConversationFindByUser(userId: number) {
   });
 }
 
+export function useConversationLeave(userId: number) {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: number) => {
+      const res = await api(`/conversation/leave/${id}`, {
+        method: "POST",
+      });
+      if (!res?.ok) {
+        const err = await res?.json();
+        throw new Error(err.message || "Failed to leave conversation");
+      }
+      return res.json() as Promise<ConversationResponseDto>;
+    },
+    onSuccess: (data) => {
+      qc.invalidateQueries({
+        queryKey: ["conversations", "user", userId],
+      });
+      qc.invalidateQueries({
+        queryKey: ["conversation", data.id],
+      });
+    },
+  });
+}
+
 export function useConversationCreate() {
   const qc = useQueryClient();
 
