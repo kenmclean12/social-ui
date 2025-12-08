@@ -18,7 +18,15 @@ import {
   authButtonStyles,
   authInnerContainerStyles,
   authInputStyles,
+  authMainContainerStyles,
 } from "../styles";
+import {
+  buttonContainerStyles,
+  buttonInnerContainerStyles,
+  contentContainerStyles,
+  contentInnerContainerStyles,
+  titleContainerStyles,
+} from "./styles";
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -105,61 +113,21 @@ export function RegisterPage() {
   };
 
   return (
-    <Stack
-      alignItems="center"
-      justifyContent="center"
-      height="100vh"
-      width="100vw"
-      sx={{ backgroundColor: "black" }}
-    >
-      <Stack
-        alignItems="center"
-        width="50%"
-        height="50%"
-        minHeight="400px"
-        minWidth="400px"
-        maxHeight="400px"
-        maxWidth="500px"
-        padding={4}
-        color="white"
-        border="2px solid lightblue"
-        borderRadius="16px"
-        sx={authInnerContainerStyles}
-      >
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="center"
-          height="10%"
-          width="100%"
-          spacing={1}
-        >
+    <Stack sx={authMainContainerStyles}>
+      <Stack sx={authInnerContainerStyles}>
+        <Stack sx={titleContainerStyles}>
           <Typography fontSize={24}>Register</Typography>
           <NightsStay sx={{ color: "lightblue" }} />
         </Stack>
-        <Stack
-          alignItems="center"
-          justifyContent="center"
-          height="60%"
-          width="100%"
-          pt={2}
-        >
-          <Stack width="100%" spacing={2} pt={2}>
+        <Stack sx={contentContainerStyles}>
+          <Stack sx={contentInnerContainerStyles}>
             {stepFields[step].map(renderField)}
           </Stack>
         </Stack>
-        <Stack
-          height="30%"
-          width="100%"
-          spacing={1.5}
-          p={4.5}
-          paddingInline={0}
-        >
+        <Stack sx={buttonContainerStyles}>
           <Stack
-            direction="row"
-            justifyContent="space-between"
-            spacing={1.5}
             pt={step !== Step.One ? 0.5 : 0}
+            sx={buttonInnerContainerStyles}
           >
             {step !== Step.One && (
               <Button

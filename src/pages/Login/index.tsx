@@ -11,7 +11,13 @@ import {
   authButtonStyles,
   authInnerContainerStyles,
   authInputStyles,
+  authMainContainerStyles,
 } from "../styles";
+import {
+  buttonContainerStyles,
+  contentContainerStyles,
+  titleContainerStyles,
+} from "./styles";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -40,45 +46,13 @@ export function LoginPage() {
   };
 
   return (
-    <Stack
-      alignItems="center"
-      justifyContent="center"
-      height="100vh"
-      width="100vw"
-      sx={{ backgroundColor: "black" }}
-    >
-      <Stack
-        width="50%"
-        height="45%"
-        minHeight="400px"
-        minWidth="400px"
-        maxHeight="400px"
-        maxWidth="500px"
-        padding={4}
-        color="white"
-        border="2px solid lightblue"
-        borderRadius="16px"
-        sx={authInnerContainerStyles}
-      >
-        <Stack
-          direction="row"
-          alignSelf="center"
-          alignItems="center"
-          justifyContent="center"
-          spacing={1}
-          width="100%"
-          height="15%"
-        >
+    <Stack sx={authMainContainerStyles}>
+      <Stack sx={authInnerContainerStyles}>
+        <Stack sx={titleContainerStyles}>
           <Typography fontSize={24}>Login</Typography>
           <NightsStay sx={{ color: "lightblue" }} />
         </Stack>
-        <Stack
-          alignItems="center"
-          justifyContent="center"
-          height="55%"
-          spacing={3}
-          pt={2}
-        >
+        <Stack sx={contentContainerStyles}>
           <Input
             placeholder="Email"
             value={form.email}
@@ -92,8 +66,8 @@ export function LoginPage() {
               ...authInputStyles,
               border: errors.email ? "2px solid lightblue" : "1px solid #ccc",
             }}
-            disableUnderline
             fullWidth
+            disableUnderline
           />
           <Input
             type="password"
@@ -112,14 +86,7 @@ export function LoginPage() {
             disableUnderline
           />
         </Stack>
-        <Stack
-          alignSelf="center"
-          height="30%"
-          width="100%"
-          p={3}
-          paddingInline={0}
-          spacing={1.5}
-        >
+        <Stack sx={buttonContainerStyles}>
           <Button
             variant="contained"
             onClick={handleLogin}
