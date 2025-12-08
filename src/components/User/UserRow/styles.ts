@@ -13,7 +13,8 @@ export const contentContainerStyles = {
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
-  gap: 8,
+  justifyContent: "flex-start",
+  gap: "12px",
   flex: 1,
   minWidth: 0,
 };

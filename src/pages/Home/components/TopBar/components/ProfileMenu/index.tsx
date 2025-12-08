@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useAuth } from "../../../../../../context";
 import { useUserFindOne } from "../../../../../../hooks";
-import { ProfileDialog } from "../../../../../../components";
+import { ProfileDialog } from "../../../../../../components/Profile/ProfileDialog";
 import { avatarStyles, menuListStyles } from "./styles";
 
 export function ProfileMenu() {
@@ -21,7 +21,10 @@ export function ProfileMenu() {
   return (
     <>
       <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-        <Avatar sx={avatarStyles} src={activeUser?.avatarUrl || ""} />
+        <Avatar
+          sx={avatarStyles}
+          src={activeUser?.avatarUrl || ""}
+        />
       </IconButton>
       <Popover
         open={!!anchorEl}

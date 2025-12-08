@@ -1,12 +1,5 @@
 import { useMemo, useState, useEffect, useRef } from "react";
-import {
-  Input,
-  Paper,
-  Popper,
-  Stack,
-  Button,
-  Box,
-} from "@mui/material";
+import { Input, Paper, Popper, Stack, Button, Box } from "@mui/material";
 import { useUserFindAll, useFollowGetFollowing } from "../../../../../../hooks";
 import { ProfileDialog } from "../../../../../../components/Profile/ProfileDialog";
 import { useAuth } from "../../../../../../context";
@@ -112,7 +105,7 @@ export function UserSearch() {
               height: "35px",
               width: "100%",
               minWidth: "300px",
-              padding: "2px 32px 2px 16px",
+              padding: "2px 16px 2px 16px",
               fontSize: "14px",
               color: "white",
               border: "1px solid white",
@@ -131,7 +124,7 @@ export function UserSearch() {
               }}
               sx={{
                 position: "absolute",
-                right: 1,
+                right: 4,
                 top: "50%",
                 transform: "translateY(-50%)",
                 color: "white",
@@ -188,11 +181,7 @@ export function UserSearch() {
                     setIsFocused(false);
                   }}
                 >
-                  <UserRow
-                    user={u}
-                    showFollowButtonSmall
-                    showUserName
-                  />
+                  <UserRow user={u} showFollowButtonSmall showUserName />
                 </Box>
               ))}
             </Paper>
