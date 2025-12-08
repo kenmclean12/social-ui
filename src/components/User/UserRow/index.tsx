@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Avatar, Paper, Stack, Typography, Tooltip } from "@mui/material";
 import type { UserResponseDto } from "../../../types";
 import { FollowButton } from "../../Follow";
@@ -8,6 +9,7 @@ interface Props {
   showUserName?: boolean;
   showFollowButton?: boolean;
   showFollowButtonSmall?: boolean;
+  button?: ReactNode;
   message?: string;
   onClick?: (id: number) => void;
 }
@@ -17,6 +19,7 @@ export function UserRow({
   showUserName = false,
   showFollowButton = false,
   showFollowButtonSmall = false,
+  button,
   message,
   onClick,
 }: Props) {
@@ -62,6 +65,11 @@ export function UserRow({
           <FollowButton targetUserId={user.id} />
         ) : null}
       </Stack>
+      {button && !showFollowButton && !showFollowButtonSmall && (
+        <Stack direction="row" sx={{ pointerEvents: "auto" }}>
+          {button}
+        </Stack>
+      )}
     </Paper>
   );
 }

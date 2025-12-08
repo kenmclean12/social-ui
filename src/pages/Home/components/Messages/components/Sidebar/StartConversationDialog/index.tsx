@@ -17,6 +17,7 @@ import {
   useConversationInitiate,
   useFollowGetFollowing,
 } from "../../../../../../../hooks";
+import { UserRow } from "../../../../../../../components";
 
 interface StartConversationDialogProps {
   open: boolean;
@@ -108,25 +109,20 @@ export function StartConversationDialog({
               },
             }}
             renderOption={(props, option, { selected }) => (
-              <Box
-                component="li"
-                {...props}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <span>{option.following.userName}</span>
-                <Checkbox
-                  checked={selected}
-                  sx={{
-                    marginLeft: "auto",
-                    color: "#fff",
-                    "&.Mui-checked": { color: "#fff" },
-                  }}
+              <li {...props}>
+                <UserRow
+                  user={option.following}
+                  button={
+                    <Checkbox
+                      checked={selected}
+                      sx={{
+                        color: "#fff",
+                        "&.Mui-checked": { color: "#fff" },
+                      }}
+                    />
+                  }
                 />
-              </Box>
+              </li>
             )}
             sx={{
               "& .MuiInputBase-root": {
@@ -156,6 +152,7 @@ export function StartConversationDialog({
               />
             )}
           />
+
           <TextField
             label="First message"
             multiline

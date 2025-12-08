@@ -4,13 +4,21 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useAuth } from "../../../../context";
 import { ChatWindow, Sidebar } from "./components";
+import {
+  iconButtonStyles,
+  iconContainerStyles,
+  innerContainerStyles,
+  mainContainerStyles,
+  resizeHandleStyles,
+  selectConversationContainerStyles,
+} from "./styles";
 
 export function Messages() {
   const { user } = useAuth();
+  const isResizing = useRef(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [sidebarWidth, setSidebarWidth] = useState<number>(250);
   const [collapsed, setCollapsed] = useState<boolean>(false);
-  const isResizing = useRef(false);
 
   const handleMouseMove = (e: MouseEvent) => {
     if (!isResizing.current || collapsed) return;
@@ -32,41 +40,17 @@ export function Messages() {
   });
 
   return (
-    <Box display="flex" flex={1} height="100%" width="100%" position="relative">
+    <Box sx={mainContainerStyles}>
       <Box
         sx={{
+          ...innerContainerStyles,
           width: collapsed ? "40px" : sidebarWidth,
-          transition: "width .2s ease",
-          borderRight: "1px solid lightblue",
-          position: "relative",
-          overflow: "hidden",
-          background: "#0b0b0b",
         }}
       >
-        <Box
-          sx={{
-            position: "absolute",
-            top: 18,
-            left: 6,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "25px",
-            width: "25px",
-            zIndex: 20,
-            background: "#111",
-            border: "1px solid lightblue",
-            borderRadius: "6px",
-          }}
-        >
+        <Box sx={iconContainerStyles}>
           <IconButton
             size="small"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "lightblue",
-            }}
+            sx={iconButtonStyles}
             onClick={() => setCollapsed((c) => !c)}
           >
             {collapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
@@ -84,14 +68,8 @@ export function Messages() {
         <Box
           onMouseDown={() => (isResizing.current = true)}
           sx={{
-            width: "6px",
-            cursor: "ew-resize",
-            background: "transparent",
-            position: "absolute",
+            ...resizeHandleStyles,
             left: sidebarWidth - 3,
-            top: 0,
-            bottom: 0,
-            "&:hover": { background: "rgba(173,216,230,0.3)" },
           }}
         />
       )}
@@ -99,13 +77,7 @@ export function Messages() {
         {selectedId ? (
           <ChatWindow conversationId={selectedId} />
         ) : (
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            height="100%"
-            color="#999"
-          >
+          <Box sx={selectConversationContainerStyles}>
             Select a conversation
           </Box>
         )}
