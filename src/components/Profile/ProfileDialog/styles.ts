@@ -1,5 +1,5 @@
 export const dialogPaperStyles = {
-  height: "90vh",
+  maxHeight: "90vh",
   backgroundColor: "black",
   color: "#fff",
   border: "1px solid #444",

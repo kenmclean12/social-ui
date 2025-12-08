@@ -9,20 +9,24 @@ interface Props {
 }
 
 export function PostSection({ userId }: Props) {
-  const { data: posts, isLoading } = usePostFindByUserId(userId);
-
-  if (isLoading) {
-    return <CircularProgress size={40} sx={spinnerStyles} />;
-  }
+  const { data: posts = [], isLoading } = usePostFindByUserId(userId);
 
   return (
     <Stack sx={mainContainerStyles}>
-      {posts ? (
+      {posts.length ? (
         posts?.map((post) => (
           <PostCard key={post.id} post={post} width="100%" />
         ))
       ) : (
-        <Typography align="center">No posts</Typography>
+        <Stack>
+          {isLoading ? (
+            <CircularProgress size={40} sx={spinnerStyles} />
+          ) : (
+            <Typography align="center" color="white">
+              No posts
+            </Typography>
+          )}
+        </Stack>
       )}
     </Stack>
   );

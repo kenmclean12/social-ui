@@ -7,6 +7,5 @@ export const mainContainerStyles = {
 
 export const spinnerStyles = {
   alignSelf: "center",
-  mt: 2,
   color: "lightblue",
 };

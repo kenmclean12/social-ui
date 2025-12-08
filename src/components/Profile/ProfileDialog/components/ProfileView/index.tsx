@@ -5,7 +5,19 @@ import { DescriptionSection } from "./DescriptionSection";
 import { PostSection } from "./PostSection";
 import { useUserFindOne } from "../../../../../hooks";
 import type { UserResponseDto } from "../../../../../types";
-import { mainContainerStyles } from "./styles";
+import {
+  avatarContainerStyles,
+  followDisplayContainerStyles,
+  innerContainerStyles,
+  mainContainerStyles,
+} from "./styles";
+
+const formatNumber = (num: number) => {
+  if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1) + "B";
+  if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + "M";
+  if (num >= 1_000) return (num / 1_000).toFixed(1) + "K";
+  return num.toString();
+};
 
 interface Props {
   userId: number;
@@ -22,57 +34,23 @@ export function ProfileView({
 }: Props) {
   const { data: user, isLoading } = useUserFindOne(userId);
 
-  const formatNumber = (num: number) => {
-    if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1) + "B";
-    if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + "M";
-    if (num >= 1_000) return (num / 1_000).toFixed(1) + "K";
-    return num.toString();
-  };
-
   if (isLoading) return <Typography sx={{ p: 2 }}>Loading...</Typography>;
   if (!user) return null;
 
   return (
     <Stack sx={mainContainerStyles}>
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={3}
-        height="300px"
-        overflow="auto"
-      >
-        <Stack
-          alignItems="center"
-          justifyContent="center"
-          height="100%"
-          border="1px solid #444"
-          borderRadius={2}
-          paddingInline="12px"
-          sx={{ backgroundColor: "black" }}
-        >
+      <Stack sx={innerContainerStyles}>
+        <Stack sx={avatarContainerStyles}>
           <AvatarUpload
             currentUrl={user.avatarUrl}
             isOwnUser={user.id === self?.id}
           />
         </Stack>
         <InfoSection user={user} isOwnUser={user.id === self?.id} />
-        <Stack spacing={1} alignItems="center" height="100%" marginLeft="auto">
+        <Stack alignItems="center" height="100%" spacing={1} marginLeft="auto">
           <Paper
             onClick={user.followerCount ? onClickFollowers : () => {}}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "145px",
-              width: "100px",
-              backgroundColor: "black",
-              border: "1px solid #444",
-              borderRadius: 2,
-              cursor: "pointer",
-              p: 1,
-              textAlign: "center",
-            }}
+            sx={followDisplayContainerStyles}
           >
             <Typography color="white">Followers</Typography>
             <Typography variant="h6" sx={{ color: "lightblue" }}>
@@ -81,20 +59,7 @@ export function ProfileView({
           </Paper>
           <Paper
             onClick={user.followingCount ? onClickFollowing : () => {}}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "145px",
-              width: "100px",
-              backgroundColor: "black",
-              border: "1px solid #444",
-              borderRadius: 2,
-              cursor: "pointer",
-              p: 1,
-              textAlign: "center",
-            }}
+            sx={followDisplayContainerStyles}
           >
             <Typography color="white">Following</Typography>
             <Typography variant="h6" sx={{ color: "lightblue" }}>
