@@ -7,7 +7,7 @@ import {
   IconButton,
   Stack,
 } from "@mui/material";
-import { Delete, Edit, Settings, ExitToApp } from "@mui/icons-material";
+import { Settings, ExitToApp } from "@mui/icons-material";
 import type { ConversationResponseDto } from "../../../../../../../types";
 import { useAuth } from "../../../../../../../context";
 import { ChatMembers } from "./ChatMembers";
@@ -133,7 +133,7 @@ export function SidebarItem({ conversation, selected, onClick }: Props) {
         <Stack direction="row" alignItems="center" spacing={1}>
           <PopoverMenu
             trigger={
-              <IconButton onClick={e => e.stopPropagation()}>
+              <IconButton onClick={(e) => e.stopPropagation()}>
                 <Settings sx={{ color: "white" }} />
               </IconButton>
             }
@@ -142,13 +142,11 @@ export function SidebarItem({ conversation, selected, onClick }: Props) {
               <>
                 <PopoverMenuItem
                   label="Update"
-                  iconRight={<Edit sx={{ color: "lightblue", height: 16, mt: .5 }} />}
                   closeOnSelect
                   onClick={() => setUpdateOpen(true)}
                 />
                 <PopoverMenuItem
                   label="Delete"
-                  iconRight={<Delete sx={{ color: "red", height: 16, mt: .5 }} />}
                   closeOnSelect
                   onClick={() => setDeleteOpen(true)}
                 />

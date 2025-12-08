@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import {
   Close,
-  Delete,
   Edit,
   Favorite,
   FavoriteBorder,
@@ -246,7 +245,6 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
           >
             <PopoverMenuItem
               label="Update"
-              iconRight={<Edit sx={{ color: "lightblue", height: 20 }} />}
               closeOnSelect
               onClick={() => {
                 setEditing(true);
@@ -255,7 +253,6 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
             />
             <PopoverMenuItem
               label="Delete"
-              iconRight={<Delete sx={{ color: "red", height: 20 }} />}
               closeOnSelect
               onClick={() => deleteMessage(message.id)}
             />

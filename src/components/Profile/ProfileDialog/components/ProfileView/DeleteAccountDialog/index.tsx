@@ -13,12 +13,8 @@ export function DeleteAccountDialog({ open, setOpen }: Props) {
   const { mutateAsync: deleteUser, isPending } = useUserDelete();
 
   const handleDelete = async () => {
-    try {
-      await deleteUser();
-      logout();
-    } catch (err) {
-      console.error("Failed to delete user:", err);
-    }
+    await deleteUser();
+    logout();
   };
 
   return (

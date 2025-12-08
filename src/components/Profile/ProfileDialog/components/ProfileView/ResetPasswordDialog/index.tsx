@@ -26,12 +26,8 @@ export function ResetPasswordDialog({ open, setOpen }: Props) {
     if (!oldPassword || !newPassword) return;
 
     const dto: PasswordResetDto = { oldPassword, newPassword };
-    try {
-      await resetPassword(dto);
-      handleClose();
-    } catch (err) {
-      console.error(err);
-    }
+    await resetPassword(dto);
+    handleClose();
   };
 
   return (

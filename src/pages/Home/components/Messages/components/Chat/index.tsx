@@ -31,8 +31,6 @@ export function ChatWindow({ conversationId }: Props) {
   const { mutate: sendMessage } = useMessageCreate();
   const isClosed = conversation?.closed === true;
 
-  console.log(data)
-
   useEffect(() => {
     if (scrollRef.current)
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
