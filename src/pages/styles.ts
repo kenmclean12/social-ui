@@ -41,7 +41,7 @@ export const authButtonStyles = {
   borderRadius: 2,
 };
 
-export const inputStyles = {
+export const textFieldStyles = {
   backgroundColor: "#1a1a1a",
   borderRadius: "8px",
 

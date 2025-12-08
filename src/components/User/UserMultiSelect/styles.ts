@@ -8,7 +8,6 @@ export const inputLabelStyles = {
 };
 
 export const selectFieldStyles = {
-  height: "50px",
   backgroundColor: "#1a1a1a",
   borderRadius: "8px",
 
@@ -63,7 +62,6 @@ export const checkboxStyles = {
     boxShadow: "none",
   },
 };
-
 
 export const extraCountStyles = {
   color: "#ccc",

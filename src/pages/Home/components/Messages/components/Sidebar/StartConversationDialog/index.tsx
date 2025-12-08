@@ -16,7 +16,7 @@ import {
   startButtonStyles,
   stackContainerStyles,
 } from "./styles";
-import { inputStyles } from "../../../../../../styles";
+import { textFieldStyles } from "../../../../../../styles";
 
 interface StartConversationDialogProps {
   open: boolean;
@@ -93,7 +93,7 @@ export function StartConversationDialog({
           minRows={3}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          sx={inputStyles}
+          sx={textFieldStyles}
           fullWidth
         />
       </Stack>

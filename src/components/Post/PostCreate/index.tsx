@@ -2,15 +2,14 @@ import { useState } from "react";
 import {
   IconButton,
   Button,
-  Input,
   Stack,
-  InputAdornment,
-  Typography,
+  TextField,
 } from "@mui/material";
 import { useAuth } from "../../../context";
 import { usePostCreate } from "../../../hooks";
 import { Add, Close } from "@mui/icons-material";
 import { UniversalDialog } from "../../UniversalDialog";
+import { textFieldStyles } from "../../../pages/styles";
 
 export function PostCreate() {
   const { user } = useAuth();
@@ -35,11 +34,6 @@ export function PostCreate() {
     const reader = new FileReader();
     reader.onload = () => setFilePreview(reader.result as string);
     reader.readAsDataURL(file);
-  };
-
-  const handleYoutubeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setContentUrl(e.target.value);
-    setFilePreview("");
   };
 
   const handleSubmit = async () => {
@@ -80,40 +74,27 @@ export function PostCreate() {
         }
       >
         <Stack spacing={2}>
-          <Input
+          <Stack spacing={3}>
+          <TextField
             fullWidth
             placeholder="Write something..."
-            disableUnderline
             multiline
             minRows={3}
             value={textContent}
             inputProps={{ maxLength: 100 }}
             onChange={(e) => setTextContent(e.target.value)}
-            sx={{
-              background: "#1e1e1e",
-              color: "white",
-              px: 1.5,
-              py: 1,
-              borderRadius: 1,
-              border: "1px solid #444",
-            }}
+            sx={textFieldStyles}
           />
-          <Stack
-            direction="row"
-            spacing={1}
-            alignItems="center"
-            justifyContent="space-between"
-          >
             <Button
               variant="outlined"
               component="label"
               disabled={!!contentUrl}
               sx={{
-                width: "45%",
                 border: "1px solid #444",
                 color: "white",
                 backgroundColor: "#1e1e1e",
               }}
+              fullWidth
             >
               Upload File
               <input
@@ -123,41 +104,6 @@ export function PostCreate() {
                 onChange={handleFileChange}
               />
             </Button>
-            <Typography
-              align="center"
-              width="10%"
-              color="white"
-              marginInline={1}
-            >
-              Or
-            </Typography>
-            <Input
-              placeholder="YouTube Video URL..."
-              disableUnderline
-              fullWidth
-              value={contentUrl}
-              onChange={handleYoutubeChange}
-              disabled={!!filePreview}
-              endAdornment={
-                contentUrl && (
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setContentUrl("")} size="small">
-                      <Close sx={{ color: "white" }} />
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }
-              sx={{
-                width: "45%",
-                height: "35px",
-                background: "#1e1e1e",
-                color: "white",
-                px: 1.5,
-                py: 1,
-                borderRadius: 1,
-                border: "1px solid #444",
-              }}
-            />
           </Stack>
           {filePreview && (
             <Stack position="relative">
