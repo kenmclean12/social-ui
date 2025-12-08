@@ -16,8 +16,8 @@ export const innerContainerStyles = {
 
 export const iconContainerStyles = {
   position: "absolute",
-  top: 20,
-  left: 6,
+  top: 0,
+  right: 0,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -26,6 +26,7 @@ export const iconContainerStyles = {
   zIndex: 20,
   background: "#111",
   border: "1px solid lightblue",
+  borderTop: "none",
   borderRadius: "6px",
 };
 

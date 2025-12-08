@@ -1,6 +1,6 @@
+import { useState, type Dispatch, type SetStateAction } from "react";
 import { Box, IconButton, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { useState, type Dispatch, type SetStateAction } from "react";
 import { useConversationFindByUser } from "../../../../../../hooks";
 import { StartConversationDialog } from "./StartConversationDialog";
 import { SidebarItem } from "./SidebarItem";
@@ -27,10 +27,10 @@ export function Sidebar({ userId, selectedId, onSelect }: Props) {
   return (
     <Box sx={sidebarContainerStyles}>
       <Box sx={sidebarHeaderStyles}>
-        <Typography sx={headerTitleStyles}>Conversations</Typography>
         <IconButton onClick={() => setOpenDialog(true)}>
           <AddIcon sx={addButtonIconStyles} />
         </IconButton>
+        <Typography sx={headerTitleStyles}>Conversations</Typography>
       </Box>
       <Box sx={sidebarListStyles}>
         {isLoading ? (

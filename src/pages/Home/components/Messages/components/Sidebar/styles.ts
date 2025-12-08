@@ -9,9 +9,7 @@ export const sidebarContainerStyles = {
 export const sidebarHeaderStyles = {
   display: "flex",
   alignItems: "center",
-  justifyContent: "space-between",
-  paddingLeft: "16px",
-  paddingRight: "16px",
+  justifyContent: "flex-start",
   paddingTop: "12px",
   paddingBottom: "12px",
   borderBottom: "1px solid lightblue",
@@ -20,7 +18,7 @@ export const sidebarHeaderStyles = {
 export const headerTitleStyles = {
   fontSize: "17px",
   color: "white",
-  paddingLeft: "24px",
+  marginLeft: "4px",
 };
 
 export const addButtonIconStyles = {
