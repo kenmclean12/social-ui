@@ -6,6 +6,7 @@ import {
   TextField,
   Button,
   Divider,
+  Box,
 } from "@mui/material";
 import { ThumbUp, ChatBubble, Settings } from "@mui/icons-material";
 import { useAuth } from "../../../../../../context";
@@ -22,6 +23,7 @@ import { ReactionPanel } from "../../../../../ReactionPanel";
 import { formatDayAndTime } from "../../../../../../utils";
 import { textFieldStyles } from "../../../../../../pages/styles";
 import { PopoverMenu, PopoverMenuItem } from "../../../../../PopoverMenu";
+import { noCommentsDisplayContainerStyles } from "../styles";
 
 interface Props {
   comment: CommentResponseDto;
@@ -290,9 +292,31 @@ export function CommentLine({ comment, isReply }: Props) {
           </Stack>
           <Divider sx={{ backgroundColor: "#444" }} />
           <Stack pt={0.5} maxHeight="300px" sx={{ overflowY: "auto" }}>
-            {comment.replies?.map((reply) => (
-              <CommentLine key={reply.id} comment={reply} isReply={true} />
-            ))}
+            {comment.replies && comment.replies.length > 0 ? (
+              comment.replies?.map((reply) => (
+                <CommentLine key={reply.id} comment={reply} isReply={true} />
+              ))
+            ) : (
+              <Box
+                sx={{
+                  ...noCommentsDisplayContainerStyles,
+                  padding: 2.5,
+                  paddingTop: 0.5,
+                }}
+              >
+                <ChatBubble sx={{ fontSize: 40, mb: 1, opacity: 0.5 }} />
+                <Typography variant="body2" align="center">
+                  No replies yet
+                </Typography>
+                <Typography
+                  align="center"
+                  variant="caption"
+                  sx={{ mt: 0.5, opacity: 0.7 }}
+                >
+                  Be the first to reply
+                </Typography>
+              </Box>
+            )}
           </Stack>
         </Stack>
       )}

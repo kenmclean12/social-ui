@@ -68,7 +68,7 @@ export function CommentSection({ postId }: Props) {
         <Divider sx={{ backgroundColor: "#444" }} />
         {comments.length > 0 ? (
           comments?.map((comment) => (
-            <CommentLine comment={comment} isReply={false} />
+            <CommentLine key={comment.id} comment={comment} isReply={false} />
           ))
         ) : (
           <Box sx={noCommentsDisplayContainerStyles}>
