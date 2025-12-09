@@ -158,7 +158,7 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
             width: "fit-content",
             p: 1.3,
             background: "black",
-            border: "1px solid #444",
+            border: "1px solid lightblue",
             color: "white",
             borderRadius: 3,
             wordBreak: "break-word",
