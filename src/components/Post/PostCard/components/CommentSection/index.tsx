@@ -7,6 +7,8 @@ import type {
 } from "../../../../../types";
 import { CommentLine } from "./components";
 import { useCommentCreate } from "../../../../../hooks";
+import { textFieldStyles } from "../../../../../pages/styles";
+import { paperStyles } from "./styles";
 
 interface Props {
   comments: CommentResponseDto[] | undefined;
@@ -15,6 +17,9 @@ interface Props {
 
 export function CommentSection({ comments, postId }: Props) {
   const { user } = useAuth();
+  const [localComments, setLocalComments] = useState<CommentResponseDto[]>(
+    comments ?? []
+  );
   const [newComment, setNewComment] = useState<string>("");
   const createComment = useCommentCreate();
 
@@ -25,20 +30,16 @@ export function CommentSection({ comments, postId }: Props) {
       postId,
       content: newComment.trim(),
     };
-    createComment.mutate(dto, { onSuccess: () => setNewComment("") });
+    createComment.mutate(dto, {
+      onSuccess: (createdComment) => {
+        setLocalComments((prev) => [createdComment, ...prev]);
+        setNewComment("");
+      },
+    });
   };
 
   return (
-    <Paper
-      sx={{
-        p: 2,
-        height: "100%",
-        overflowY: "auto",
-        backgroundColor: "#2a2a2a",
-        border: "1px solid #444",
-        borderRadius: 1,
-      }}
-    >
+    <Paper sx={paperStyles}>
       <Stack spacing={1}>
         <Stack direction="row" spacing={1} mt={1} alignItems="center">
           <TextField
@@ -47,22 +48,22 @@ export function CommentSection({ comments, postId }: Props) {
             fullWidth
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            sx={{
-              backgroundColor: "#1e1e1e",
-              borderRadius: 1,
-              input: { color: "white" },
-            }}
+            sx={textFieldStyles}
           />
           <Button
-            variant="contained"
+            variant="outlined"
             onClick={handleCreate}
+            sx={{
+              border: "1px solid lightblue",
+              color: "lightblue",
+            }}
             disabled={!newComment.trim()}
           >
             Send
           </Button>
         </Stack>
         <Divider sx={{ backgroundColor: "#444" }} />
-        {comments?.map((comment) => (
+        {localComments?.map((comment) => (
           <CommentLine comment={comment} />
         ))}
       </Stack>

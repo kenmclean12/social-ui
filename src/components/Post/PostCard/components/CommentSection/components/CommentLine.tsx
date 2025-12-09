@@ -188,7 +188,6 @@ export function CommentLine({ comment, isReply }: Props) {
                 {likes?.length || 0}
               </Typography>
             </Stack>
-
             <ReactionPanel
               entityType="comment"
               entityId={comment.id}
@@ -196,7 +195,6 @@ export function CommentLine({ comment, isReply }: Props) {
             />
           </Stack>
         </Stack>
-
         {isAuthor && !editing && (
           <>
             <IconButton

@@ -113,7 +113,6 @@ export function Notifications() {
             notifications.map((notif) => (
               <Box
                 key={notif.id}
-                sx={{ position: "relative", mt: 0.5 }}
                 onClick={() => handleNotificationClick(notif)}
               >
                 <UserRow

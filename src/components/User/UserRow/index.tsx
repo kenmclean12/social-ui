@@ -33,7 +33,7 @@ export function UserRow({
     <Paper
       sx={{
         ...paperStyles,
-        cursor: onClick ? "pointer" : "default",
+        cursor: "pointer",
         backgroundColor: color ?? "black",
         "&:hover": {
           backgroundColor: hoverColor ?? "#101",

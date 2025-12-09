@@ -45,7 +45,7 @@ export const styles = {
     left: 0,
     width: "100%",
     height: "100%",
-    bgcolor: "#1e1e1e",
+    bgcolor: "black",
     gap: "8px",
     p: 2,
     borderLeft: "1px solid #444",

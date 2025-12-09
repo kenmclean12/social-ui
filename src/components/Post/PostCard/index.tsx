@@ -92,6 +92,8 @@ export function PostCard({
     );
   };
 
+  console.log(post.textContent)
+
   return (
     <>
       <Paper sx={{ ...styles.paper, height, width }}>
@@ -178,7 +180,7 @@ export function PostCard({
                   </Stack>
                 </>
               ) : (
-                <Typography color="white" pt={1}>
+                <Typography sx={{ color: "white" }} pt={1}>
                   {post.textContent}
                 </Typography>
               )}
