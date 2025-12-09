@@ -16,11 +16,10 @@ import { useAuth } from "../../../context";
 import { CommentSection, DeletePostDialog, MediaSection } from "./components";
 import { useLikeCreate, useLikeDelete, usePostUpdate } from "../../../hooks";
 import { ReactionPanel } from "../../ReactionPanel";
-import { commentSectionContainerStyles, paperStyles } from "./styles";
+import { styles } from "./styles";
 import { PopoverMenu, PopoverMenuItem } from "../../PopoverMenu";
-import { cancelButtonStyles } from "../../../pages/Home/components/Messages/components/Sidebar/StartConversationDialog/styles";
-import { textFieldStyles } from "../../../pages/styles";
 import { ProfileDialog } from "../../Profile";
+import { textFieldStyles } from "../../../pages/styles";
 
 interface Props {
   post: PostResponseDto;
@@ -40,6 +39,7 @@ export function PostCard({
   const [profileOpen, setProfileOpen] = useState<boolean>(false);
   const [post, setPost] = useState<PostResponseDto>(initialPost);
   const [editText, setEditText] = useState<string>(post.textContent || "");
+
   const { mutate: createLike } = useLikeCreate();
   const { mutate: removeLike } = useLikeDelete();
   const { mutate: updatePost } = usePostUpdate(post.id, user?.id as number);
@@ -49,7 +49,7 @@ export function PostCard({
     [post.likes, user?.id]
   );
   const hasCommented = useMemo(
-    () => post.comments?.some((c) => c.user?.id === (user?.id as number)),
+    () => post.comments?.some((c) => c.user?.id === user?.id),
     [post.comments, user?.id]
   );
 
@@ -93,36 +93,21 @@ export function PostCard({
 
   return (
     <>
-      <Paper sx={{ ...paperStyles, height, width }}>
+      <Paper sx={{ ...styles.paper, height, width }}>
         <Slide direction="right" in={!showComments} mountOnEnter appear={false}>
           <Stack spacing={1} sx={{ height: "100%" }}>
             <Stack
               direction="row"
-              spacing={2}
               alignItems="center"
               justifyContent="space-between"
+              spacing={2}
             >
               <Stack
-                direction="row"
-                spacing={2}
-                alignItems="center"
-                flex={1}
-                minWidth={0}
                 onClick={() => setProfileOpen(true)}
-                sx={{ cursor: "pointer" }}
+                sx={styles.headerContainer}
               >
                 <Avatar src={post.creator?.avatarUrl} />
-                <Typography
-                  color="white"
-                  fontWeight="bold"
-                  sx={{
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    textOverflow: "ellipsis",
-                    flexShrink: 1,
-                    minWidth: 0,
-                  }}
-                >
+                <Typography sx={styles.headerText}>
                   {post.creator
                     ? `${post.creator.firstName} ${post.creator.lastName}`
                     : "Unknown User"}
@@ -149,7 +134,7 @@ export function PostCard({
                 </PopoverMenu>
               )}
             </Stack>
-            <Divider sx={{ backgroundColor: "#444" }} />
+            <Divider sx={styles.divider} />
             <MediaSection url={post.contentUrl} height={400} />
             <Stack height="170px" p={1}>
               {editing ? (
@@ -159,18 +144,14 @@ export function PostCard({
                     fullWidth
                     minRows={3}
                     value={editText}
+                    inputProps={{ maxLength: 500 }}
                     onChange={(e) => setEditText(e.target.value)}
                     sx={textFieldStyles}
                   />
-                  <Stack
-                    direction="row"
-                    spacing={1}
-                    mt={1}
-                    justifyContent="flex-end"
-                  >
+                  <Stack sx={styles.editActionsStack}>
                     <Button
                       variant="outlined"
-                      style={cancelButtonStyles}
+                      sx={styles.cancelButton}
                       onClick={() => {
                         setEditing(false);
                         setEditText(post.textContent ?? "");
@@ -180,11 +161,8 @@ export function PostCard({
                     </Button>
                     <Button
                       variant="outlined"
+                      sx={styles.saveButton}
                       onClick={handleSaveEdit}
-                      style={{
-                        border: "1px solid lightblue",
-                        color: "lightblue",
-                      }}
                       disabled={editText === post.textContent}
                     >
                       Save
@@ -197,7 +175,7 @@ export function PostCard({
                 </Typography>
               )}
             </Stack>
-            <Divider sx={{ backgroundColor: "#444" }} />
+            <Divider sx={styles.divider} />
             <Stack
               direction="row"
               alignItems="center"
@@ -206,19 +184,21 @@ export function PostCard({
               <Stack direction="row" alignItems="center" spacing={1} mr={2}>
                 <ThumbUp
                   onClick={handleToggleLike}
-                  sx={{ color: hasLiked ? "lightblue" : "white" }}
+                  sx={hasLiked ? styles.iconActive : styles.iconInactive}
                 />
-                <Typography sx={{ color: hasLiked ? "lightblue" : "white" }}>
+                <Typography
+                  sx={hasLiked ? styles.iconActive : styles.iconInactive}
+                >
                   {post.likes?.length || 0}
                 </Typography>
               </Stack>
               <Stack direction="row" alignItems="center" spacing={1} mr={1}>
                 <ChatBubble
                   onClick={() => setShowComments(true)}
-                  sx={{ color: hasCommented ? "lightblue" : "white" }}
+                  sx={hasCommented ? styles.iconActive : styles.iconInactive}
                 />
                 <Typography
-                  sx={{ color: hasCommented ? "lightblue" : "white" }}
+                  sx={hasCommented ? styles.iconActive : styles.iconInactive}
                 >
                   {post.comments?.length || 0}
                 </Typography>
@@ -233,7 +213,7 @@ export function PostCard({
           </Stack>
         </Slide>
         <Slide direction="left" in={showComments} mountOnEnter>
-          <Stack sx={commentSectionContainerStyles}>
+          <Stack sx={styles.commentContainer}>
             <Stack direction="row" spacing={1} alignItems="center">
               <IconButton onClick={() => setShowComments(false)}>
                 <ArrowBack sx={{ color: "white" }} />
