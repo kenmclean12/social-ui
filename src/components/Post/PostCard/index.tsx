@@ -189,7 +189,7 @@ export function PostCard({
               alignItems="center"
               justifyContent="flex-end"
             >
-              <Stack direction="row" alignItems="center" spacing={1} mr={2}>
+              <Stack direction="row" alignItems="center" spacing={1} mr={2} sx={{ cursor: "pointer" }}>
                 <ThumbUp
                   onClick={handleToggleLike}
                   sx={hasLiked ? styles.iconActive : styles.iconInactive}
@@ -200,7 +200,7 @@ export function PostCard({
                   {post.likes?.length || 0}
                 </Typography>
               </Stack>
-              <Stack direction="row" alignItems="center" spacing={1} mr={1}>
+              <Stack direction="row" alignItems="center" spacing={1} mr={1} sx={{ cursor: "pointer" }}>
                 <ChatBubble
                   onClick={() => setShowComments(true)}
                   sx={hasCommented ? styles.iconActive : styles.iconInactive}
@@ -222,7 +222,7 @@ export function PostCard({
         </Slide>
         <Slide direction="left" in={showComments} mountOnEnter>
           <Stack sx={styles.commentContainer}>
-            <Stack direction="row" spacing={1} alignItems="center">
+            <Stack direction="row" spacing={1} alignItems="center" sx={{ cursor: "pointer" }}>
               <IconButton onClick={() => setShowComments(false)}>
                 <ArrowBack sx={{ color: "white" }} />
               </IconButton>
