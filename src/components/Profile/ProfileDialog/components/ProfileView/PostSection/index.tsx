@@ -16,7 +16,7 @@ export function PostSection({ userId }: Props) {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = usePostFindByUserId(userId);
+  } = usePostFindByUserId(userId, 20);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
 

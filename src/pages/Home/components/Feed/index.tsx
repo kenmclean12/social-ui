@@ -1,13 +1,39 @@
-import { Stack, Typography } from "@mui/material";
+import { useEffect, useRef } from "react";
+import { Stack, Typography, CircularProgress } from "@mui/material";
 import { useAuth } from "../../../../context";
 import { useFeedPersonalized } from "../../../../hooks";
 import { PostCard } from "../../../../components";
 
 export function Feed() {
   const { user } = useAuth();
-  const { data: posts = [], isLoading } = useFeedPersonalized(
-    user?.id as number
-  );
+
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useFeedPersonalized(user?.id as number, 3);
+
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!loaderRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 1 }
+    );
+
+    observer.observe(loaderRef.current);
+    return () => observer.disconnect();
+  }, [hasNextPage, fetchNextPage]);
+
+  const allPosts = data?.pages.flatMap((page) => page.data) ?? [];
 
   if (isLoading) {
     return (
@@ -21,6 +47,7 @@ export function Feed() {
       </Stack>
     );
   }
+
   return (
     <Stack
       height="100%"
@@ -41,8 +68,19 @@ export function Feed() {
         gap={2}
         p={1}
       >
-        {posts.length > 0 &&
-          posts.map((p) => <PostCard key={p.id} commentId={null} post={p} width="auto" height="550px" />)}
+        {allPosts.length > 0 &&
+          allPosts.map((post) => (
+            <PostCard
+              key={post.id}
+              commentId={null}
+              post={post}
+              width="auto"
+              height="550px"
+            />
+          ))}
+        <div ref={loaderRef} style={{ height: "40px" }}>
+          {isFetchingNextPage && <CircularProgress size={35} />}
+        </div>
       </Stack>
     </Stack>
   );

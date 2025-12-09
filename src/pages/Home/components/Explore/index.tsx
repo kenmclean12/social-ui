@@ -24,7 +24,7 @@ export function ExploreFeed() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useFeedExplore(filter, 4);
+  } = useFeedExplore(filter, 20);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
