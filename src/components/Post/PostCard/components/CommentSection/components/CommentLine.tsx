@@ -19,7 +19,7 @@ import {
   useLikeFind,
 } from "../../../../../../hooks";
 import { ReactionPanel } from "../../../../../ReactionPanel";
-import { formatDayLabel } from "../../../../../../utils";
+import { formatDayAndTime, formatDayLabel } from "../../../../../../utils";
 import { textFieldStyles } from "../../../../../../pages/styles";
 import { PopoverMenu, PopoverMenuItem } from "../../../../../PopoverMenu";
 
@@ -92,7 +92,9 @@ export function CommentLine({ comment, isReply }: Props) {
     );
   };
 
-  const formattedDate = formatDayLabel(new Date(comment.createdAt));
+  const formattedDate = comment.createdAt
+    ? formatDayAndTime(new Date(comment.createdAt))
+    : "n/a";
 
   return (
     <Stack sx={{ mb: 1.5, paddingInline: isReply ? 1 : 0 }}>
@@ -110,7 +112,7 @@ export function CommentLine({ comment, isReply }: Props) {
         <Stack direction="row" spacing={1} alignItems="center">
           <Avatar
             src={comment.user.avatarUrl || ""}
-            sx={{ width: 28, height: 28 }}
+            sx={{ width: 25, height: 25 }}
           />
 
           <Stack flex={1} sx={{ minWidth: 0 }}>
@@ -134,21 +136,6 @@ export function CommentLine({ comment, isReply }: Props) {
               >
                 {comment.user.firstName} {comment.user.lastName}
               </Typography>
-
-              {/* @username */}
-              <Typography
-                fontSize={12}
-                color="lightgrey"
-                sx={{
-                  maxWidth: "35%",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                @{comment.user.userName}
-              </Typography>
-
               {/* Date — never shrinks, never gets ellipsed */}
               <Typography
                 fontSize={11}
@@ -237,7 +224,7 @@ export function CommentLine({ comment, isReply }: Props) {
         <Stack direction="row" justifyContent="flex-end">
           <Stack direction="row" alignItems="center" mr={1}>
             <ThumbUp
-              onClick={isAuthor ? toggleLike : () => {}}
+              onClick={!isAuthor ? toggleLike : () => {}}
               sx={{
                 height: 15,
                 color: hasLiked ? "lightblue" : "white",

@@ -27,7 +27,7 @@ import { styles } from "./styles";
 import { PopoverMenu, PopoverMenuItem } from "../../PopoverMenu";
 import { ProfileDialog } from "../../Profile";
 import { textFieldStyles } from "../../../pages/styles";
-import { formatDayLabel } from "../../../utils";
+import { formatDayAndTime, formatDayLabel } from "../../../utils";
 
 interface Props {
   post: PostResponseDto;
@@ -126,7 +126,7 @@ export function PostCard({
                   </Typography>
                   {post.createdAt && (
                     <Typography sx={styles.timestampText}>
-                      {formatDayLabel(new Date(post.createdAt))}
+                      {formatDayAndTime(new Date(post.createdAt))}
                     </Typography>
                   )}
                 </Stack>
