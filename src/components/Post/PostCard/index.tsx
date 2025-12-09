@@ -101,6 +101,18 @@ export function PostCard({
   };
 
   const showTextSection = editing || Boolean(post.textContent);
+  const totalCommentCount = useMemo(() => {
+    if (!post.comments) return 0;
+
+    let count = 0;
+
+    for (const c of post.comments) {
+      count += 1;
+      count += c.replies?.length ?? 0;
+    }
+
+    return count;
+  }, [post.comments]);
 
   return (
     <>
@@ -270,7 +282,7 @@ export function PostCard({
                 <Typography
                   sx={hasCommented ? styles.iconActive : styles.iconInactive}
                 >
-                  {post.comments?.length || 0}
+                  {totalCommentCount}
                 </Typography>
               </Stack>
               <ReactionPanel
@@ -294,7 +306,7 @@ export function PostCard({
                 <ArrowBack sx={{ color: "white" }} />
               </IconButton>
               <Typography color="white" fontWeight="bold">
-                Comments ({post.comments?.length || 0})
+                Comments ({totalCommentCount})
               </Typography>
             </Stack>
             <Divider sx={{ backgroundColor: "#444", my: 1 }} />
