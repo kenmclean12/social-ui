@@ -27,7 +27,7 @@ import { styles } from "./styles";
 import { PopoverMenu, PopoverMenuItem } from "../../PopoverMenu";
 import { ProfileDialog } from "../../Profile";
 import { textFieldStyles } from "../../../pages/styles";
-import { formatDayAndTime, formatDayLabel } from "../../../utils";
+import { formatDayAndTime } from "../../../utils";
 
 interface Props {
   post: PostResponseDto;

@@ -19,7 +19,7 @@ import {
   useLikeFind,
 } from "../../../../../../hooks";
 import { ReactionPanel } from "../../../../../ReactionPanel";
-import { formatDayAndTime, formatDayLabel } from "../../../../../../utils";
+import { formatDayAndTime } from "../../../../../../utils";
 import { textFieldStyles } from "../../../../../../pages/styles";
 import { PopoverMenu, PopoverMenuItem } from "../../../../../PopoverMenu";
 
