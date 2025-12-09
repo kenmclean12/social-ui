@@ -127,17 +127,15 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
 
   return (
     <>
-      <Stack sx={{ mb: 1.5, paddingInline: isReply ? 1 : 0 }}>
+      <Stack sx={{ mb: 1, paddingInline: isReply ? 1.5 : 0 }}>
         {/* Comment bubble */}
         <Stack
           spacing={1}
           sx={{
             p: 1.5,
             backgroundColor: "black",
-            border: `1px solid ${isReply ? "#444" : "lightblue"}`,
-            borderBottom: showReplies
-              ? "none"
-              : `1px solid ${isReply ? "#444" : "lightblue"}`,
+            border: `1px solid #444`,
+            borderBottom: showReplies ? "none" : `1px solid #444`,
             borderRadius: 1,
           }}
         >
@@ -300,14 +298,26 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
         </Stack>
         <Divider sx={{ backgroundColor: "#444" }} />
         {showReplies && (
-          <Stack spacing={1} border="1px solid lightblue" borderTop="none">
-            <Stack direction="row" spacing={1} p={1.5} pb={0.5}>
+          <Stack
+            spacing={1}
+            border="1px solid #444"
+            borderTop="none"
+            mb={4}
+            sx={{ backgroundColor: "#121212" }}
+          >
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={1}
+              p={1.5}
+              pb={0.25}
+            >
               <TextField
                 size="small"
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
                 placeholder="Write a reply..."
-                sx={textFieldStyles}
+                sx={{ ...textFieldStyles, backgroundColor: "black" }}
                 inputProps={{ maxLength: 400 }}
                 fullWidth
               />
@@ -316,17 +326,34 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
                 size="small"
                 onClick={submitReply}
                 sx={{
-                  height: "37.5px",
+                  height: "35px",
+                  backgroundColor: "black",
                   border: "1px solid lightblue",
                   color: "lightblue",
+
+                  "&:hover": {
+                    backgroundColor: "black",
+                    borderColor: "lightblue",
+                  },
+
+                  "&.Mui-disabled": {
+                    backgroundColor: "black !important",
+                    borderColor: "#333 !important",
+                    color: "#555 !important",
+                    cursor: "not-allowed",
+                    opacity: 1,
+                  },
                 }}
                 disabled={!replyText.trim()}
               >
-                Send
+                Reply
               </Button>
             </Stack>
-            <Divider sx={{ backgroundColor: "#444" }} />
-            <Stack pt={0.5} maxHeight="300px" sx={{ overflowY: "auto" }}>
+            <Stack
+              pt={0.5}
+              maxHeight="300px"
+              sx={{ backgroundColor: "#121212", overflowY: "auto" }}
+            >
               {comment.replies && comment.replies.length > 0 ? (
                 comment.replies?.map((reply) => (
                   <CommentLine
@@ -340,8 +367,9 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
                 <Box
                   sx={{
                     ...noCommentsDisplayContainerStyles,
-                    padding: 2.5,
-                    paddingTop: 0.5,
+                    backgroundColor: "black",
+                    padding: 4,
+                    paddingTop: 1,
                   }}
                 >
                   <ChatBubble sx={{ fontSize: 40, mb: 1, opacity: 0.5 }} />
