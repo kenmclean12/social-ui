@@ -50,7 +50,6 @@ export function Notifications() {
     if (notif.type === NotificationType.FOLLOW && notif.actionUser) {
       setProfileUserId(notif.actionUser.id);
       setProfileDialogOpen(true);
-      setAnchorEl(null);
       return;
     }
 
@@ -62,7 +61,6 @@ export function Notifications() {
       if (notif.post?.id) {
         setPostId(notif.post.id);
         setPostDialogOpen(true);
-        setAnchorEl(null);
       }
       return;
     }
@@ -73,8 +71,12 @@ export function Notifications() {
     ) {
       setMessageId(notif.message?.id ?? null);
       setMessageDialogOpen(true);
-      setAnchorEl(null);
     }
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    markAllRead();
   };
 
   return (
@@ -82,7 +84,6 @@ export function Notifications() {
       <IconButton
         onClick={(e) => {
           setAnchorEl(e.currentTarget);
-          markAllRead();
         }}
         sx={{ color: "lightblue" }}
       >
@@ -96,7 +97,7 @@ export function Notifications() {
       <Popover
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
-        onClose={() => setAnchorEl(null)}
+        onClose={handleClose}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         PaperProps={{
@@ -112,7 +113,7 @@ export function Notifications() {
             notifications.map((notif) => (
               <Box
                 key={notif.id}
-                sx={{ position: "relative", mt: .5 }}
+                sx={{ position: "relative", mt: 0.5 }}
                 onClick={() => handleNotificationClick(notif)}
               >
                 <UserRow
