@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import {
   Avatar,
   IconButton,
@@ -10,7 +10,7 @@ import {
   MenuItem,
   Input,
 } from "@mui/material";
-import { ThumbUp, ChatBubble, Settings } from "@mui/icons-material";
+import { ThumbUp, ChatBubble, Settings, Edit, Delete } from "@mui/icons-material";
 import { useAuth } from "../../../../../../context";
 import type { CommentResponseDto } from "../../../../../../types";
 import {
@@ -22,39 +22,44 @@ import {
   useLikeFind,
 } from "../../../../../../hooks";
 import { ReactionPanel } from "../../../../../ReactionPanel";
+import { formatDayLabel } from "../../../../../../utils";
+import { textFieldStyles } from "../../../../../../pages/styles";
 
 interface Props {
   comment: CommentResponseDto;
-  isReply?: boolean;
 }
 
-export function CommentLine({ comment, isReply }: Props) {
+export function CommentLine({ comment }: Props) {
   const { user } = useAuth();
+
+  console.log(comment.replies)
+
+  const isAuthor = user?.id === comment.user.id;
+  const isReply = Boolean(comment.parentCommentId);
+  const replyCount = comment.replies?.length || 0;
+
+  const { data: likes } = useLikeFind("comment", comment.id);
+  const hasLiked = likes?.some((l) => l.userId === user?.id);
+
   const { mutateAsync: createLike } = useLikeCreate();
   const { mutateAsync: deleteLike } = useLikeDelete();
   const { mutateAsync: updateComment } = useCommentUpdate(comment.id);
   const { mutateAsync: deleteComment } = useCommentDelete();
   const { mutateAsync: createComment } = useCommentCreate();
 
-  const { data: likes } = useLikeFind("comment", comment.id);
-  const hasLiked = useMemo(
-    () => likes?.some((l) => l.userId === user?.id),
-    [likes, user?.id]
-  );
-  const isAuthor = user?.id === comment.user.id;
-
-  const [showReplies, setShowReplies] = useState(false);
-  const [showReplyInput, setShowReplyInput] = useState(false);
-  const [replyText, setReplyText] = useState("");
-
-  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  // Local state
   const [editing, setEditing] = useState(false);
   const [editValue, setEditValue] = useState(comment.content);
+  const [showReplies, setShowReplies] = useState(false);
+  const [replyText, setReplyText] = useState("");
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
 
   const toggleLike = () => {
     if (!user || isAuthor) return;
-    if (!hasLiked) createLike({ userId: user.id, commentId: comment.id });
-    else {
+
+    if (!hasLiked) {
+      createLike({ userId: user.id, commentId: comment.id });
+    } else {
       const like = likes?.find((l) => l.userId === user.id);
       if (like) deleteLike(like.id);
     }
@@ -62,6 +67,7 @@ export function CommentLine({ comment, isReply }: Props) {
 
   const submitReply = () => {
     if (!user || !replyText.trim()) return;
+
     createComment(
       {
         userId: user.id,
@@ -72,14 +78,13 @@ export function CommentLine({ comment, isReply }: Props) {
       {
         onSuccess: () => {
           setReplyText("");
-          setShowReplyInput(false);
-          setShowReplies(true);
+          setShowReplies(true); // auto-open replies
         },
       }
     );
   };
 
-  const handleSaveEdit = () => {
+  const saveEdit = () => {
     if (!editValue.trim()) return;
     updateComment(
       { content: editValue },
@@ -87,201 +92,195 @@ export function CommentLine({ comment, isReply }: Props) {
     );
   };
 
-  const replyCount = comment.replies?.length || 0;
+  const formattedDate = formatDayLabel(new Date(comment.createdAt));
 
   return (
-    <Stack spacing={0.5} sx={{ mb: 1 }}>
-      <Stack
-        direction="row"
-        spacing={1}
-        alignItems="flex-start"
-        sx={{ p: 1, backgroundColor: "#1e1e1e", borderRadius: 1 }}
-      >
-        <Avatar
-          src={comment.user.avatarUrl || ""}
-          sx={{ width: 30, height: 30 }}
-        />
+    <Stack spacing={1} sx={{ mb: 1.5, pl: isReply ? 5 : 0 }}>
+      {/* Comment bubble */}
+      <Stack spacing={1} sx={{ p: 1.5, backgroundColor: "#1e1e1e", borderRadius: 1 }}>
+        {/* Header */}
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Avatar src={comment.user.avatarUrl || ""} sx={{ width: 28, height: 28 }} />
 
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          width="100%"
-        >
-          {!editing && (
-            <Stack direction="row" alignItems="center" spacing={1.5}>
-              <Typography fontSize={12} color="white">
-                {comment.user.firstName} {comment.user.lastName} (@
-                {comment.user.userName})
+          <Stack flex={1}>
+            <Stack direction="row" alignItems="center" spacing={0.75}>
+              <Typography fontSize={13} color="white" fontWeight={500}>
+                {comment.user.firstName} {comment.user.lastName}
               </Typography>
-              <Typography fontSize={14} color="white">
-                {comment.content}
+              <Typography fontSize={12} color="gray">
+                @{comment.user.userName}
+              </Typography>
+              <Typography fontSize={11} color="gray" sx={{ ml: 0.5 }}>
+                • {formattedDate}
               </Typography>
             </Stack>
-          )}
-
-          {editing && (
-            <Stack spacing={1} sx={{ flexGrow: 1 }}>
-              <Input
-                fullWidth
-                size="small"
-                multiline
-                minRows={2}
-                value={editValue}
-                disableUnderline
-                onChange={(e) => setEditValue(e.target.value)}
-                sx={{
-                  background: "#1e1e1e",
-                  color: "white",
-                  borderRadius: 1,
-                  border: "1px solid #444",
-                  p: 1,
-                  input: { color: "white" },
-                }}
-              />
-              <Stack direction="row" spacing={1}>
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    setEditing(false);
-                    setEditValue(comment.content);
-                  }}
-                  sx={{ color: "white", borderColor: "#555" }}
-                >
-                  Cancel
-                </Button>
-                <Button variant="contained" onClick={handleSaveEdit}>
-                  Save
-                </Button>
-              </Stack>
-            </Stack>
-          )}
-
-          <Stack direction="row" spacing={2} mt={0.5} pr={0.5}>
-            <Stack direction="row" alignItems="center" sx={{ gap: 0.2 }}>
-              {!isReply && (
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  spacing={0.25}
-                  pr={2}
-                >
-                  <IconButton
-                    size="small"
-                    onClick={() => setShowReplies(!showReplies)}
-                  >
-                    <ChatBubble
-                      sx={{ color: replyCount > 0 ? "lightblue" : "white" }}
-                    />
-                  </IconButton>
-                  <Typography sx={{ color: "white", fontSize: 14 }}>
-                    {replyCount}
-                  </Typography>
-                </Stack>
-              )}
-              <IconButton size="small" onClick={toggleLike} disabled={isAuthor}>
-                <ThumbUp sx={{ color: hasLiked ? "lightblue" : "white" }} />
-              </IconButton>
-              <Typography
-                sx={{ color: hasLiked ? "lightblue" : "white", fontSize: 14 }}
-              >
-                {likes?.length || 0}
-              </Typography>
-            </Stack>
-            <ReactionPanel
-              entityType="comment"
-              reactionEntries={comment.reactions}
-              entityId={comment.id}
-              isSelf={isAuthor}
-            />
           </Stack>
-        </Stack>
-        {isAuthor && !editing && (
-          <>
-            <IconButton
-              size="small"
-              sx={{ color: "white" }}
-              onClick={(e) => setAnchor(e.currentTarget)}
-            >
-              <Settings />
-            </IconButton>
-            <Popover
-              anchorEl={anchor}
-              open={Boolean(anchor)}
-              onClose={() => setAnchor(null)}
-              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-              transformOrigin={{ vertical: "top", horizontal: "right" }}
-              PaperProps={{
-                sx: {
-                  backgroundColor: "#1e1e1e",
-                  minWidth: 150,
-                  border: "1px solid #444",
-                  p: 0,
-                },
-              }}
-            >
-              <MenuItem
-                onClick={() => {
-                  setEditing(true);
-                  setEditValue(comment.content);
-                  setAnchor(null);
-                }}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  color: "white",
-                }}
-              >
-                Update
-                <Settings sx={{ color: "lightblue", height: 20 }} />
-              </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  deleteComment(comment.id);
-                  setAnchor(null);
-                }}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  color: "red",
-                }}
-              >
-                Delete
-                <Settings sx={{ color: "red", height: 20 }} />
-              </MenuItem>
-            </Popover>
-          </>
-        )}
-      </Stack>
 
-      {showReplyInput && (
-        <Stack direction="row" spacing={1} pl={5}>
-          <TextField
-            size="small"
-            placeholder="Write a reply..."
-            fullWidth
-            value={replyText}
-            onChange={(e) => setReplyText(e.target.value)}
-            sx={{
-              backgroundColor: "#1e1e1e",
-              borderRadius: 1,
-              input: { color: "white" },
-            }}
-          />
-          <Button
-            variant="contained"
-            onClick={submitReply}
-            disabled={!replyText.trim()}
+          {/* Author settings */}
+          {!editing && isAuthor && (
+            <>
+              <IconButton
+                size="small"
+                sx={{ color: "gray", p: 0.5 }}
+                onClick={(e) => setAnchor(e.currentTarget)}
+              >
+                <Settings sx={{ fontSize: 16 }} />
+              </IconButton>
+
+              <Popover
+                anchorEl={anchor}
+                open={Boolean(anchor)}
+                onClose={() => setAnchor(null)}
+                PaperProps={{
+                  sx: {
+                    backgroundColor: "#1e1e1e",
+                    minWidth: 120,
+                    border: "1px solid #444",
+                  },
+                }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    setEditing(true);
+                    setEditValue(comment.content);
+                    setAnchor(null);
+                  }}
+                  sx={{ color: "white", fontSize: 13 }}
+                >
+                  <Edit sx={{ fontSize: 16, mr: 1 }} /> Edit
+                </MenuItem>
+
+                <MenuItem
+                  onClick={() => {
+                    deleteComment(comment.id);
+                    setAnchor(null);
+                  }}
+                  sx={{ color: "red", fontSize: 13 }}
+                >
+                  <Delete sx={{ fontSize: 16, mr: 1 }} /> Delete
+                </MenuItem>
+              </Popover>
+            </>
+          )}
+        </Stack>
+
+        {/* Content or edit mode */}
+        {!editing ? (
+          <Typography
+            fontSize={14}
+            color="white"
+            sx={{ pl: 4, whiteSpace: "pre-wrap", lineHeight: 1.4 }}
           >
-            Send
-          </Button>
-        </Stack>
-      )}
+            {comment.content}
+          </Typography>
+        ) : (
+          <Stack spacing={1} sx={{ pl: 4 }}>
+            <Input
+              fullWidth
+              multiline
+              minRows={2}
+              disableUnderline
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              sx={{
+                background: "#1e1e1e",
+                color: "white",
+                border: "1px solid #444",
+                borderRadius: 1,
+                p: 1,
+              }}
+            />
+            <Stack direction="row" spacing={1}>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => setEditing(false)}
+                sx={{ color: "white", borderColor: "#555" }}
+              >
+                Cancel
+              </Button>
+              <Button variant="contained" size="small" onClick={saveEdit}>
+                Save
+              </Button>
+            </Stack>
+          </Stack>
+        )}
 
-      {showReplies && replyCount > 0 && (
-        <Stack spacing={1} pl={5}>
+        {/* Actions */}
+        <Stack direction="row" justifyContent="flex-end" spacing={1}>
+          {/* Like */}
+          <IconButton size="small" onClick={toggleLike} disabled={isAuthor} sx={{ p: 0.5 }}>
+            <ThumbUp
+              sx={{
+                fontSize: 16,
+                color: hasLiked ? "lightblue" : "white",
+              }}
+            />
+          </IconButton>
+          <Typography color={hasLiked ? "lightblue" : "white"} fontSize={12}>
+            {likes?.length || 0}
+          </Typography>
+
+          {/* Chat bubble — toggles replies */}
+          {!isReply && (
+            <>
+              <IconButton
+                size="small"
+                onClick={() => setShowReplies((s) => !s)}
+                sx={{ p: 0.5 }}
+              >
+                <ChatBubble
+                  sx={{
+                    fontSize: 16,
+                    color: replyCount > 0 ? "lightblue" : "white",
+                  }}
+                />
+              </IconButton>
+
+              <Typography
+                fontSize={12}
+                color={replyCount > 0 ? "lightblue" : "white"}
+              >
+                {replyCount}
+              </Typography>
+            </>
+          )}
+
+          <ReactionPanel
+            smallIcon
+            entityType="comment"
+            entityId={comment.id}
+            reactionEntries={comment.reactions}
+            isSelf={isAuthor}
+          />
+        </Stack>
+      </Stack>
+      {showReplies && (
+        <Stack spacing={1}>
+          <Stack direction="row" spacing={1}>
+            <TextField
+              size="small"
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              placeholder="Write a reply..."
+              sx={textFieldStyles}
+              fullWidth
+            />
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={submitReply}
+              sx={{
+                border: "1px solid #444",
+                color: "white"
+              }}
+              disabled={!replyText.trim()}
+            >
+              Send
+            </Button>
+          </Stack>
           {comment.replies?.map((reply) => (
-            <CommentLine key={reply.id} comment={reply} isReply />
+            <CommentLine key={reply.id} comment={reply} />
           ))}
         </Stack>
       )}

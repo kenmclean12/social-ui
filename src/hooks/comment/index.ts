@@ -38,6 +38,7 @@ export function useCommentCreate() {
     },
     onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: ["comments", data.postId] });
+      qc.invalidateQueries({ queryKey: ["posts_user", data.user.id] });
     },
   });
 }

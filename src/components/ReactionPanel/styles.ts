@@ -5,7 +5,6 @@ export const triggerContainerStyles = {
   cursor: "pointer",
   borderRadius: 20,
   padding: "2px 8px",
-  gap: "6px",
 };
 
 export const popoverStyles = {

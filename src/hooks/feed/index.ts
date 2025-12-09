@@ -4,7 +4,7 @@ import { api } from "../../lib/api";
 
 export function useFeedPersonalized(userId: number, limit = 200) {
   return useQuery({
-    queryKey: ["feed", "personalized", userId, limit],
+    queryKey: ["feed", "personalized", userId],
     enabled: !!userId,
     queryFn: async () => {
       const res = await api(
@@ -22,11 +22,12 @@ export function useFeedPersonalized(userId: number, limit = 200) {
 }
 
 export function useFeedExplore(
+  userId: number,
   filter: "mostLiked" | "mostReacted" | "recent" | "oldest" = "recent",
   limit = 20
 ) {
   return useQuery({
-    queryKey: ["feed", "explore", filter, limit],
+    queryKey: ["feed", "explore", userId],
     queryFn: async () => {
       const res = await api(`/feed/explore?filter=${filter}&limit=${limit}`);
 

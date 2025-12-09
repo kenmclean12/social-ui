@@ -32,6 +32,7 @@ interface ReactionPanelProps {
   entityId: number;
   isSelf: boolean;
   direction?: "left" | "right";
+  smallIcon?: boolean;
 }
 
 export function ReactionPanel({
@@ -40,6 +41,7 @@ export function ReactionPanel({
   entityId,
   isSelf,
   direction = "left",
+  smallIcon,
 }: ReactionPanelProps) {
   const { user } = useAuth();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -86,16 +88,18 @@ export function ReactionPanel({
   return (
     <>
       <Stack
-        sx={triggerContainerStyles}
+        sx={{ ...triggerContainerStyles, gap: smallIcon ? 0.25 : .8 }}
         onClick={(e) => setAnchorEl(e.currentTarget)}
       >
         <EmojiEmotions
           sx={{
+            height: smallIcon ? 18 : "auto",
             color: userReaction && !isSelf ? "lightblue" : "white",
           }}
         />
         <Typography
           sx={{
+            fontSize: smallIcon ? 12 : "auto",
             color: userReaction && !isSelf ? "lightblue" : "white",
           }}
         >

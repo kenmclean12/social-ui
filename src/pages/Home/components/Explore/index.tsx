@@ -11,12 +11,14 @@ import {
 import { Public } from "@mui/icons-material";
 import { useFeedExplore } from "../../../../hooks";
 import { PostCard } from "../../../../components";
+import { useAuth } from "../../../../context";
 
 type FilterType = "mostLiked" | "mostReacted" | "recent" | "oldest";
 
 export function ExploreFeed() {
+  const { user } = useAuth();
   const [filter, setFilter] = useState<FilterType>("mostLiked");
-  const { data: posts = [] } = useFeedExplore(filter);
+  const { data: posts = [] } = useFeedExplore(user?.id as number, filter);
 
   const handleChange = (event: SelectChangeEvent<FilterType>) => {
     setFilter(event.target.value as typeof filter);
