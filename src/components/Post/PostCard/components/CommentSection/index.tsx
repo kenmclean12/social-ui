@@ -18,12 +18,13 @@ import { ChatBubble } from "@mui/icons-material";
 
 interface Props {
   postId: number;
+  setCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export function CommentSection({ postId }: Props) {
+export function CommentSection({ postId, setCount }: Props) {
   const { user } = useAuth();
-  const { data: comments = [] } = useCommentFindByPost(postId);
   const [newComment, setNewComment] = useState<string>("");
+  const { data: comments = [] } = useCommentFindByPost(postId);
   const createComment = useCommentCreate();
 
   const handleCreate = () => {
@@ -36,6 +37,7 @@ export function CommentSection({ postId }: Props) {
     createComment.mutate(dto, {
       onSuccess: () => {
         setNewComment("");
+        setCount(prev => prev + 1);
       },
     });
   };
@@ -68,7 +70,7 @@ export function CommentSection({ postId }: Props) {
         <Divider sx={{ backgroundColor: "#444" }} />
         {comments.length > 0 ? (
           comments?.map((comment) => (
-            <CommentLine key={comment.id} comment={comment} isReply={false} />
+            <CommentLine key={comment.id} comment={comment} isReply={false} setCount={setCount} />
           ))
         ) : (
           <Box sx={noCommentsDisplayContainerStyles}>

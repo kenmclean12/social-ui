@@ -24,17 +24,20 @@ import { formatDayAndTime } from "../../../../../../utils";
 import { textFieldStyles } from "../../../../../../pages/styles";
 import { PopoverMenu, PopoverMenuItem } from "../../../../../PopoverMenu";
 import { noCommentsDisplayContainerStyles } from "../styles";
+import { ProfileDialog } from "../../../../../Profile";
 
 interface Props {
   comment: CommentResponseDto;
+  setCount?: React.Dispatch<React.SetStateAction<number>>;
   isReply?: boolean;
 }
 
-export function CommentLine({ comment, isReply }: Props) {
+export function CommentLine({ comment, setCount, isReply }: Props) {
   const { user } = useAuth();
 
   const isAuthor = user?.id === comment.user.id;
   const replyCount = comment.replies?.length || 0;
+  const [profileId, setProfileId] = useState<number | null>(null);
 
   const { data: likes } = useLikeFind("comment", comment.id);
   const hasLiked = likes?.some((l) => l.userId === user?.id);
@@ -75,10 +78,34 @@ export function CommentLine({ comment, isReply }: Props) {
       {
         onSuccess: () => {
           setReplyText("");
-          setShowReplies(true); // auto-open replies
+          setShowReplies(true);
+          if (setCount) {
+            setCount((prev) => prev + 1);
+          }
         },
       }
     );
+  };
+
+  const getTotalCommentCount = (comment: CommentResponseDto): number => {
+    let count = 1;
+    if (comment.replies && comment.replies.length > 0) {
+      for (const reply of comment.replies) {
+        count += getTotalCommentCount(reply);
+      }
+    }
+    return count;
+  };
+
+  const handleDelete = () => {
+    deleteComment(comment.id, {
+      onSuccess: () => {
+        if (setCount) {
+          const total = getTotalCommentCount(comment);
+          setCount((prev) => prev - total);
+        }
+      },
+    });
   };
 
   const handleEditClick = () => {
@@ -99,226 +126,248 @@ export function CommentLine({ comment, isReply }: Props) {
     : "n/a";
 
   return (
-    <Stack sx={{ mb: 1.5, paddingInline: isReply ? 1 : 0 }}>
-      {/* Comment bubble */}
-      <Stack
-        spacing={1}
-        sx={{
-          p: 1.5,
-          backgroundColor: "black",
-          border: `1px solid #444`,
-          borderRadius: 1,
-        }}
-      >
-        {/* Header */}
-        <Stack direction="row" spacing={1} alignItems="center">
-          <Avatar
-            src={comment.user.avatarUrl || ""}
-            sx={{ width: 25, height: 25 }}
-          />
+    <>
+      <Stack sx={{ mb: 1.5, paddingInline: isReply ? 1 : 0 }}>
+        {/* Comment bubble */}
+        <Stack
+          spacing={1}
+          sx={{
+            p: 1.5,
+            backgroundColor: "black",
+            border: `1px solid ${isReply ? "#444" : "lightblue"}`,
+            borderBottom: showReplies
+              ? "none"
+              : `1px solid ${isReply ? "#444" : "lightblue"}`,
+            borderRadius: 1,
+          }}
+        >
+          {/* Header */}
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Avatar
+              src={comment.user.avatarUrl || ""}
+              sx={{ width: 25, height: 25 }}
+            />
 
-          <Stack flex={1} sx={{ minWidth: 0 }}>
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={0.75}
-              sx={{ minWidth: 0 }}
-            >
-              {/* Full name */}
-              <Typography
-                fontSize={13}
-                color="white"
-                fontWeight={500}
-                sx={{
-                  maxWidth: "45%",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
+            <Stack flex={1} sx={{ minWidth: 0 }}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={0.75}
+                sx={{ minWidth: 0 }}
               >
-                {comment.user.firstName} {comment.user.lastName}
-              </Typography>
-              <Typography
-                fontSize={11}
-                color="lightgrey"
-                sx={{ ml: 0.5, flexShrink: 0 }}
-              >
-                • {formattedDate}
-              </Typography>
-            </Stack>
-          </Stack>
-
-          {!editing && isAuthor && (
-            <PopoverMenu
-              trigger={
-                <Settings
+                <Typography
+                  fontSize={13}
+                  color="white"
+                  fontWeight={500}
+                  onClick={() => setProfileId(comment.user.id)}
                   sx={{
+                    maxWidth: "45%",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
                     cursor: "pointer",
-                    color: "white",
-                    p: 0.5,
-                    fontSize: 25,
                   }}
-                />
-              }
-            >
-              <PopoverMenuItem
-                label="Edit"
-                onClick={handleEditClick}
-                closeOnSelect
-              />
-              <PopoverMenuItem
-                label="Delete"
-                onClick={() => deleteComment(comment.id)}
-                closeOnSelect
-              />
-            </PopoverMenu>
-          )}
-        </Stack>
-        {!editing ? (
-          <Typography
-            fontSize={14}
-            color="white"
-            sx={{ pl: 4, whiteSpace: "pre-wrap", lineHeight: 1.4 }}
-          >
-            {comment.content}
-          </Typography>
-        ) : (
-          <Stack
-            spacing={1}
-            p={1}
-            pt={1}
-            border="1px solid #444"
-            borderRadius={1}
-          >
-            <TextField
-              fullWidth
-              multiline
-              minRows={2}
-              value={editValue}
-              onChange={(e) => setEditValue(e.target.value)}
-              sx={textFieldStyles}
-            />
-            <Stack
-              direction="row"
-              justifyContent="flex-end"
-              spacing={1.5}
-              pb={0.5}
-            >
-              <Button
-                size="small"
-                onClick={() => setEditing(false)}
-                sx={{ color: "white", borderColor: "#555" }}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={saveEdit}
-                sx={{ border: "1px solid lightblue", color: "lightblue" }}
-              >
-                Save
-              </Button>
+                >
+                  {comment.user.firstName} {comment.user.lastName}
+                </Typography>
+                <Typography
+                  fontSize={11}
+                  color="lightgrey"
+                  sx={{ ml: 0.5, flexShrink: 0 }}
+                >
+                  • {formattedDate}
+                </Typography>
+              </Stack>
             </Stack>
+
+            {!editing && isAuthor && (
+              <PopoverMenu
+                trigger={
+                  <Settings
+                    sx={{
+                      cursor: "pointer",
+                      color: "white",
+                      p: 0.5,
+                      fontSize: 25,
+                    }}
+                  />
+                }
+              >
+                <PopoverMenuItem
+                  label="Edit"
+                  onClick={handleEditClick}
+                  closeOnSelect
+                />
+                <PopoverMenuItem
+                  label="Delete"
+                  onClick={handleDelete}
+                  closeOnSelect
+                />
+              </PopoverMenu>
+            )}
           </Stack>
-        )}
-        <Stack direction="row" justifyContent="flex-end">
-          <Stack direction="row" alignItems="center" mr={1}>
-            <ThumbUp
-              onClick={!isAuthor ? toggleLike : () => {}}
-              sx={{
-                height: 15,
-                color: hasLiked ? "lightblue" : "white",
-                cursor: "pointer",
-              }}
-            />
-            <Typography color={hasLiked ? "lightblue" : "white"} fontSize={13}>
-              {likes?.length || 0}
+          {!editing ? (
+            <Typography
+              fontSize={14}
+              color="white"
+              sx={{ pl: 4, whiteSpace: "pre-wrap", lineHeight: 1.4 }}
+            >
+              {comment.content}
             </Typography>
-          </Stack>
-          {!isReply && (
-            <Stack direction="row" alignItems="center">
-              <ChatBubble
-                onClick={() => setShowReplies((s) => !s)}
+          ) : (
+            <Stack
+              spacing={1}
+              p={1}
+              pt={1}
+              border="1px solid #444"
+              borderRadius={1}
+            >
+              <TextField
+                fullWidth
+                multiline
+                minRows={2}
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+                sx={textFieldStyles}
+              />
+              <Stack
+                direction="row"
+                justifyContent="flex-end"
+                spacing={1.5}
+                pb={0.5}
+              >
+                <Button
+                  size="small"
+                  onClick={() => setEditing(false)}
+                  sx={{ color: "white", borderColor: "#555" }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={saveEdit}
+                  sx={{ border: "1px solid lightblue", color: "lightblue" }}
+                >
+                  Save
+                </Button>
+              </Stack>
+            </Stack>
+          )}
+          <Stack direction="row" justifyContent="flex-end">
+            <Stack direction="row" alignItems="center" mr={1}>
+              <ThumbUp
+                onClick={!isAuthor ? toggleLike : () => {}}
                 sx={{
                   height: 15,
-                  color: replyCount > 0 ? "lightblue" : "white",
+                  color: hasLiked ? "lightblue" : "white",
                   cursor: "pointer",
                 }}
               />
               <Typography
+                color={hasLiked ? "lightblue" : "white"}
                 fontSize={13}
-                color={replyCount > 0 ? "lightblue" : "white"}
               >
-                {replyCount}
+                {likes?.length || 0}
               </Typography>
             </Stack>
-          )}
-          <ReactionPanel
-            smallIcon
-            entityType="comment"
-            entityId={comment.id}
-            reactionEntries={comment.reactions}
-            isSelf={isAuthor}
-          />
-        </Stack>
-      </Stack>
-      {showReplies && (
-        <Stack spacing={1} border="1px solid #444" borderTop="none">
-          <Stack direction="row" spacing={1} p={1.5} pb={0.5}>
-            <TextField
-              size="small"
-              value={replyText}
-              onChange={(e) => setReplyText(e.target.value)}
-              placeholder="Write a reply..."
-              sx={textFieldStyles}
-              inputProps={{ maxLength: 400 }}
-              fullWidth
-            />
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={submitReply}
-              sx={{
-                height: "37.5px",
-                border: "1px solid lightblue",
-                color: "lightblue",
-              }}
-              disabled={!replyText.trim()}
-            >
-              Send
-            </Button>
-          </Stack>
-          <Divider sx={{ backgroundColor: "#444" }} />
-          <Stack pt={0.5} maxHeight="300px" sx={{ overflowY: "auto" }}>
-            {comment.replies && comment.replies.length > 0 ? (
-              comment.replies?.map((reply) => (
-                <CommentLine key={reply.id} comment={reply} isReply={true} />
-              ))
-            ) : (
-              <Box
-                sx={{
-                  ...noCommentsDisplayContainerStyles,
-                  padding: 2.5,
-                  paddingTop: 0.5,
-                }}
-              >
-                <ChatBubble sx={{ fontSize: 40, mb: 1, opacity: 0.5 }} />
-                <Typography variant="body2" align="center">
-                  No replies yet
-                </Typography>
+            {!isReply && (
+              <Stack direction="row" alignItems="center">
+                <ChatBubble
+                  onClick={() => setShowReplies((s) => !s)}
+                  sx={{
+                    height: 15,
+                    color: replyCount > 0 ? "lightblue" : "white",
+                    cursor: "pointer",
+                  }}
+                />
                 <Typography
-                  align="center"
-                  variant="caption"
-                  sx={{ mt: 0.5, opacity: 0.7 }}
+                  fontSize={13}
+                  color={replyCount > 0 ? "lightblue" : "white"}
                 >
-                  Be the first to reply
+                  {replyCount}
                 </Typography>
-              </Box>
+              </Stack>
             )}
+            <ReactionPanel
+              smallIcon
+              entityType="comment"
+              entityId={comment.id}
+              reactionEntries={comment.reactions}
+              isSelf={isAuthor}
+            />
           </Stack>
         </Stack>
+        <Divider sx={{ backgroundColor: "#444" }} />
+        {showReplies && (
+          <Stack spacing={1} border="1px solid lightblue" borderTop="none">
+            <Stack direction="row" spacing={1} p={1.5} pb={0.5}>
+              <TextField
+                size="small"
+                value={replyText}
+                onChange={(e) => setReplyText(e.target.value)}
+                placeholder="Write a reply..."
+                sx={textFieldStyles}
+                inputProps={{ maxLength: 400 }}
+                fullWidth
+              />
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={submitReply}
+                sx={{
+                  height: "37.5px",
+                  border: "1px solid lightblue",
+                  color: "lightblue",
+                }}
+                disabled={!replyText.trim()}
+              >
+                Send
+              </Button>
+            </Stack>
+            <Divider sx={{ backgroundColor: "#444" }} />
+            <Stack pt={0.5} maxHeight="300px" sx={{ overflowY: "auto" }}>
+              {comment.replies && comment.replies.length > 0 ? (
+                comment.replies?.map((reply) => (
+                  <CommentLine
+                    key={reply.id}
+                    comment={reply}
+                    isReply={true}
+                    setCount={setCount}
+                  />
+                ))
+              ) : (
+                <Box
+                  sx={{
+                    ...noCommentsDisplayContainerStyles,
+                    padding: 2.5,
+                    paddingTop: 0.5,
+                  }}
+                >
+                  <ChatBubble sx={{ fontSize: 40, mb: 1, opacity: 0.5 }} />
+                  <Typography variant="body2" align="center">
+                    No replies yet
+                  </Typography>
+                  <Typography
+                    align="center"
+                    variant="caption"
+                    sx={{ mt: 0.5, opacity: 0.7 }}
+                  >
+                    Be the first to reply
+                  </Typography>
+                </Box>
+              )}
+            </Stack>
+          </Stack>
+        )}
+      </Stack>
+      {profileId && (
+        <ProfileDialog
+          open={!!profileId}
+          userId={profileId}
+          onClose={() => setProfileId(null)}
+        />
       )}
-    </Stack>
+    </>
   );
 }

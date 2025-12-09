@@ -51,6 +51,7 @@ export function PostCard({
   const [post, setPost] = useState<PostResponseDto>(initialPost);
   const [collapsed, setCollapsed] = useState<boolean>(true);
   const [editText, setEditText] = useState<string>(post.textContent || "");
+  const [commentCount, setCommentCount] = useState<number>(0);
 
   const { mutate: createLike } = useLikeCreate();
   const { mutate: removeLike } = useLikeDelete();
@@ -59,6 +60,16 @@ export function PostCard({
   useEffect(() => {
     setShowComments(!!commentId);
   }, [commentId]);
+
+  useEffect(() => {
+    let count = 0;
+    if (!post.comments) return;
+    for (const c of post.comments) {
+      count += 1;
+      count += c.replies?.length ?? 0;
+    }
+    setCommentCount(count);
+  }, [post.comments]);
 
   const hasLiked = useMemo(
     () => post.likes?.some((l) => l.userId === user?.id),
@@ -108,18 +119,6 @@ export function PostCard({
   };
 
   const showTextSection = editing || Boolean(post.textContent);
-  const totalCommentCount = useMemo(() => {
-    if (!post.comments) return 0;
-
-    let count = 0;
-
-    for (const c of post.comments) {
-      count += 1;
-      count += c.replies?.length ?? 0;
-    }
-
-    return count;
-  }, [post.comments]);
 
   return (
     <>
@@ -289,7 +288,7 @@ export function PostCard({
                 <Typography
                   sx={hasCommented ? styles.iconActive : styles.iconInactive}
                 >
-                  {totalCommentCount}
+                  {commentCount}
                 </Typography>
               </Stack>
               <ReactionPanel
@@ -313,11 +312,14 @@ export function PostCard({
                 <ArrowBack sx={{ color: "white" }} />
               </IconButton>
               <Typography color="white" fontWeight="bold">
-                Comments ({totalCommentCount})
+                Comments ({commentCount})
               </Typography>
             </Stack>
             <Divider sx={{ backgroundColor: "#444", my: 1 }} />
-            <CommentSection postId={post.id} />
+            <CommentSection
+              postId={post.id}
+              setCount={setCommentCount}
+            />
           </Stack>
         </Slide>
       </Paper>
