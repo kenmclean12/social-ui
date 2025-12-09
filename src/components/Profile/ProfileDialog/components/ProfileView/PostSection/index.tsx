@@ -16,7 +16,7 @@ export function PostSection({ userId }: Props) {
       {posts.length ? (
         <Stack sx={gridStyles}>
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} height="500px" />
+            <PostCard key={post.id} commentId={null} post={post} height="500px" />
           ))}
         </Stack>
       ) : (

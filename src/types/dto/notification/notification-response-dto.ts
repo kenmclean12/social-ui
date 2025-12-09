@@ -12,6 +12,7 @@ export interface NotificationResponseDto {
   type: NotificationType;
   post?: PostResponseDto;
   comment?: CommentResponseDto;
+  parentComment?: CommentResponseDto;
   message?: MessageResponseDto;
   read: boolean;
   createdAt: string;

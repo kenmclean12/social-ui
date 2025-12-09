@@ -6,10 +6,11 @@ import { UniversalDialog } from "../../UniversalDialog";
 interface Props {
   postId: number | null;
   open: boolean;
+  commentId: number | null;
   onClose: () => void;
 }
 
-export function PostDialog({ open, postId, onClose }: Props) {
+export function PostDialog({ open, postId, commentId, onClose }: Props) {
   const { data: post, isLoading } = usePostFindOne(postId as number);
 
   return (
@@ -21,7 +22,7 @@ export function PostDialog({ open, postId, onClose }: Props) {
       loading={isLoading}
       emptyMessage="Post not found"
     >
-      <PostCard post={post as PostResponseDto} height="800px" width="100%" />
+      <PostCard post={post as PostResponseDto} commentId={commentId} height="800px" width="100%" />
     </UniversalDialog>
   );
 }

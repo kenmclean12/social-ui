@@ -42,7 +42,7 @@ export function Feed() {
         p={1}
       >
         {posts.length > 0 &&
-          posts.map((p) => <PostCard key={p.id} post={p} width="auto" height="550px" />)}
+          posts.map((p) => <PostCard key={p.id} commentId={null} post={p} width="auto" height="550px" />)}
       </Stack>
     </Stack>
   );

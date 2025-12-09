@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useEffect, useMemo, useState } from "react";
 import {
   Stack,
   Paper,
@@ -31,12 +32,14 @@ import { formatDayAndTime } from "../../../utils";
 
 interface Props {
   post: PostResponseDto;
+  commentId: number | null;
   width?: string | number;
   height?: string | number;
 }
 
 export function PostCard({
   post: initialPost,
+  commentId,
   width = "100%",
   height = "auto",
 }: Props) {
@@ -52,6 +55,10 @@ export function PostCard({
   const { mutate: createLike } = useLikeCreate();
   const { mutate: removeLike } = useLikeDelete();
   const { mutate: updatePost } = usePostUpdate(post.id, user?.id as number);
+
+  useEffect(() => {
+    setShowComments(!!commentId);
+  }, [commentId]);
 
   const hasLiked = useMemo(
     () => post.likes?.some((l) => l.userId === user?.id),

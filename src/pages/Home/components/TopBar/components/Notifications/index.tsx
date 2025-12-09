@@ -36,6 +36,7 @@ export function Notifications() {
   const [postId, setPostId] = useState<number | null>(null);
   const [messageDialogOpen, setMessageDialogOpen] = useState<boolean>(false);
   const [messageId, setMessageId] = useState<number | null>(null);
+  const [commentId, setCommentId] = useState<number | null>(null);
   const { mutateAsync: markAllRead } = useNotificationMarkAllRead();
 
   const { data: notifications = [] } = useNotificationFindAll();
@@ -43,6 +44,7 @@ export function Notifications() {
   useNotificationStream(user?.id as number);
 
   const handleNotificationClick = (notif: NotificationResponseDto) => {
+    console.log(notif);
     if (!notif.read) {
       updateNotification.mutate({ id: notif.id, read: true });
     }
@@ -55,15 +57,34 @@ export function Notifications() {
 
     if (
       notif.type === NotificationType.POST_LIKE ||
-      notif.type === NotificationType.POST_REACTION ||
-      notif.type === NotificationType.POST_COMMENT
+      notif.type === NotificationType.POST_REACTION
     ) {
-      console.log(notif)
       if (notif.post?.id) {
+        setCommentId(null);
         setPostId(notif.post.id);
         setPostDialogOpen(true);
       }
       return;
+    }
+
+    if (
+      notif.type === NotificationType.POST_COMMENT ||
+      notif.type === NotificationType.COMMENT_LIKE ||
+      notif.type === NotificationType.COMMENT_REACTION
+    ) {
+      if (notif.comment?.postId) {
+        setPostId(notif.comment.postId);
+        setCommentId(notif.comment.id);
+        setPostDialogOpen(true);
+      }
+    }
+
+    if (notif.type === NotificationType.COMMENT_REPLY) {
+      if (notif.post?.id && notif.comment?.id) {
+        setPostId(notif.post.id);
+        setCommentId(notif.comment?.id);
+        setPostDialogOpen(true);
+      }
     }
 
     if (
@@ -138,6 +159,7 @@ export function Notifications() {
         <PostDialog
           open={postDialogOpen}
           postId={postId}
+          commentId={commentId}
           onClose={() => setPostDialogOpen(false)}
         />
       )}
