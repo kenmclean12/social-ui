@@ -27,15 +27,13 @@ import { textFieldStyles } from "../../../../../../pages/styles";
 
 interface Props {
   comment: CommentResponseDto;
+  isReply?: boolean;
 }
 
-export function CommentLine({ comment }: Props) {
+export function CommentLine({ comment, isReply }: Props) {
   const { user } = useAuth();
 
-  console.log(comment.replies)
-
   const isAuthor = user?.id === comment.user.id;
-  const isReply = Boolean(comment.parentCommentId);
   const replyCount = comment.replies?.length || 0;
 
   const { data: likes } = useLikeFind("comment", comment.id);
@@ -220,8 +218,6 @@ export function CommentLine({ comment }: Props) {
           <Typography color={hasLiked ? "lightblue" : "white"} fontSize={12}>
             {likes?.length || 0}
           </Typography>
-
-          {/* Chat bubble — toggles replies */}
           {!isReply && (
             <>
               <IconButton
@@ -280,7 +276,7 @@ export function CommentLine({ comment }: Props) {
             </Button>
           </Stack>
           {comment.replies?.map((reply) => (
-            <CommentLine key={reply.id} comment={reply} />
+            <CommentLine key={reply.id} comment={reply} isReply={true} />
           ))}
         </Stack>
       )}

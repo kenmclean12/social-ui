@@ -1,25 +1,19 @@
 import { useState } from "react";
 import { Stack, Paper, TextField, Button, Divider } from "@mui/material";
 import { useAuth } from "../../../../../context";
-import type {
-  CommentCreateDto,
-  CommentResponseDto,
-} from "../../../../../types";
+import type { CommentCreateDto } from "../../../../../types";
 import { CommentLine } from "./components";
-import { useCommentCreate } from "../../../../../hooks";
+import { useCommentCreate, useCommentFindByPost } from "../../../../../hooks";
 import { textFieldStyles } from "../../../../../pages/styles";
 import { paperStyles } from "./styles";
 
 interface Props {
-  comments: CommentResponseDto[] | undefined;
   postId: number;
 }
 
-export function CommentSection({ comments, postId }: Props) {
+export function CommentSection({ postId }: Props) {
   const { user } = useAuth();
-  const [localComments, setLocalComments] = useState<CommentResponseDto[]>(
-    comments ?? []
-  );
+  const { data: comments } = useCommentFindByPost(postId);
   const [newComment, setNewComment] = useState<string>("");
   const createComment = useCommentCreate();
 
@@ -31,8 +25,7 @@ export function CommentSection({ comments, postId }: Props) {
       content: newComment.trim(),
     };
     createComment.mutate(dto, {
-      onSuccess: (createdComment) => {
-        setLocalComments((prev) => [createdComment, ...prev]);
+      onSuccess: () => {
         setNewComment("");
       },
     });
@@ -63,8 +56,8 @@ export function CommentSection({ comments, postId }: Props) {
           </Button>
         </Stack>
         <Divider sx={{ backgroundColor: "#444" }} />
-        {localComments?.map((comment) => (
-          <CommentLine comment={comment} />
+        {comments?.map((comment) => (
+          <CommentLine comment={comment} isReply={false} />
         ))}
       </Stack>
     </Paper>

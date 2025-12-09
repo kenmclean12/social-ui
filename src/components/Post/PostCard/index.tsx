@@ -298,7 +298,7 @@ export function PostCard({
               </Typography>
             </Stack>
             <Divider sx={{ backgroundColor: "#444", my: 1 }} />
-            <CommentSection comments={post.comments} postId={post.id} />
+            <CommentSection postId={post.id} />
           </Stack>
         </Slide>
       </Paper>
