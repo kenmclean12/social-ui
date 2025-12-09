@@ -92,7 +92,7 @@ export function PostCard({
     );
   };
 
-  console.log(post.textContent)
+  const showTextSection = editing || Boolean(post.textContent);
 
   return (
     <>
@@ -145,53 +145,80 @@ export function PostCard({
               )}
             </Stack>
             <Divider sx={styles.divider} />
-            <MediaSection url={post.contentUrl} height={400} />
-            <Stack height="170px" p={1}>
-              {editing ? (
-                <>
-                  <TextField
-                    multiline
-                    fullWidth
-                    minRows={3}
-                    value={editText}
-                    inputProps={{ maxLength: 500 }}
-                    onChange={(e) => setEditText(e.target.value)}
-                    sx={textFieldStyles}
-                  />
-                  <Stack sx={styles.editActionsStack}>
-                    <Button
-                      variant="outlined"
-                      sx={styles.cancelButton}
-                      onClick={() => {
-                        setEditing(false);
-                        setEditText(post.textContent ?? "");
+            <MediaSection
+              url={post.contentUrl}
+              height={post.textContent && !editing ? 400 : "100%"}
+            />
+            {showTextSection && (
+              <Stack
+                p={1}
+                sx={{
+                  height: editing ? 380 : "auto",
+                  maxHeight: editing ? 380 : 200,
+                  overflowY: "auto",
+                }}
+              >
+                {editing ? (
+                  <>
+                    <TextField
+                      multiline
+                      fullWidth
+                      minRows={3}
+                      value={editText}
+                      inputProps={{ maxLength: 500 }}
+                      onChange={(e) => setEditText(e.target.value)}
+                      sx={textFieldStyles}
+                      slotProps={{
+                        input: {
+                          sx: {
+                            maxHeight: 120,
+                            overflowY: "auto",
+                          },
+                        },
                       }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      sx={styles.saveButton}
-                      onClick={handleSaveEdit}
-                      disabled={editText === post.textContent}
-                    >
-                      Save
-                    </Button>
-                  </Stack>
-                </>
-              ) : (
-                <Typography sx={{ color: "white" }} pt={1}>
-                  {post.textContent}
-                </Typography>
-              )}
-            </Stack>
+                    />
+                    <Stack sx={styles.editActionsStack}>
+                      <Button
+                        variant="outlined"
+                        sx={styles.cancelButton}
+                        onClick={() => {
+                          setEditing(false);
+                          setEditText(post.textContent ?? "");
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        sx={styles.saveButton}
+                        onClick={handleSaveEdit}
+                        disabled={editText === post.textContent}
+                      >
+                        Save
+                      </Button>
+                    </Stack>
+                  </>
+                ) : (
+                  <Typography sx={{ color: "white" }} pt={1}>
+                    {post.textContent}
+                  </Typography>
+                )}
+              </Stack>
+            )}
+
             <Divider sx={styles.divider} />
             <Stack
               direction="row"
               alignItems="center"
               justifyContent="flex-end"
             >
-              <Stack direction="row" alignItems="center" spacing={1} mr={2} sx={{ cursor: "pointer" }}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={1}
+                mr={2}
+                sx={{ cursor: "pointer" }}
+              >
                 <ThumbUp
                   onClick={handleToggleLike}
                   sx={hasLiked ? styles.iconActive : styles.iconInactive}
@@ -202,7 +229,13 @@ export function PostCard({
                   {post.likes?.length || 0}
                 </Typography>
               </Stack>
-              <Stack direction="row" alignItems="center" spacing={1} mr={1} sx={{ cursor: "pointer" }}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={1}
+                mr={1}
+                sx={{ cursor: "pointer" }}
+              >
                 <ChatBubble
                   onClick={() => setShowComments(true)}
                   sx={hasCommented ? styles.iconActive : styles.iconInactive}
@@ -224,7 +257,12 @@ export function PostCard({
         </Slide>
         <Slide direction="left" in={showComments} mountOnEnter>
           <Stack sx={styles.commentContainer}>
-            <Stack direction="row" spacing={1} alignItems="center" sx={{ cursor: "pointer" }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              alignItems="center"
+              sx={{ cursor: "pointer" }}
+            >
               <IconButton onClick={() => setShowComments(false)}>
                 <ArrowBack sx={{ color: "white" }} />
               </IconButton>
