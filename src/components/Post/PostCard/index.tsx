@@ -180,7 +180,7 @@ export function PostCard({
             {((!collapsed && showTextSection) || (collapsed && editing)) && (
               <Stack
                 sx={{
-                  height: editing ? 420 : "50%",
+                  height: editing ? 330 : "50%",
                   maxHeight: editing ? 380 : 200,
                   overflowY: "auto",
                 }}
