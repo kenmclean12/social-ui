@@ -37,7 +37,7 @@ export function Feed() {
     >
       <Stack
         display="grid"
-        gridTemplateColumns="repeat(auto-fill, minmax(450px, 1fr))"
+        gridTemplateColumns="repeat(auto-fill, minmax(500px, 1fr))"
         gap={2}
         p={1}
       >

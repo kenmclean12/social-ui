@@ -16,6 +16,5 @@ export const mainContainerStyles = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  overflow: "hidden",
-  mt: 1,
+  overflowY: "auto",
 };

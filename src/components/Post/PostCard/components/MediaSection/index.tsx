@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { Box, Typography } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Dialog,
+  IconButton
+} from "@mui/material";
+import { Close } from "@mui/icons-material";
 import { emptyContainerStyles, mainContainerStyles } from "./styles";
 
 type Status = "empty" | "loading" | "valid" | "invalid";
@@ -11,6 +17,7 @@ interface Props {
 
 export function MediaSection({ url, height = 200 }: Props) {
   const mediaType = "image";
+  const [open, setOpen] = useState<boolean>(false);
   const [status, setStatus] = useState<Status>(
     url && mediaType === "image" ? "loading" : "empty"
   );
@@ -34,17 +41,57 @@ export function MediaSection({ url, height = 200 }: Props) {
   }
 
   return (
-    <Box sx={{ ...mainContainerStyles, height }}>
-      {mediaType === "image" && (
+    <>
+      <Box
+        sx={{ ...mainContainerStyles, height, cursor: "pointer" }}
+        onClick={() => setOpen(true)}
+      >
+        {mediaType === "image" && (
+          <img
+            src={url}
+            alt="Post media"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              borderRadius: "8px",
+            }}
+          />
+        )}
+        {mediaType === "image" && status === "loading" && (
+          <Typography color="white">Loading...</Typography>
+        )}
+      </Box>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        fullScreen
+        PaperProps={{
+          sx: {
+            backgroundColor: "black",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          },
+        }}
+      >
+        <IconButton
+          onClick={() => setOpen(false)}
+          sx={{ position: "absolute", top: 20, right: 20, color: "white" }}
+        >
+          <Close />
+        </IconButton>
         <img
           src={url}
-          alt="Post media"
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          alt="Expanded media"
+          style={{
+            maxWidth: "95%",
+            maxHeight: "95%",
+            objectFit: "contain",
+            borderRadius: "8px",
+          }}
         />
-      )}
-      {mediaType === "image" && status === "loading" && (
-        <Typography color="white">Loading...</Typography>
-      )}
-    </Box>
+      </Dialog>
+    </>
   );
 }

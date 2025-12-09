@@ -153,7 +153,7 @@ export function PostCard({
               <Stack
                 p={1}
                 sx={{
-                  height: editing ? 380 : "auto",
+                  height: editing ? 380 : 250,
                   maxHeight: editing ? 380 : 200,
                   overflowY: "auto",
                 }}
