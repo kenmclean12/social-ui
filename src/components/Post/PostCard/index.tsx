@@ -10,7 +10,14 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { ThumbUp, ChatBubble, ArrowBack, MoreVert } from "@mui/icons-material";
+import {
+  ThumbUp,
+  ChatBubble,
+  ArrowBack,
+  MoreVert,
+  ArrowUpward,
+  ArrowDownward,
+} from "@mui/icons-material";
 import { type PostResponseDto } from "../../../types";
 import { useAuth } from "../../../context";
 import { CommentSection, DeletePostDialog, MediaSection } from "./components";
@@ -39,6 +46,7 @@ export function PostCard({
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [profileOpen, setProfileOpen] = useState<boolean>(false);
   const [post, setPost] = useState<PostResponseDto>(initialPost);
+  const [collapsed, setCollapsed] = useState<boolean>(true);
   const [editText, setEditText] = useState<string>(post.textContent || "");
 
   const { mutate: createLike } = useLikeCreate();
@@ -147,13 +155,32 @@ export function PostCard({
             <Divider sx={styles.divider} />
             <MediaSection
               url={post.contentUrl}
-              height={post.textContent && !editing ? 400 : "100%"}
+              height={
+                collapsed ? "100%" : post.textContent && !editing ? 400 : "100%"
+              }
             />
-            {showTextSection && (
+            {post.textContent && !editing && (
               <Stack
-                p={1}
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                sx={{ cursor: "pointer", py: 0.5 }}
+                onClick={() => setCollapsed((prev) => !prev)}
+              >
+                <Typography sx={{ color: "white", fontSize: "13px", mr: 0.5 }}>
+                  {collapsed ? "Show text" : "Hide text"}
+                </Typography>
+                {collapsed ? (
+                  <ArrowUpward sx={{ color: "white", fontSize: 18 }} />
+                ) : (
+                  <ArrowDownward sx={{ color: "white", fontSize: 18 }} />
+                )}
+              </Stack>
+            )}
+            {((!collapsed && showTextSection) || (collapsed && editing)) && (
+              <Stack
                 sx={{
-                  height: editing ? 380 : 250,
+                  height: editing ? 420 : "50%",
                   maxHeight: editing ? 380 : 200,
                   overflowY: "auto",
                 }}
@@ -199,7 +226,7 @@ export function PostCard({
                     </Stack>
                   </>
                 ) : (
-                  <Typography sx={{ color: "white" }} pt={1}>
+                  <Typography sx={{ color: "white" }}>
                     {post.textContent}
                   </Typography>
                 )}
