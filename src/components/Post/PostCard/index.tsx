@@ -76,7 +76,7 @@ export function PostCard({
       <Slide direction="right" in={!showComments} mountOnEnter appear={false}>
         <Stack spacing={1} sx={{ height: "100%" }}>
           <Stack direction="row" spacing={2} alignItems="center">
-            <Avatar src={post.creator.avatarUrl} />
+            <Avatar src={post.creator?.avatarUrl} />
             <Typography color="white" fontWeight="bold">
               {post.creator
                 ? `${post.creator.firstName} ${post.creator.lastName}`
