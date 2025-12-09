@@ -14,7 +14,7 @@ import { useAuth } from "../../../context";
 import { CommentSection, MediaSection } from "./components";
 import { useLikeCreate, useLikeDelete } from "../../../hooks";
 import { ReactionPanel } from "../../ReactionPanel";
-import { paperStyles } from "./styles";
+import { commentSectionContainerStyles, paperStyles } from "./styles";
 
 interface Props {
   post: PostResponseDto;
@@ -85,30 +85,27 @@ export function PostCard({
           </Stack>
           <Divider sx={{ backgroundColor: "#444" }} />
           <MediaSection url={post.contentUrl} height={300} />
-          <Typography color="white" p={1} pt={2} pb={2}>
-            {post.textContent}
-          </Typography>
+          <Stack height="150px" sx={{ overflowY: "auto" }}>
+            <Typography color="white" p={1} pt={2} pb={2}>
+              {post.textContent}
+            </Typography>
+          </Stack>
           <Divider sx={{ backgroundColor: "#444" }} />
-          <Stack
-            direction="row"
-            spacing={2}
-            alignItems="center"
-            justifyContent="flex-end"
-          >
-            <Stack direction="row" alignItems="center" spacing={0.5}>
-              <IconButton onClick={handleToggleLike}>
-                <ThumbUp sx={{ color: hasLiked ? "lightblue" : "white" }} />
-              </IconButton>
+          <Stack direction="row" alignItems="center" justifyContent="flex-end">
+            <Stack direction="row" alignItems="center" spacing={1} mr={2}>
+              <ThumbUp
+                onClick={handleToggleLike}
+                sx={{ color: hasLiked ? "lightblue" : "white" }}
+              />
               <Typography sx={{ color: hasLiked ? "lightblue" : "white" }}>
                 {post.likes?.length || 0}
               </Typography>
             </Stack>
-            <Stack direction="row" alignItems="center" spacing={0.5}>
-              <IconButton onClick={() => setShowComments(true)}>
-                <ChatBubble
-                  sx={{ color: hasCommented ? "lightblue" : "white" }}
-                />
-              </IconButton>
+            <Stack direction="row" alignItems="center" spacing={1} mr={1}>
+              <ChatBubble
+                onClick={() => setShowComments(true)}
+                sx={{ color: hasCommented ? "lightblue" : "white" }}
+              />
               <Typography sx={{ color: hasCommented ? "lightblue" : "white" }}>
                 {post.comments?.length || 0}
               </Typography>
@@ -123,20 +120,7 @@ export function PostCard({
         </Stack>
       </Slide>
       <Slide direction="left" in={showComments} mountOnEnter>
-        <Stack
-          spacing={1}
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            bgcolor: "#1e1e1e",
-            p: 2,
-            borderLeft: "1px solid #444",
-            overflowY: "auto",
-          }}
-        >
+        <Stack sx={commentSectionContainerStyles}>
           <Stack direction="row" spacing={1} alignItems="center">
             <IconButton onClick={() => setShowComments(false)}>
               <ArrowBack sx={{ color: "white" }} />

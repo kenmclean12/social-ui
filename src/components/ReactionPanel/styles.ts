@@ -5,7 +5,7 @@ export const triggerContainerStyles = {
   cursor: "pointer",
   borderRadius: 20,
   padding: "2px 8px",
-  gap: "4px",
+  gap: "6px",
   "&:hover": {
     backgroundColor: "rgba(255, 255, 255, 0.1)",
   },

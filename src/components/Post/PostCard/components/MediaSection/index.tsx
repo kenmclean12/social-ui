@@ -1,5 +1,8 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
+import { emptyContainerStyles, mainContainerStyles } from "./styles";
+
+type Status = "empty" | "loading" | "valid" | "invalid";
 
 interface Props {
   url?: string;
@@ -7,21 +10,10 @@ interface Props {
 }
 
 export function MediaSection({ url, height = 200 }: Props) {
-  const mediaType = useMemo<"image" | "video" | null>(() => {
-    if (!url) return null;
-    if (
-      url.includes("youtube.com") ||
-      url.includes("youtu.be") ||
-      url.endsWith(".mp4")
-    ) {
-      return "video";
-    }
-    return "image";
-  }, [url]);
-
-  const [status, setStatus] = useState<
-    "empty" | "loading" | "valid" | "invalid"
-  >(url && mediaType === "image" ? "loading" : "empty");
+  const mediaType = "image";
+  const [status, setStatus] = useState<Status>(
+    url && mediaType === "image" ? "loading" : "empty"
+  );
 
   useEffect(() => {
     if (!url || mediaType !== "image") return;
@@ -38,50 +30,11 @@ export function MediaSection({ url, height = 200 }: Props) {
   }, [url, mediaType]);
 
   if (!url) {
-    return (
-      <Box
-        sx={{
-          width: "100%",
-          height,
-          backgroundColor: "#444",
-          borderRadius: 1,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          overflow: "hidden",
-          mt: 1,
-        }}
-      />
-    );
+    return <Box sx={{ ...emptyContainerStyles, height }} />;
   }
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        height,
-        backgroundColor: "#444",
-        borderRadius: 1,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        overflow: "hidden",
-        mt: 1,
-      }}
-    >
-      {mediaType === "video" && (
-        <iframe
-          width="100%"
-          height="100%"
-          src={
-            url.includes("youtube") ? url.replace("watch?v=", "embed/") : url
-          }
-          title="Video"
-          allowFullScreen
-          style={{ border: "none" }}
-        />
-      )}
-
+    <Box sx={{ ...mainContainerStyles, height }}>
       {mediaType === "image" && (
         <img
           src={url}
