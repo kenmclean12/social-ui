@@ -1,10 +1,5 @@
 import { useState } from "react";
-import {
-  IconButton,
-  Button,
-  Stack,
-  TextField,
-} from "@mui/material";
+import { IconButton, Button, Stack, TextField } from "@mui/material";
 import { useAuth } from "../../../context";
 import { usePostCreate } from "../../../hooks";
 import { Add, Close } from "@mui/icons-material";
@@ -75,24 +70,24 @@ export function PostCreate() {
       >
         <Stack spacing={2}>
           <Stack spacing={2}>
-          <TextField
-            fullWidth
-            placeholder="Write something..."
-            multiline
-            minRows={3}
-            value={textContent}
-            inputProps={{ maxLength: 100 }}
-            onChange={(e) => setTextContent(e.target.value)}
-            sx={textFieldStyles}
-          />
+            <TextField
+              fullWidth
+              placeholder="Write something..."
+              multiline
+              minRows={3}
+              value={textContent}
+              inputProps={{ maxLength: 100 }}
+              onChange={(e) => setTextContent(e.target.value)}
+              sx={textFieldStyles}
+            />
             <Button
               variant="outlined"
               component="label"
               disabled={!!contentUrl}
               sx={{
+                backgroundColor: "#1e1e1e",
                 border: "1px solid #444",
                 color: "white",
-                backgroundColor: "#1e1e1e",
               }}
               fullWidth
             >

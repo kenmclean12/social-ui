@@ -12,14 +12,9 @@ import { ThumbUp, ChatBubble, ArrowBack } from "@mui/icons-material";
 import { type PostResponseDto } from "../../../types";
 import { useAuth } from "../../../context";
 import { CommentSection, MediaSection } from "./components";
-import {
-  useCommentFindByPost,
-  useLikeCreate,
-  useLikeDelete,
-  useLikeFind,
-  useUserFindOne,
-} from "../../../hooks";
+import { useLikeCreate, useLikeDelete } from "../../../hooks";
 import { ReactionPanel } from "../../ReactionPanel";
+import { paperStyles } from "./styles";
 
 interface Props {
   post: PostResponseDto;
@@ -27,58 +22,64 @@ interface Props {
   height?: string | number;
 }
 
-export function PostCard({ post, width = "100%", height = "auto" }: Props) {
+export function PostCard({
+  post: initialPost,
+  width = "100%",
+  height = "auto",
+}: Props) {
   const { user } = useAuth();
-  const [showComments, setShowComments] = useState(false);
-  const { data: creator } = useUserFindOne(post.creatorId);
-  const { data: likes } = useLikeFind("post", post.id);
-  const { data: comments } = useCommentFindByPost(post.id);
+  const [showComments, setShowComments] = useState<boolean>(false);
+  const [post, setPost] = useState<PostResponseDto>(initialPost);
   const { mutate: createLike } = useLikeCreate();
   const { mutate: removeLike } = useLikeDelete();
 
   const hasLiked = useMemo(
-    () => likes?.some((l) => l.userId === user?.id),
-    [likes, user?.id]
+    () => post.likes?.some((l) => l.userId === user?.id),
+    [post.likes, user?.id]
   );
   const hasCommented = useMemo(
-    () => comments?.some((c) => c.user.id === user?.id),
-    [comments, user?.id]
+    () => post.comments?.some((c) => c.user.id === user?.id),
+    [post.comments, user?.id]
   );
 
   const handleToggleLike = () => {
     if (!user) return;
-    if (!hasLiked) createLike({ userId: user.id, postId: post.id });
-    else {
-      const like = likes?.find((l) => l.userId === user?.id);
-      if (like) removeLike(like.id);
+
+    if (!hasLiked) {
+      createLike(
+        { userId: user.id, postId: post.id },
+        {
+          onSuccess: (like) => {
+            setPost((prev) => ({
+              ...prev,
+              likes: [...(prev.likes ?? []), like],
+            }));
+          },
+        }
+      );
+    } else {
+      const like = post.likes?.find((l) => l.userId === user?.id);
+      if (!like) return;
+      removeLike(like.id, {
+        onSuccess: () => {
+          setPost((prev) => ({
+            ...prev,
+            likes: prev.likes?.filter((l) => l.id !== like.id),
+          }));
+        },
+      });
     }
   };
 
   return (
-    <Paper
-      sx={{
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        height,
-        width,
-        minHeight: 400,
-        minWidth: 400,
-        maxHeight: 600,
-        p: 2,
-        backgroundColor: "#1e1e1e",
-        border: "1px solid #444",
-        borderRadius: 2,
-        overflow: "hidden",
-      }}
-    >
-      <Slide direction="right" in={!showComments} mountOnEnter>
+    <Paper sx={{ ...paperStyles, height, width }}>
+      <Slide direction="right" in={!showComments} mountOnEnter appear={false}>
         <Stack spacing={1} sx={{ height: "100%" }}>
           <Stack direction="row" spacing={2} alignItems="center">
-            <Avatar src={creator?.avatarUrl} />
+            <Avatar src={post.creator.avatarUrl} />
             <Typography color="white" fontWeight="bold">
-              {creator
-                ? `${creator.firstName} ${creator.lastName}`
+              {post.creator
+                ? `${post.creator.firstName} ${post.creator.lastName}`
                 : "Unknown User"}
             </Typography>
           </Stack>
@@ -99,7 +100,7 @@ export function PostCard({ post, width = "100%", height = "auto" }: Props) {
                 <ThumbUp sx={{ color: hasLiked ? "lightblue" : "white" }} />
               </IconButton>
               <Typography sx={{ color: hasLiked ? "lightblue" : "white" }}>
-                {likes?.length || 0}
+                {post.likes?.length || 0}
               </Typography>
             </Stack>
             <Stack direction="row" alignItems="center" spacing={0.5}>
@@ -109,13 +110,14 @@ export function PostCard({ post, width = "100%", height = "auto" }: Props) {
                 />
               </IconButton>
               <Typography sx={{ color: hasCommented ? "lightblue" : "white" }}>
-                {comments?.length || 0}
+                {post.comments?.length || 0}
               </Typography>
             </Stack>
             <ReactionPanel
               entityType="post"
               entityId={post.id}
-              isSelf={post.creatorId === user?.id}
+              reactionEntries={post.reactions ?? []}
+              isSelf={post.creator.id === user?.id}
             />
           </Stack>
         </Stack>
@@ -140,11 +142,11 @@ export function PostCard({ post, width = "100%", height = "auto" }: Props) {
               <ArrowBack sx={{ color: "white" }} />
             </IconButton>
             <Typography color="white" fontWeight="bold">
-              Comments ({comments?.length || 0})
+              Comments ({post.comments?.length || 0})
             </Typography>
           </Stack>
           <Divider sx={{ backgroundColor: "#444", my: 1 }} />
-          <CommentSection comments={comments} postId={post.id} />
+          <CommentSection comments={post.comments} postId={post.id} />
         </Stack>
       </Slide>
     </Paper>
