@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Stack,
   Typography,
@@ -6,23 +6,49 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  CircularProgress,
   type SelectChangeEvent,
 } from "@mui/material";
 import { Public } from "@mui/icons-material";
 import { useFeedExplore } from "../../../../hooks";
 import { PostCard } from "../../../../components";
-import { useAuth } from "../../../../context";
 
 type FilterType = "mostLiked" | "mostReacted" | "recent" | "oldest";
 
 export function ExploreFeed() {
-  const { user } = useAuth();
   const [filter, setFilter] = useState<FilterType>("mostLiked");
-  const { data: posts = [] } = useFeedExplore(user?.id as number, filter);
+
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useFeedExplore(filter, 4);
+
+  const loaderRef = useRef<HTMLDivElement | null>(null);
 
   const handleChange = (event: SelectChangeEvent<FilterType>) => {
-    setFilter(event.target.value as typeof filter);
+    setFilter(event.target.value as FilterType);
   };
+
+  useEffect(() => {
+    if (!loaderRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 1 }
+    );
+
+    observer.observe(loaderRef.current);
+    return () => observer.disconnect();
+  }, [hasNextPage, fetchNextPage]);
+
+  const allPosts = data?.pages.flatMap((page) => page.data) ?? [];
 
   return (
     <Stack
@@ -51,16 +77,9 @@ export function ExploreFeed() {
           mb={2}
           border="1px solid #444"
           borderRadius={2}
-          sx={{
-            bgcolor: "#0d0d0dff",
-          }}
+          sx={{ bgcolor: "#0d0d0dff" }}
         >
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="center"
-            spacing={0.75}
-          >
+          <Stack direction="row" alignItems="center" spacing={0.75}>
             <Typography color="white">Explore</Typography>
             <Public sx={{ color: "lightblue" }} />
           </Stack>
@@ -82,21 +101,12 @@ export function ExploreFeed() {
                 backgroundColor: "black",
                 color: "white",
                 ".MuiOutlinedInput-notchedOutline": { borderColor: "#444" },
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#666",
-                },
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#444",
-                },
+                "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#666" },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#444" },
                 ".MuiSvgIcon-root": { color: "white" },
               }}
               MenuProps={{
-                PaperProps: {
-                  sx: {
-                    backgroundColor: "black",
-                    color: "white",
-                  },
-                },
+                PaperProps: { sx: { backgroundColor: "black", color: "white" } },
               }}
             >
               <MenuItem value="mostLiked">Most Liked</MenuItem>
@@ -107,16 +117,38 @@ export function ExploreFeed() {
           </FormControl>
         </Stack>
       </Stack>
-      <Stack
-        display="grid"
-        gridTemplateColumns="repeat(auto-fill, minmax(500px, 1fr))"
-        gap={2}
-        p={1}
-        pt={0}
-      >
-        {posts.length > 0 &&
-          posts.map((p) => <PostCard key={p.id} commentId={null} post={p} width="auto" height="600px" />)}
-      </Stack>
+      {allPosts.length > 0 ? (
+        <Stack
+          display="grid"
+          gridTemplateColumns="repeat(auto-fill, minmax(500px, 1fr))"
+          gap={2}
+          p={1}
+          pt={0}
+        >
+          {allPosts.map((post) => (
+            <PostCard
+              key={post.id}
+              post={post}
+              commentId={null}
+              width="auto"
+              height="600px"
+            />
+          ))}
+          <div ref={loaderRef} style={{ height: "40px" }}>
+            {isFetchingNextPage && <CircularProgress size={35} />}
+          </div>
+        </Stack>
+      ) : (
+        <Stack>
+          {isLoading ? (
+            <CircularProgress size={40} />
+          ) : (
+            <Typography align="center" color="white">
+              No posts
+            </Typography>
+          )}
+        </Stack>
+      )}
     </Stack>
   );
 }

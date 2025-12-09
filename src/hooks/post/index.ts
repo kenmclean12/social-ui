@@ -1,9 +1,10 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import {
   type PostCreateDto,
   type PostUpdateDto,
   type PostResponseDto,
+  type PaginatedResponseDto,
 } from "../../types";
 import { api } from "../../lib/api";
 
@@ -23,18 +24,27 @@ export function usePostFindOne(id: number) {
   });
 }
 
-export function usePostFindByUserId(userId: number) {
-  return useQuery({
+export function usePostFindByUserId(userId: number, limit: number) {
+  return useInfiniteQuery<PaginatedResponseDto<PostResponseDto>>({
     queryKey: ["posts_user", userId],
     enabled: !!userId,
-    queryFn: async () => {
-      const res = await api(`/post/posts/${userId}`);
-      if (!res?.ok) {
-        const err = await res?.json();
+    initialPageParam: 1,
+
+    queryFn: async ({ pageParam = 1 }) => {
+      const res = await api(`/post/posts/${userId}?page=${pageParam}&limit=${limit}`);
+      if (!res || !res.ok) {
+        const err = res ? await res.json() : { message: "No response from server" };
         throw new Error(err.message || "Failed to fetch posts");
       }
-      return res.json() as Promise<PostResponseDto[]>;
+      return res.json();
     },
+    getNextPageParam: (lastPage) => {
+      const { page, total, limit } = lastPage;
+      const totalPages = Math.ceil(total / limit);
+
+      return page < totalPages ? page + 1 : undefined;
+    },
+
     retry: 0,
   });
 }
