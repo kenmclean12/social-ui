@@ -42,11 +42,6 @@ export function MediaSection({ url, height = 200 }: Props) {
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
       )}
-      {mediaType === "image" && status === "invalid" && (
-        <Typography color="white" fontSize={32}>
-          ?
-        </Typography>
-      )}
       {mediaType === "image" && status === "loading" && (
         <Typography color="white">Loading...</Typography>
       )}

@@ -16,7 +16,6 @@ import type { ReactionResponseDto } from "../../types";
 import { UserRow } from "../User";
 import {
   closeIconStyles,
-  emojiCountContainerStyles,
   emojiIconButtonStyles,
   noReactionsDisplayContainerStyles,
   paperStyles,
@@ -159,18 +158,6 @@ export function ReactionPanel({
                 {Object.entries(groupedReactions).map(
                   ([emoji, emojiReactions]) => (
                     <Box key={emoji} sx={{ mb: 1 }}>
-                      <Box sx={emojiCountContainerStyles}>
-                        <Typography fontSize={20} mr={1}>
-                          {emoji}
-                        </Typography>
-                        <Typography
-                          color="white"
-                          fontSize={12}
-                          fontWeight={500}
-                        >
-                          {emojiReactions.length}
-                        </Typography>
-                      </Box>
                       <List sx={{ p: 0, gap: "0px" }}>
                         {emojiReactions.map((reaction) => (
                           <Box key={reaction.id} sx={userListContainerStyles}>
@@ -182,17 +169,17 @@ export function ReactionPanel({
                                   : `${reaction.user.firstName} reacted with`
                               }
                               button={
-                                reaction.user.id === user?.id && (
-                                  <Stack
-                                    direction="row"
-                                    alignItems="center"
-                                    spacing={1.5}
-                                  >
-                                    <span>{reaction.reaction}</span>
+                                <Stack
+                                  direction="row"
+                                  alignItems="center"
+                                  spacing={1.5}
+                                >
+                                  <span>{reaction.reaction}</span>
+                                  {reaction.user.id === user?.id && (
                                     <Close
                                       onClick={async (e) => {
                                         e.stopPropagation();
-                                        await removeReaction(reaction.id);
+                                        removeReaction(reaction.id);
                                         setReactions((prev) =>
                                           prev.filter(
                                             (x) => x.id !== reaction.id
@@ -201,8 +188,8 @@ export function ReactionPanel({
                                       }}
                                       sx={closeIconStyles}
                                     />
-                                  </Stack>
-                                )
+                                  )}
+                                </Stack>
                               }
                             />
                           </Box>

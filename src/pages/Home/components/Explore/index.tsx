@@ -113,7 +113,7 @@ export function ExploreFeed() {
         pt={0}
       >
         {posts.length > 0 &&
-          posts.map((p) => <PostCard key={p.id} post={p} width="auto" />)}
+          posts.map((p) => <PostCard key={p.id} post={p} width="auto" height="600px" />)}
       </Stack>
     </Stack>
   );

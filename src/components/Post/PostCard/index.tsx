@@ -38,7 +38,7 @@ export function PostCard({
     [post.likes, user?.id]
   );
   const hasCommented = useMemo(
-    () => post.comments?.some((c) => c.user.id === user?.id),
+    () => post.comments?.some((c) => c.user?.id === user?.id as number),
     [post.comments, user?.id]
   );
 
@@ -84,8 +84,8 @@ export function PostCard({
             </Typography>
           </Stack>
           <Divider sx={{ backgroundColor: "#444" }} />
-          <MediaSection url={post.contentUrl} height={300} />
-          <Stack height="150px" sx={{ overflowY: "auto" }}>
+          <MediaSection url={post.contentUrl} height={400} />
+          <Stack height="170px">
             <Typography color="white" p={1} pt={2} pb={2}>
               {post.textContent}
             </Typography>

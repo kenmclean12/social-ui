@@ -15,7 +15,7 @@ export function PostSection({ userId }: Props) {
     <Stack sx={mainContainerStyles}>
       {posts.length ? (
         posts?.map((post) => (
-          <PostCard key={post.id} post={post} width="100%" />
+          <PostCard key={post.id} post={post} width="100%" height="600px" />
         ))
       ) : (
         <Stack>
