@@ -25,7 +25,6 @@ export const commentSectionContainerStyles = {
   overflowY: "auto",
 };
 
-
 export const styles = {
   paper: {
     position: "relative",
@@ -60,6 +59,7 @@ export const styles = {
     minWidth: 0,
     color: "white",
     fontWeight: "bold",
+    fontSize: "15px",
   },
   headerContainer: {
     display: "flex",
@@ -87,7 +87,20 @@ export const styles = {
     border: "1px solid lightblue",
     color: "lightblue",
   },
+  timestampText: {
+    color: "#aaa",
+    fontSize: "0.75rem",
+    lineHeight: 1,
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+  },
   iconActive: { color: "lightblue" },
   iconInactive: { color: "white" },
-  editActionsStack: { flexDirection: "row", gap: 2, mt: 1, justifyContent: "flex-end" },
+  editActionsStack: {
+    flexDirection: "row",
+    gap: 2,
+    mt: 1,
+    justifyContent: "flex-end",
+  },
 };
