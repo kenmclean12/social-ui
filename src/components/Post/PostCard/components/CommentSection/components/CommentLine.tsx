@@ -190,6 +190,7 @@ export function CommentLine({ comment, isReply }: Props) {
             </Stack>
             <ReactionPanel
               entityType="comment"
+              reactionEntries={comment.reactions}
               entityId={comment.id}
               isSelf={isAuthor}
             />
