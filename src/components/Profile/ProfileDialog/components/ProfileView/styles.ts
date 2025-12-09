@@ -2,7 +2,7 @@ export const mainContainerStyles = {
   display: "flex",
   flexDirection: "column",
   flex: 1,
-  padding: "24px",
+  padding: "12px",
   gap: "24px",
 };
 

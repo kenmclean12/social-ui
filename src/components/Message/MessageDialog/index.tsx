@@ -1,7 +1,6 @@
-import { Stack } from "@mui/material";
+import type { MessageResponseDto } from "../../../types";
 import { useMessageFindOne } from "../../../hooks";
 import { MessageBubble } from "../MessageBubble";
-import type { MessageResponseDto } from "../../../types";
 import { UniversalDialog } from "../../UniversalDialog";
 
 interface Props {
@@ -22,13 +21,11 @@ export function MessageDialog({ messageId, open, onClose }: Props) {
       loading={isLoading}
       emptyMessage="Message not found"
     >
-      <Stack>
-        <MessageBubble
-          message={message as MessageResponseDto}
-          isSelf={true}
-          dialog
-        />
-      </Stack>
+      <MessageBubble
+        message={message as MessageResponseDto}
+        isSelf={true}
+        dialog
+      />
     </UniversalDialog>
   );
 }

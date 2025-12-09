@@ -6,3 +6,12 @@ export const paperStyles = {
   borderRadius: 1,
   overflowY: "auto",
 };
+
+export const noCommentsDisplayContainerStyles = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  p: 11,
+  color: "rgba(255, 255, 255, 0.5)",
+};

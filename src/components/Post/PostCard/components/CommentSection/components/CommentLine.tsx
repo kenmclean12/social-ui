@@ -1,16 +1,13 @@
 import { useState } from "react";
 import {
   Avatar,
-  IconButton,
   Stack,
   Typography,
   TextField,
   Button,
-  Popover,
-  MenuItem,
-  Input,
+  Divider,
 } from "@mui/material";
-import { ThumbUp, ChatBubble, Settings, Edit, Delete } from "@mui/icons-material";
+import { ThumbUp, ChatBubble, Settings } from "@mui/icons-material";
 import { useAuth } from "../../../../../../context";
 import type { CommentResponseDto } from "../../../../../../types";
 import {
@@ -24,6 +21,7 @@ import {
 import { ReactionPanel } from "../../../../../ReactionPanel";
 import { formatDayLabel } from "../../../../../../utils";
 import { textFieldStyles } from "../../../../../../pages/styles";
+import { PopoverMenu, PopoverMenuItem } from "../../../../../PopoverMenu";
 
 interface Props {
   comment: CommentResponseDto;
@@ -50,7 +48,6 @@ export function CommentLine({ comment, isReply }: Props) {
   const [editValue, setEditValue] = useState(comment.content);
   const [showReplies, setShowReplies] = useState(false);
   const [replyText, setReplyText] = useState("");
-  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
 
   const toggleLike = () => {
     if (!user || isAuthor) return;
@@ -82,6 +79,11 @@ export function CommentLine({ comment, isReply }: Props) {
     );
   };
 
+  const handleEditClick = () => {
+    setEditing(true);
+    setEditValue(comment.content);
+  };
+
   const saveEdit = () => {
     if (!editValue.trim()) return;
     updateComment(
@@ -93,76 +95,97 @@ export function CommentLine({ comment, isReply }: Props) {
   const formattedDate = formatDayLabel(new Date(comment.createdAt));
 
   return (
-    <Stack spacing={1} sx={{ mb: 1.5, pl: isReply ? 5 : 0 }}>
+    <Stack sx={{ mb: 1.5, paddingInline: isReply ? 1 : 0 }}>
       {/* Comment bubble */}
-      <Stack spacing={1} sx={{ p: 1.5, backgroundColor: "#1e1e1e", borderRadius: 1 }}>
+      <Stack
+        spacing={1}
+        sx={{
+          p: 1.5,
+          backgroundColor: "black",
+          border: `1px solid #444`,
+          borderRadius: 1,
+        }}
+      >
         {/* Header */}
         <Stack direction="row" spacing={1} alignItems="center">
-          <Avatar src={comment.user.avatarUrl || ""} sx={{ width: 28, height: 28 }} />
+          <Avatar
+            src={comment.user.avatarUrl || ""}
+            sx={{ width: 28, height: 28 }}
+          />
 
-          <Stack flex={1}>
-            <Stack direction="row" alignItems="center" spacing={0.75}>
-              <Typography fontSize={13} color="white" fontWeight={500}>
+          <Stack flex={1} sx={{ minWidth: 0 }}>
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={0.75}
+              sx={{ minWidth: 0 }}
+            >
+              {/* Full name */}
+              <Typography
+                fontSize={13}
+                color="white"
+                fontWeight={500}
+                sx={{
+                  maxWidth: "45%",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
                 {comment.user.firstName} {comment.user.lastName}
               </Typography>
-              <Typography fontSize={12} color="gray">
+
+              {/* @username */}
+              <Typography
+                fontSize={12}
+                color="lightgrey"
+                sx={{
+                  maxWidth: "35%",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
                 @{comment.user.userName}
               </Typography>
-              <Typography fontSize={11} color="gray" sx={{ ml: 0.5 }}>
+
+              {/* Date — never shrinks, never gets ellipsed */}
+              <Typography
+                fontSize={11}
+                color="lightgrey"
+                sx={{ ml: 0.5, flexShrink: 0 }}
+              >
                 • {formattedDate}
               </Typography>
             </Stack>
           </Stack>
 
-          {/* Author settings */}
           {!editing && isAuthor && (
-            <>
-              <IconButton
-                size="small"
-                sx={{ color: "gray", p: 0.5 }}
-                onClick={(e) => setAnchor(e.currentTarget)}
-              >
-                <Settings sx={{ fontSize: 16 }} />
-              </IconButton>
-
-              <Popover
-                anchorEl={anchor}
-                open={Boolean(anchor)}
-                onClose={() => setAnchor(null)}
-                PaperProps={{
-                  sx: {
-                    backgroundColor: "#1e1e1e",
-                    minWidth: 120,
-                    border: "1px solid #444",
-                  },
-                }}
-              >
-                <MenuItem
-                  onClick={() => {
-                    setEditing(true);
-                    setEditValue(comment.content);
-                    setAnchor(null);
+            <PopoverMenu
+              trigger={
+                <Settings
+                  sx={{
+                    cursor: "pointer",
+                    color: "white",
+                    p: 0.5,
+                    fontSize: 25,
                   }}
-                  sx={{ color: "white", fontSize: 13 }}
-                >
-                  <Edit sx={{ fontSize: 16, mr: 1 }} /> Edit
-                </MenuItem>
-
-                <MenuItem
-                  onClick={() => {
-                    deleteComment(comment.id);
-                    setAnchor(null);
-                  }}
-                  sx={{ color: "red", fontSize: 13 }}
-                >
-                  <Delete sx={{ fontSize: 16, mr: 1 }} /> Delete
-                </MenuItem>
-              </Popover>
-            </>
+                />
+              }
+            >
+              <PopoverMenuItem
+                label="Edit"
+                onClick={handleEditClick}
+                closeOnSelect
+              />
+              <PopoverMenuItem
+                label="Delete"
+                onClick={() => deleteComment(comment.id)}
+                closeOnSelect
+              />
+            </PopoverMenu>
           )}
         </Stack>
-
-        {/* Content or edit mode */}
         {!editing ? (
           <Typography
             fontSize={14}
@@ -172,76 +195,77 @@ export function CommentLine({ comment, isReply }: Props) {
             {comment.content}
           </Typography>
         ) : (
-          <Stack spacing={1} sx={{ pl: 4 }}>
-            <Input
+          <Stack
+            spacing={1}
+            p={1}
+            pt={1}
+            border="1px solid #444"
+            borderRadius={1}
+          >
+            <TextField
               fullWidth
               multiline
               minRows={2}
-              disableUnderline
               value={editValue}
               onChange={(e) => setEditValue(e.target.value)}
-              sx={{
-                background: "#1e1e1e",
-                color: "white",
-                border: "1px solid #444",
-                borderRadius: 1,
-                p: 1,
-              }}
+              sx={textFieldStyles}
             />
-            <Stack direction="row" spacing={1}>
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              spacing={1.5}
+              pb={0.5}
+            >
               <Button
-                variant="outlined"
                 size="small"
                 onClick={() => setEditing(false)}
                 sx={{ color: "white", borderColor: "#555" }}
               >
                 Cancel
               </Button>
-              <Button variant="contained" size="small" onClick={saveEdit}>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={saveEdit}
+                sx={{ border: "1px solid lightblue", color: "lightblue" }}
+              >
                 Save
               </Button>
             </Stack>
           </Stack>
         )}
-
-        {/* Actions */}
-        <Stack direction="row" justifyContent="flex-end" spacing={1}>
-          {/* Like */}
-          <IconButton size="small" onClick={toggleLike} disabled={isAuthor} sx={{ p: 0.5 }}>
+        <Stack direction="row" justifyContent="flex-end">
+          <Stack direction="row" alignItems="center" mr={1}>
             <ThumbUp
+              onClick={isAuthor ? toggleLike : () => {}}
               sx={{
-                fontSize: 16,
+                height: 15,
                 color: hasLiked ? "lightblue" : "white",
+                cursor: "pointer",
               }}
             />
-          </IconButton>
-          <Typography color={hasLiked ? "lightblue" : "white"} fontSize={12}>
-            {likes?.length || 0}
-          </Typography>
+            <Typography color={hasLiked ? "lightblue" : "white"} fontSize={13}>
+              {likes?.length || 0}
+            </Typography>
+          </Stack>
           {!isReply && (
-            <>
-              <IconButton
-                size="small"
+            <Stack direction="row" alignItems="center">
+              <ChatBubble
                 onClick={() => setShowReplies((s) => !s)}
-                sx={{ p: 0.5 }}
-              >
-                <ChatBubble
-                  sx={{
-                    fontSize: 16,
-                    color: replyCount > 0 ? "lightblue" : "white",
-                  }}
-                />
-              </IconButton>
-
+                sx={{
+                  height: 15,
+                  color: replyCount > 0 ? "lightblue" : "white",
+                  cursor: "pointer",
+                }}
+              />
               <Typography
-                fontSize={12}
+                fontSize={13}
                 color={replyCount > 0 ? "lightblue" : "white"}
               >
                 {replyCount}
               </Typography>
-            </>
+            </Stack>
           )}
-
           <ReactionPanel
             smallIcon
             entityType="comment"
@@ -252,14 +276,15 @@ export function CommentLine({ comment, isReply }: Props) {
         </Stack>
       </Stack>
       {showReplies && (
-        <Stack spacing={1}>
-          <Stack direction="row" spacing={1}>
+        <Stack spacing={1} border="1px solid #444" borderTop="none">
+          <Stack direction="row" spacing={1} p={1.5} pb={0.5}>
             <TextField
               size="small"
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
               placeholder="Write a reply..."
               sx={textFieldStyles}
+              inputProps={{ maxLength: 400 }}
               fullWidth
             />
             <Button
@@ -267,17 +292,21 @@ export function CommentLine({ comment, isReply }: Props) {
               size="small"
               onClick={submitReply}
               sx={{
-                border: "1px solid #444",
-                color: "white"
+                height: "37.5px",
+                border: "1px solid lightblue",
+                color: "lightblue",
               }}
               disabled={!replyText.trim()}
             >
               Send
             </Button>
           </Stack>
-          {comment.replies?.map((reply) => (
-            <CommentLine key={reply.id} comment={reply} isReply={true} />
-          ))}
+          <Divider sx={{ backgroundColor: "#444" }} />
+          <Stack pt={0.5} maxHeight="300px" sx={{ overflowY: "auto" }}>
+            {comment.replies?.map((reply) => (
+              <CommentLine key={reply.id} comment={reply} isReply={true} />
+            ))}
+          </Stack>
         </Stack>
       )}
     </Stack>

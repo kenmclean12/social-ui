@@ -88,18 +88,18 @@ export function ReactionPanel({
   return (
     <>
       <Stack
-        sx={{ ...triggerContainerStyles, gap: smallIcon ? 0.25 : .8 }}
+        sx={{ ...triggerContainerStyles, gap: smallIcon ? 0 : .8 }}
         onClick={(e) => setAnchorEl(e.currentTarget)}
       >
         <EmojiEmotions
           sx={{
-            height: smallIcon ? 18 : "auto",
+            height: smallIcon ? 16 : "auto",
             color: userReaction && !isSelf ? "lightblue" : "white",
           }}
         />
         <Typography
           sx={{
-            fontSize: smallIcon ? 12 : "auto",
+            fontSize: smallIcon ? 13 : "auto",
             color: userReaction && !isSelf ? "lightblue" : "white",
           }}
         >

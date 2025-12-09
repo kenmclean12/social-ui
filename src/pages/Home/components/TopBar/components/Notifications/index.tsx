@@ -58,6 +58,7 @@ export function Notifications() {
       notif.type === NotificationType.POST_REACTION ||
       notif.type === NotificationType.POST_COMMENT
     ) {
+      console.log(notif)
       if (notif.post?.id) {
         setPostId(notif.post.id);
         setPostDialogOpen(true);

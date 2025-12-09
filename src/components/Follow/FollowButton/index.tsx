@@ -20,16 +20,18 @@ export function FollowButton({
   size = "medium",
   displayText = true,
 }: Props) {
-  const { user: self } = useAuth();
-  const { data: followingList } = useFollowGetFollowing(self?.id ?? 0);
+  const { user } = useAuth();
+  const { data: followingList = [] } = useFollowGetFollowing(
+    user?.id as number
+  );
   const followRecord = useMemo(
-    () => followingList?.find((f) => f.following.id === targetUserId),
+    () => followingList.find((f) => f.following.id === targetUserId),
     [followingList, targetUserId]
   );
 
   const isFollowing = !!followRecord;
-  const followCreate = useFollowCreate(self?.id ?? 0);
-  const followRemove = useFollowRemove(self?.id ?? 0);
+  const followCreate = useFollowCreate(user?.id as number);
+  const followRemove = useFollowRemove(user?.id as number);
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -41,12 +43,14 @@ export function FollowButton({
         followingId: targetUserId,
       });
     } else {
-      followCreate.mutate({ followerId: self.id, followingId: targetUserId });
+      followCreate.mutate({
+        followerId: user?.id as number,
+        followingId: targetUserId,
+      });
     }
   };
 
-  if (!self || self.id === targetUserId) return null;
-
+  if (!self || user?.id === targetUserId) return null;
   if (!displayText) {
     return (
       <IconButton onClick={handleClick} sx={noTextButtonStyles}>

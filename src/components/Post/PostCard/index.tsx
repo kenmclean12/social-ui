@@ -14,9 +14,9 @@ import {
   ThumbUp,
   ChatBubble,
   ArrowBack,
-  MoreVert,
   ArrowUpward,
   ArrowDownward,
+  Settings,
 } from "@mui/icons-material";
 import { type PostResponseDto } from "../../../types";
 import { useAuth } from "../../../context";
@@ -135,7 +135,7 @@ export function PostCard({
                 <PopoverMenu
                   trigger={
                     <IconButton>
-                      <MoreVert sx={{ color: "white" }} />
+                      <Settings sx={{ color: "white" }} />
                     </IconButton>
                   }
                 >

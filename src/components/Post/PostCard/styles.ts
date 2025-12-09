@@ -95,7 +95,7 @@ export const styles = {
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
   },
-  iconActive: { color: "lightblue" },
+  iconActive: { marginTop: "4px", color: "lightblue" },
   iconInactive: { color: "white" },
   editActionsStack: {
     flexDirection: "row",

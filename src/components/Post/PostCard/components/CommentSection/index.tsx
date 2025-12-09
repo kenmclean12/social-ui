@@ -1,11 +1,20 @@
 import { useState } from "react";
-import { Stack, Paper, TextField, Button, Divider } from "@mui/material";
+import {
+  Stack,
+  Paper,
+  TextField,
+  Button,
+  Divider,
+  Box,
+  Typography,
+} from "@mui/material";
 import { useAuth } from "../../../../../context";
 import type { CommentCreateDto } from "../../../../../types";
 import { CommentLine } from "./components";
 import { useCommentCreate, useCommentFindByPost } from "../../../../../hooks";
 import { textFieldStyles } from "../../../../../pages/styles";
-import { paperStyles } from "./styles";
+import { noCommentsDisplayContainerStyles, paperStyles } from "./styles";
+import { ChatBubble } from "@mui/icons-material";
 
 interface Props {
   postId: number;
@@ -13,7 +22,7 @@ interface Props {
 
 export function CommentSection({ postId }: Props) {
   const { user } = useAuth();
-  const { data: comments } = useCommentFindByPost(postId);
+  const { data: comments = [] } = useCommentFindByPost(postId);
   const [newComment, setNewComment] = useState<string>("");
   const createComment = useCommentCreate();
 
@@ -42,6 +51,7 @@ export function CommentSection({ postId }: Props) {
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             sx={textFieldStyles}
+            inputProps={{ maxLength: 400 }}
           />
           <Button
             variant="outlined"
@@ -56,9 +66,25 @@ export function CommentSection({ postId }: Props) {
           </Button>
         </Stack>
         <Divider sx={{ backgroundColor: "#444" }} />
-        {comments?.map((comment) => (
-          <CommentLine comment={comment} isReply={false} />
-        ))}
+        {comments.length > 0 ? (
+          comments?.map((comment) => (
+            <CommentLine comment={comment} isReply={false} />
+          ))
+        ) : (
+          <Box sx={noCommentsDisplayContainerStyles}>
+            <ChatBubble sx={{ fontSize: 40, mb: 1, opacity: 0.5 }} />
+            <Typography variant="body2" align="center">
+              No comments yet
+            </Typography>
+            <Typography
+              align="center"
+              variant="caption"
+              sx={{ mt: 0.5, opacity: 0.7 }}
+            >
+              Be the first to comment
+            </Typography>
+          </Box>
+        )}
       </Stack>
     </Paper>
   );
