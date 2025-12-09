@@ -25,5 +25,5 @@ export function formatTimeLabel(date: Date) {
 export function formatDayAndTime(date: Date) {
   const day = formatDayLabel(date);
   const time = formatTimeLabel(date);
-  return `${day} / ${time}`;
+  return `${day} • ${time}`;
 }

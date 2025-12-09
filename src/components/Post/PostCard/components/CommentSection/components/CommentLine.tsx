@@ -138,7 +138,6 @@ export function CommentLine({ comment, isReply }: Props) {
               >
                 {comment.user.firstName} {comment.user.lastName}
               </Typography>
-              {/* Date — never shrinks, never gets ellipsed */}
               <Typography
                 fontSize={11}
                 color="lightgrey"
