@@ -57,7 +57,7 @@ export function usePostCreate() {
     },
     onSuccess: (post) => {
       enqueueSnackbar("Post created!", { variant: "success" });
-      qc.invalidateQueries({ queryKey: ["posts_user", post.creatorId] });
+      qc.invalidateQueries({ queryKey: ["posts_user", post.creator.id] });
     },
     onError: (err: Error) => enqueueSnackbar(err.message, { variant: "error" }),
   });
