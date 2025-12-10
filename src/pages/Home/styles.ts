@@ -10,6 +10,7 @@ export const tabStyles = {
   flex: 1,
   color: "lightblue",
   fontWeight: 500,
+
   "&.Mui-selected": {
     color: "white",
     borderBottom: "3px solid lightblue",

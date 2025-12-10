@@ -1,4 +1,3 @@
-// styles.ts
 export const dialogFooterStackStyles = {
   display: "flex",
   flexDirection: "row",
@@ -53,7 +52,6 @@ export const switchStyles = {
     opacity: 1,
   },
 };
-
 
 export const switchLabelStyles = {
   color: "#fff",

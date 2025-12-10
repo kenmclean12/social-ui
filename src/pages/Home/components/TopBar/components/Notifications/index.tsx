@@ -44,7 +44,6 @@ export function Notifications() {
   useNotificationStream(user?.id as number);
 
   const handleNotificationClick = (notif: NotificationResponseDto) => {
-    console.log(notif);
     if (!notif.read) {
       updateNotification.mutate({ id: notif.id, read: true });
     }

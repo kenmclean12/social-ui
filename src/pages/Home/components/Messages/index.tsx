@@ -15,7 +15,7 @@ import {
 
 export function Messages() {
   const { user } = useAuth();
-  const isResizing = useRef(false);
+  const isResizing = useRef<boolean>(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [sidebarWidth, setSidebarWidth] = useState<number>(250);
   const [collapsed, setCollapsed] = useState<boolean>(false);
