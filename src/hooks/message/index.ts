@@ -111,10 +111,9 @@ export function useMessageMarkRead() {
 
   return useMutation({
     mutationFn: async (params: { messageId: number; userId: number }) => {
-      const res = await api(
-        `/message/${params.messageId}/read/${params.userId}`,
-        { method: "POST" }
-      );
+      const res = await api(`/message/${params.messageId}/read`, {
+        method: "POST",
+      });
       if (!res?.ok) {
         const err = await res?.json();
         throw new Error(err.message || "Failed to mark message read");

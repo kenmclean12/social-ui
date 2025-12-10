@@ -35,9 +35,7 @@ export function useUserSearch(search: string) {
         if (debounceRef.current) clearTimeout(debounceRef.current);
 
         debounceRef.current = setTimeout(async () => {
-          const res = await api(
-            `/user/search?q=${encodeURIComponent(search)}`
-          );
+          const res = await api(`/user/search?q=${encodeURIComponent(search)}`);
 
           if (!res?.ok) {
             const err = await res?.json();
