@@ -8,3 +8,4 @@ export * from "./reaction";
 export * from "./comment";
 export * from "./conversation";
 export * from "./message";
+export * from "./minio";

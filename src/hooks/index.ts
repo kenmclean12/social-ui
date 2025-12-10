@@ -9,3 +9,4 @@ export * from "./comment";
 export * from "./feed";
 export * from "./conversation";
 export * from "./message";
+export * from "./minio";
