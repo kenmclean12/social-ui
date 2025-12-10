@@ -11,7 +11,7 @@ export function Feed() {
   const { user } = useAuth();
   const loaderRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [showScrollTop, setShowScrollTop] = useState(true);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const { data, isLoading, fetchNextPage, hasNextPage } = useFeedPersonalized(
     user?.id as number,
     2

@@ -8,11 +8,12 @@ export const noPostContainerStyles = {
 
 export const arrowUpwardButtonStyles = {
   position: "fixed",
-  top: 130,
+  top: 120,
   left: "50%",
   transform: "translateX(-50%)",
-  backgroundColor: "white",
+  backgroundColor: "black",
+  border: "1px solid lightblue",
   color: "lightblue",
-  "&:hover": { backgroundColor: "white" },
+  "&:hover": { backgroundColor: "black" },
   zIndex: 1000,
 };
