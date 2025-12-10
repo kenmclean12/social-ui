@@ -135,6 +135,7 @@ export function Notifications() {
               <Box
                 key={notif.id}
                 onClick={() => handleNotificationClick(notif)}
+                sx={{ position: "relative" }}
               >
                 <UserRow
                   user={notif.actionUser}
