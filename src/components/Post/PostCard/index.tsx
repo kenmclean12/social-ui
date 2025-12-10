@@ -144,7 +144,7 @@ export function PostCard({
                   </Typography>
                   {post.createdAt && (
                     <Typography sx={styles.timestampText}>
-                      {post.createdAt ? formatDayAndTime(post.createdAt) : "n/a"}
+                      {post.createdAt ? formatDayAndTime(new Date(post.createdAt)) : "n/a"}
                     </Typography>
                   )}
                 </Stack>

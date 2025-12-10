@@ -78,7 +78,7 @@ export function ChatWindow({ conversationId }: Props) {
                   <Box display="flex" alignItems="center" my={1}>
                     <Divider sx={{ flex: 1, borderColor: "#333" }} />
                     <Typography sx={dateLabelStyles}>
-                      {formatDayLabel(msgDate)}
+                      {msgDate ? formatDayLabel(new Date(msgDate)) : "n/a"}
                     </Typography>
                     <Divider sx={{ flex: 1, borderColor: "#333" }} />
                   </Box>

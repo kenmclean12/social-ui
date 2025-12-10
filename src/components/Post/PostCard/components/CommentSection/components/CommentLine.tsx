@@ -154,7 +154,7 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
                 <Typography sx={timestampStyles}>
                   •{" "}
                   {comment.createdAt
-                    ? formatDayAndTime(comment.createdAt)
+                    ? formatDayAndTime(new Date(comment.createdAt))
                     : "n/a"}
                 </Typography>
               </Stack>
