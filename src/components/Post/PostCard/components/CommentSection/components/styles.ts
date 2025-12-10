@@ -53,6 +53,7 @@ export const timestampStyles = {
 };
 
 export const contentTextStyles = {
+  color: "white",
   paddingLeft: "32px",
   whiteSpace: "pre-wrap",
   lineHeight: 1.4,
