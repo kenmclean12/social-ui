@@ -1,11 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
-import { useSnackbar } from "notistack";
 import { api } from "../../lib/api";
 import type { PresignUrlDto, PresignUrlDtoResponseDto } from "../../types";
 
 export function useMinioPresignUrl() {
-  const { enqueueSnackbar } = useSnackbar();
-
   return useMutation({
     mutationFn: async (dto: PresignUrlDto) => {
       const res = await api("/minio/url", {
@@ -19,14 +16,6 @@ export function useMinioPresignUrl() {
       }
 
       return res.json() as Promise<PresignUrlDtoResponseDto>;
-    },
-    onSuccess: (data) => {
-      enqueueSnackbar("Presigned URL generated!", { variant: "success" });
-      console.log("Upload URL:", data.uploadUrl);
-      console.log("Final public URL:", data.finalUrl);
-    },
-    onError: (err) => {
-      enqueueSnackbar(err.message, { variant: "error" });
     },
   });
 }
