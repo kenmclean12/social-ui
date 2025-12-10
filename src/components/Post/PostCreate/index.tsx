@@ -31,6 +31,7 @@ export function PostCreate() {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    const uniqueFileName = `${Date.now()}-${user?.id || "anon"}-${file.name}`;
 
     const reader = new FileReader();
     reader.onload = () => setFilePreview(reader.result as string);
@@ -38,7 +39,7 @@ export function PostCreate() {
 
     try {
       const { uploadUrl, finalUrl } = await getPresignedUrl({
-        fileName: file.name,
+        fileName: uniqueFileName,
       });
 
       await fetch(uploadUrl, { method: "PUT", body: file });
