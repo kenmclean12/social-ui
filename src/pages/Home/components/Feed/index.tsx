@@ -6,14 +6,13 @@ import { PostCard } from "../../../../components";
 
 export function Feed() {
   const { user } = useAuth();
-
   const {
     data,
     isLoading,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useFeedPersonalized(user?.id as number, 3);
+  } = useFeedPersonalized(user?.id as number, 20);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
 

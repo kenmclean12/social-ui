@@ -10,7 +10,7 @@ export function useFeedPersonalized(userId: number, limit = 20) {
 
     queryFn: async ({ pageParam = 1 }) => {
       const res = await api(
-        `/feed/personalized?userId=${userId}&page=${pageParam}&limit=${limit}`
+        `/feed/personalized?&page=${pageParam}&limit=${limit}`
       );
 
       if (!res?.ok) {

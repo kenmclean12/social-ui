@@ -17,7 +17,6 @@ type FilterType = "mostLiked" | "mostReacted" | "recent" | "oldest";
 
 export function ExploreFeed() {
   const [filter, setFilter] = useState<FilterType>("mostLiked");
-
   const {
     data,
     isLoading,
