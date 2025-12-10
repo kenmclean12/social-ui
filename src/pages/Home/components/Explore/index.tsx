@@ -6,30 +6,34 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  CircularProgress,
+  IconButton,
   type SelectChangeEvent,
 } from "@mui/material";
-import { Public } from "@mui/icons-material";
+import { Public, ArrowUpward } from "@mui/icons-material";
 import { useFeedExplore } from "../../../../hooks";
 import { PostCard } from "../../../../components";
+import {
+  exploreTopBarContainerStyles,
+  gridContainerStyles,
+  inputLabelStyles,
+  mainContainerStyles,
+  paperPropStyles,
+  selectStyles,
+} from "./styles";
+import { arrowUpwardButtonStyles, noPostContainerStyles } from "../styles";
 
 type FilterType = "mostLiked" | "mostReacted" | "recent" | "oldest";
 
 export function ExploreFeed() {
-  const [filter, setFilter] = useState<FilterType>("mostLiked");
-  const {
-    data,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useFeedExplore(filter, 20);
-
   const loaderRef = useRef<HTMLDivElement | null>(null);
-
-  const handleChange = (event: SelectChangeEvent<FilterType>) => {
-    setFilter(event.target.value as FilterType);
-  };
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [filter, setFilter] = useState<FilterType>("mostLiked");
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const { data, isLoading, fetchNextPage, hasNextPage } = useFeedExplore(
+    filter,
+    2
+  );
+  const allPosts = data?.pages.flatMap((page) => page.data) ?? [];
 
   useEffect(() => {
     if (!loaderRef.current) return;
@@ -47,66 +51,42 @@ export function ExploreFeed() {
     return () => observer.disconnect();
   }, [hasNextPage, fetchNextPage]);
 
-  const allPosts = data?.pages.flatMap((page) => page.data) ?? [];
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      setShowScrollTop(container.scrollTop > 300);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    containerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleChange = (event: SelectChangeEvent<FilterType>) => {
+    setFilter(event.target.value as FilterType);
+  };
 
   return (
-    <Stack
-      alignSelf="center"
-      height="100%"
-      width="100%"
-      pt={1}
-      boxSizing="border-box"
-      sx={{
-        overflowY: "auto",
-        "&::-webkit-scrollbar": { width: 8 },
-        "&::-webkit-scrollbar-thumb": {
-          backgroundColor: "#444",
-          borderRadius: 4,
-        },
-      }}
-    >
+    <Stack ref={containerRef} sx={mainContainerStyles}>
       <Stack p={1} pb={0}>
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          width="100%"
-          p={1.5}
-          paddingInline={2}
-          mb={2}
-          border="1px solid #444"
-          borderRadius={2}
-          sx={{ bgcolor: "#0d0d0dff" }}
-        >
+        <Stack sx={exploreTopBarContainerStyles}>
           <Stack direction="row" alignItems="center" spacing={0.75}>
             <Typography color="white">Explore</Typography>
             <Public sx={{ color: "lightblue" }} />
           </Stack>
           <FormControl size="small" sx={{ minWidth: 150 }}>
-            <InputLabel
-              sx={{
-                color: "white",
-                "&.Mui-focused": { color: "white" },
-              }}
-            >
-              Filter By
-            </InputLabel>
+            <InputLabel sx={inputLabelStyles}>Filter By</InputLabel>
             <Select
               value={filter}
               onChange={handleChange}
               label="Filter"
-              sx={{
-                maxWidth: 400,
-                backgroundColor: "black",
-                color: "white",
-                ".MuiOutlinedInput-notchedOutline": { borderColor: "#444" },
-                "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#666" },
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#444" },
-                ".MuiSvgIcon-root": { color: "white" },
-              }}
-              MenuProps={{
-                PaperProps: { sx: { backgroundColor: "black", color: "white" } },
-              }}
+              sx={selectStyles}
+              MenuProps={{ PaperProps: { sx: paperPropStyles } }}
             >
               <MenuItem value="mostLiked">Most Liked</MenuItem>
               <MenuItem value="mostReacted">Most Reacted</MenuItem>
@@ -116,14 +96,13 @@ export function ExploreFeed() {
           </FormControl>
         </Stack>
       </Stack>
-      {allPosts.length > 0 ? (
-        <Stack
-          display="grid"
-          gridTemplateColumns="repeat(auto-fill, minmax(500px, 1fr))"
-          gap={2}
-          p={1}
-          pt={0}
-        >
+      {isLoading && (
+        <Stack sx={noPostContainerStyles}>
+          <Typography color="white">Loading feed...</Typography>
+        </Stack>
+      )}
+      {allPosts.length > 0 && (
+        <Stack sx={gridContainerStyles}>
           {allPosts.map((post) => (
             <PostCard
               key={post.id}
@@ -133,20 +112,13 @@ export function ExploreFeed() {
               height="600px"
             />
           ))}
-          <div ref={loaderRef} style={{ height: "40px" }}>
-            {isFetchingNextPage && <CircularProgress size={35} />}
-          </div>
+          <div ref={loaderRef} />
         </Stack>
-      ) : (
-        <Stack>
-          {isLoading ? (
-            <CircularProgress size={40} />
-          ) : (
-            <Typography align="center" color="white">
-              No posts
-            </Typography>
-          )}
-        </Stack>
+      )}
+      {showScrollTop && (
+        <IconButton onClick={scrollToTop} sx={arrowUpwardButtonStyles}>
+          <ArrowUpward />
+        </IconButton>
       )}
     </Stack>
   );

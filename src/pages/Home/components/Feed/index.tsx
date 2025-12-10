@@ -1,20 +1,21 @@
-import { useEffect, useRef } from "react";
-import { Stack, Typography, CircularProgress } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
+import { Stack, Typography, IconButton } from "@mui/material";
+import { ArrowUpward } from "@mui/icons-material";
 import { useAuth } from "../../../../context";
 import { useFeedPersonalized } from "../../../../hooks";
 import { PostCard } from "../../../../components";
+import { mainContainerStyles, postGridStyles } from "./styles";
+import { arrowUpwardButtonStyles, noPostContainerStyles } from "../styles";
 
 export function Feed() {
   const { user } = useAuth();
-  const {
-    data,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useFeedPersonalized(user?.id as number, 20);
-
   const loaderRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [showScrollTop, setShowScrollTop] = useState(true);
+  const { data, isLoading, fetchNextPage, hasNextPage } = useFeedPersonalized(
+    user?.id as number,
+    2
+  );
 
   useEffect(() => {
     if (!loaderRef.current) return;
@@ -32,55 +33,59 @@ export function Feed() {
     return () => observer.disconnect();
   }, [hasNextPage, fetchNextPage]);
 
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      setShowScrollTop(container.scrollTop > 300);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    containerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const allPosts = data?.pages.flatMap((page) => page.data) ?? [];
 
   if (isLoading) {
     return (
-      <Stack
-        width="100%"
-        height="100%"
-        alignItems="center"
-        justifyContent="center"
-      >
+      <Stack sx={noPostContainerStyles}>
         <Typography color="white">Loading feed...</Typography>
       </Stack>
     );
   }
 
-  return (
-    <Stack
-      height="100%"
-      width="100%"
-      p={2}
-      sx={{
-        overflowY: "auto",
-        "&::-webkit-scrollbar": { width: 8 },
-        "&::-webkit-scrollbar-thumb": {
-          backgroundColor: "#444",
-          borderRadius: 4,
-        },
-      }}
-    >
-      <Stack
-        display="grid"
-        gridTemplateColumns="repeat(auto-fill, minmax(500px, 1fr))"
-        gap={2}
-        p={1}
-      >
-        {allPosts.length > 0 &&
-          allPosts.map((post) => (
-            <PostCard
-              key={post.id}
-              commentId={null}
-              post={post}
-              width="auto"
-              height="550px"
-            />
-          ))}
-        <div ref={loaderRef} style={{ height: "40px" }}>
-          {isFetchingNextPage && <CircularProgress size={35} />}
-        </div>
+  if (allPosts.length === 0) {
+    return (
+      <Stack sx={noPostContainerStyles}>
+        <Typography color="white">No posts found</Typography>
       </Stack>
+    );
+  }
+
+  return (
+    <Stack ref={containerRef} sx={mainContainerStyles}>
+      <Stack sx={postGridStyles}>
+        {allPosts.map((post) => (
+          <PostCard
+            key={post.id}
+            commentId={null}
+            post={post}
+            width="auto"
+            height="550px"
+          />
+        ))}
+        <div ref={loaderRef} />
+      </Stack>
+      {showScrollTop && (
+        <IconButton onClick={scrollToTop} sx={arrowUpwardButtonStyles}>
+          <ArrowUpward />
+        </IconButton>
+      )}
     </Stack>
   );
 }
