@@ -14,7 +14,7 @@ export function Feed() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const { data, isLoading, fetchNextPage, hasNextPage } = useFeedPersonalized(
     user?.id as number,
-    2
+    20
   );
 
   useEffect(() => {

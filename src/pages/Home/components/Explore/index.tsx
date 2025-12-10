@@ -31,7 +31,7 @@ export function ExploreFeed() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const { data, isLoading, fetchNextPage, hasNextPage } = useFeedExplore(
     filter,
-    2
+    20
   );
   const allPosts = data?.pages.flatMap((page) => page.data) ?? [];
 
