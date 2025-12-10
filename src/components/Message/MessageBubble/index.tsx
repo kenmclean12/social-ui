@@ -104,7 +104,7 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
 
   const readCount = message.reads?.length || 0;
   const timestamp = message.createdAt
-    ? formatTimeLabel(message.createdAt)
+    ? formatTimeLabel(new Date(message.createdAt))
     : "n/a";
 
   return (
