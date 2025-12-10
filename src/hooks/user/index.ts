@@ -7,6 +7,7 @@ import {
   type UserResponseDto,
 } from "../../types";
 import { api } from "../../lib/api";
+import { useRef } from "react";
 
 export function useUserFindOne(id: number) {
   return useQuery({
@@ -23,17 +24,30 @@ export function useUserFindOne(id: number) {
   });
 }
 
-export function useUserFindAll() {
-  return useQuery({
-    queryKey: ["users"],
-    queryFn: async () => {
-      const res = await api("/user");
-      if (!res?.ok) {
-        const err = await res?.json();
-        throw new Error(err.message || "Failed to fetch users");
-      }
-      return res.json() as Promise<UserResponseDto[]>;
-    },
+export function useUserSearch(search: string) {
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  return useQuery<UserResponseDto[]>({
+    queryKey: ["user-search", search],
+    enabled: search.trim().length > 0,
+    queryFn: () =>
+      new Promise((resolve) => {
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+
+        debounceRef.current = setTimeout(async () => {
+          const res = await api(
+            `/user/search?q=${encodeURIComponent(search)}`
+          );
+
+          if (!res?.ok) {
+            const err = await res?.json();
+            throw new Error(err.message || "Failed to search users");
+          }
+
+          const json = (await res.json()) as UserResponseDto[];
+          resolve(json);
+        }, 200);
+      }),
   });
 }
 
