@@ -18,7 +18,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   function login(
     access_token: string,
     refresh_token: string,
-    user: UserResponseDto,
+    user: UserResponseDto
   ) {
     localStorage.setItem("access_token", access_token);
     localStorage.setItem("refresh_token", refresh_token);

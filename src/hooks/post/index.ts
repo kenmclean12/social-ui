@@ -1,4 +1,9 @@
-import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  useInfiniteQuery,
+} from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import {
   type PostCreateDto,
@@ -31,9 +36,13 @@ export function usePostFindByUserId(userId: number, limit: number) {
     initialPageParam: 1,
 
     queryFn: async ({ pageParam = 1 }) => {
-      const res = await api(`/post/posts/${userId}?page=${pageParam}&limit=${limit}`);
+      const res = await api(
+        `/post/posts/${userId}?page=${pageParam}&limit=${limit}`
+      );
       if (!res || !res.ok) {
-        const err = res ? await res.json() : { message: "No response from server" };
+        const err = res
+          ? await res.json()
+          : { message: "No response from server" };
         throw new Error(err.message || "Failed to fetch posts");
       }
       return res.json();

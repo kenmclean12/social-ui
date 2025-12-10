@@ -7,7 +7,7 @@ export interface AuthContextType {
   login: (
     access_token: string,
     refresh_token: string,
-    user: UserResponseDto,
+    user: UserResponseDto
   ) => void;
   logout: () => void;
 }
