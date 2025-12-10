@@ -2,7 +2,12 @@ import { Divider, Paper, Box } from "@mui/material";
 import type { UserWithCountsResponseDto } from "../../../../../../types";
 import { useUserUpdate } from "../../../../../../hooks";
 import { EditableField } from "./components";
-import { basicInfoTextContainerStyles, contactDetailsTextContainerStyles, editableFieldContainerStyles, mainContainerStyles } from "./styles";
+import {
+  basicInfoTextContainerStyles,
+  contactDetailsTextContainerStyles,
+  editableFieldContainerStyles,
+  mainContainerStyles,
+} from "./styles";
 
 interface Props {
   user: UserWithCountsResponseDto;
@@ -16,9 +21,7 @@ export function InfoSection({ user, isOwnUser }: Props) {
     <Paper elevation={1} sx={mainContainerStyles}>
       <Box sx={{ flex: 1, width: "50%" }}>
         <Box sx={{ mb: 2, pt: 2 }}>
-          <Box sx={basicInfoTextContainerStyles}>
-            Basic Info
-          </Box>
+          <Box sx={basicInfoTextContainerStyles}>Basic Info</Box>
           <Divider sx={{ backgroundColor: "#ccc" }} />
           <Box sx={editableFieldContainerStyles}>
             <EditableField
@@ -56,9 +59,7 @@ export function InfoSection({ user, isOwnUser }: Props) {
       />
       <Box sx={{ flex: 1, width: "50%", pt: 2 }}>
         <Box sx={{ mb: 2 }}>
-          <Box sx={contactDetailsTextContainerStyles}>
-            Contact Details
-          </Box>
+          <Box sx={contactDetailsTextContainerStyles}>Contact Details</Box>
           <Divider sx={{ backgroundColor: "#ccc" }} />
           <Box sx={editableFieldContainerStyles}>
             <EditableField

@@ -23,8 +23,19 @@ import { ReactionPanel } from "../../../../../ReactionPanel";
 import { formatDayAndTime } from "../../../../../../utils";
 import { textFieldStyles } from "../../../../../../pages/styles";
 import { PopoverMenu, PopoverMenuItem } from "../../../../../PopoverMenu";
-import { noCommentsDisplayContainerStyles } from "../styles";
+import { sendButtonStyles } from "../styles";
 import { ProfileDialog } from "../../../../../Profile";
+import {
+  chatBubbleStyles,
+  contentContainerStyles,
+  contentTextStyles,
+  firstToReplyTextStyles,
+  noRepliesContainerStyles,
+  repliesContainerStyles,
+  settingsIconStyles,
+  timestampStyles,
+  userTextStyles,
+} from "./styles";
 
 interface Props {
   comment: CommentResponseDto;
@@ -34,11 +45,9 @@ interface Props {
 
 export function CommentLine({ comment, setCount, isReply }: Props) {
   const { user } = useAuth();
-
   const isAuthor = user?.id === comment.user.id;
   const replyCount = comment.replies?.length || 0;
   const [profileId, setProfileId] = useState<number | null>(null);
-
   const { data: likes } = useLikeFind("comment", comment.id);
   const hasLiked = likes?.some((l) => l.userId === user?.id);
 
@@ -48,11 +57,10 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
   const { mutateAsync: deleteComment } = useCommentDelete();
   const { mutateAsync: createComment } = useCommentCreate();
 
-  // Local state
-  const [editing, setEditing] = useState(false);
-  const [editValue, setEditValue] = useState(comment.content);
-  const [showReplies, setShowReplies] = useState(false);
-  const [replyText, setReplyText] = useState("");
+  const [editing, setEditing] = useState<boolean>(false);
+  const [editValue, setEditValue] = useState<string>(comment.content);
+  const [showReplies, setShowReplies] = useState<boolean>(false);
+  const [replyText, setReplyText] = useState<string>("");
 
   const toggleLike = () => {
     if (!user || isAuthor) return;
@@ -121,76 +129,38 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
     );
   };
 
-  const formattedDate = comment.createdAt
-    ? formatDayAndTime(new Date(comment.createdAt))
-    : "n/a";
-
   return (
     <>
-      <Stack sx={{ mb: 1, paddingInline: isReply ? 1.5 : 0 }}>
-        {/* Comment bubble */}
+      <Stack sx={{ paddingInline: isReply ? 1.5 : 0, mb: 1 }}>
         <Stack
-          spacing={1}
           sx={{
-            p: 1.5,
-            backgroundColor: "black",
-            border: `1px solid #444`,
-            borderBottom: showReplies ? "none" : `1px solid #444`,
-            borderRadius: 1,
+            ...contentContainerStyles,
+            borderBottom: showReplies ? "none" : "1px solid #444",
           }}
         >
-          {/* Header */}
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Stack direction="row" alignItems="center" spacing={1}>
             <Avatar
               src={comment.user.avatarUrl || ""}
               sx={{ width: 25, height: 25 }}
             />
-
-            <Stack flex={1} sx={{ minWidth: 0 }}>
-              <Stack
-                direction="row"
-                alignItems="center"
-                spacing={0.75}
-                sx={{ minWidth: 0 }}
-              >
+            <Stack flex={1} minWidth={0}>
+              <Stack direction="row" alignItems="center" spacing={0.75} minWidth={0}>
                 <Typography
-                  fontSize={13}
-                  color="white"
-                  fontWeight={500}
                   onClick={() => setProfileId(comment.user.id)}
-                  sx={{
-                    maxWidth: "45%",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                    cursor: "pointer",
-                  }}
+                  sx={userTextStyles}
                 >
                   {comment.user.firstName} {comment.user.lastName}
                 </Typography>
-                <Typography
-                  fontSize={11}
-                  color="lightgrey"
-                  sx={{ ml: 0.5, flexShrink: 0 }}
-                >
-                  • {formattedDate}
+                <Typography sx={timestampStyles}>
+                  •{" "}
+                  {comment.createdAt
+                    ? formatDayAndTime(comment.createdAt)
+                    : "n/a"}
                 </Typography>
               </Stack>
             </Stack>
-
             {!editing && isAuthor && (
-              <PopoverMenu
-                trigger={
-                  <Settings
-                    sx={{
-                      cursor: "pointer",
-                      color: "white",
-                      p: 0.5,
-                      fontSize: 25,
-                    }}
-                  />
-                }
-              >
+              <PopoverMenu trigger={<Settings sx={settingsIconStyles} />}>
                 <PopoverMenuItem
                   label="Edit"
                   onClick={handleEditClick}
@@ -205,21 +175,9 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
             )}
           </Stack>
           {!editing ? (
-            <Typography
-              fontSize={14}
-              color="white"
-              sx={{ pl: 4, whiteSpace: "pre-wrap", lineHeight: 1.4 }}
-            >
-              {comment.content}
-            </Typography>
+            <Typography sx={contentTextStyles}>{comment.content}</Typography>
           ) : (
-            <Stack
-              spacing={1}
-              p={1}
-              pt={1}
-              border="1px solid #444"
-              borderRadius={1}
-            >
+            <Stack spacing={1} p={1} pt={1} border="1px solid #444" borderRadius={1}>
               <TextField
                 fullWidth
                 multiline
@@ -228,12 +186,7 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
                 onChange={(e) => setEditValue(e.target.value)}
                 sx={textFieldStyles}
               />
-              <Stack
-                direction="row"
-                justifyContent="flex-end"
-                spacing={1.5}
-                pb={0.5}
-              >
+              <Stack direction="row" justifyContent="flex-end" spacing={1.5} pb={0.5}>
                 <Button
                   size="small"
                   onClick={() => setEditing(false)}
@@ -298,20 +251,8 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
         </Stack>
         <Divider sx={{ backgroundColor: "#444" }} />
         {showReplies && (
-          <Stack
-            spacing={1}
-            border="1px solid #444"
-            borderTop="none"
-            mb={4}
-            sx={{ backgroundColor: "#121212" }}
-          >
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={1}
-              p={1.5}
-              pb={0.25}
-            >
+          <Stack spacing={1} border="1px solid #444" borderTop="none" mb={4} sx={{ backgroundColor: "#121212" }}>
+            <Stack direction="row" alignItems="center" spacing={1} p={1.5} pb={0.25}>
               <TextField
                 size="small"
                 value={replyText}
@@ -325,35 +266,13 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
                 variant="outlined"
                 size="small"
                 onClick={submitReply}
-                sx={{
-                  height: "35px",
-                  backgroundColor: "black",
-                  border: "1px solid lightblue",
-                  color: "lightblue",
-
-                  "&:hover": {
-                    backgroundColor: "black",
-                    borderColor: "lightblue",
-                  },
-
-                  "&.Mui-disabled": {
-                    backgroundColor: "black !important",
-                    borderColor: "#333 !important",
-                    color: "#555 !important",
-                    cursor: "not-allowed",
-                    opacity: 1,
-                  },
-                }}
+                sx={sendButtonStyles}
                 disabled={!replyText.trim()}
               >
                 Reply
               </Button>
             </Stack>
-            <Stack
-              pt={0.5}
-              maxHeight="300px"
-              sx={{ backgroundColor: "#121212", overflowY: "auto" }}
-            >
+            <Stack sx={repliesContainerStyles}>
               {comment.replies && comment.replies.length > 0 ? (
                 comment.replies?.map((reply) => (
                   <CommentLine
@@ -364,22 +283,15 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
                   />
                 ))
               ) : (
-                <Box
-                  sx={{
-                    ...noCommentsDisplayContainerStyles,
-                    backgroundColor: "black",
-                    padding: 4,
-                    paddingTop: 1,
-                  }}
-                >
-                  <ChatBubble sx={{ fontSize: 40, mb: 1, opacity: 0.5 }} />
+                <Box sx={noRepliesContainerStyles}>
+                  <ChatBubble sx={chatBubbleStyles} />
                   <Typography variant="body2" align="center">
                     No replies yet
                   </Typography>
                   <Typography
                     align="center"
                     variant="caption"
-                    sx={{ mt: 0.5, opacity: 0.7 }}
+                    sx={firstToReplyTextStyles}
                   >
                     Be the first to reply
                   </Typography>

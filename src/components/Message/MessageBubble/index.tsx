@@ -17,7 +17,7 @@ import {
   Visibility,
 } from "@mui/icons-material";
 import { useAuth } from "../../../context";
-import type { MessageResponseDto } from "../../../types";
+import type { LikeResponseDto, MessageResponseDto } from "../../../types";
 import {
   useLikeCreate,
   useLikeDelete,
@@ -28,8 +28,18 @@ import {
 import { ReactionPanel } from "../../ReactionPanel";
 import { ProfileDialog } from "../../Profile";
 import { PopoverMenu, PopoverMenuItem } from "../../PopoverMenu";
-import { textFieldStyles } from "../../../pages/styles";
 import { UserRow } from "../../User";
+import {
+  bottomRowContainerStyles,
+  mainContainerStyles,
+  messageContentStyles,
+  messageEditTextFieldStyles,
+  paperStyles,
+  timestampSelfStyles,
+  timestampStyles,
+  topRowContainerStyles,
+} from "./styles";
+import { formatTimeLabel } from "../../../utils";
 
 interface Props {
   message: MessageResponseDto;
@@ -44,7 +54,7 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
   const [editing, setEditing] = useState<boolean>(false);
   const [editValue, setEditValue] = useState<string>(message.content);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-  const [likes, setLikes] = useState(message.likes || []);
+  const [likes, setLikes] = useState<LikeResponseDto[]>(message.likes || []);
 
   const { mutateAsync: createLike } = useLikeCreate();
   const { mutateAsync: removeLike } = useLikeDelete();
@@ -92,30 +102,23 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
     setEditing(false);
   };
 
-  const timestamp = message.createdAt
-    ? new Date(message.createdAt).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "n/a";
-
   const readCount = message.reads?.length || 0;
+  const timestamp = message.createdAt
+    ? formatTimeLabel(message.createdAt)
+    : "n/a";
 
   return (
     <Box
-      display="flex"
-      flexDirection="column"
+      sx={mainContainerStyles}
       alignItems={isSelf ? "flex-end" : "flex-start"}
       mb={dialog ? 0 : 2}
-      gap={0.5}
     >
       {!isSelf ? (
         <Stack
-          direction="row"
-          alignItems="center"
-          spacing={1}
-          mb={0.5}
-          sx={{ cursor: dialog ? "default" : "pointer" }}
+          sx={{
+            ...topRowContainerStyles,
+            cursor: dialog ? "default" : "pointer",
+          }}
           onClick={() => setSelectedUserId(message.sender.id)}
         >
           <Avatar
@@ -125,23 +128,11 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
           <Typography fontSize={13} color="#ccc">
             {message.sender.firstName} {message.sender.lastName}
           </Typography>
-          <Typography
-            fontSize={11}
-            color="#aaa"
-            sx={{ userSelect: "none", pt: 0.25, whiteSpace: "nowrap" }}
-          >
-            {timestamp}
-          </Typography>
+          <Typography sx={timestampStyles}>{timestamp}</Typography>
         </Stack>
       ) : (
         <Stack direction="row" alignItems="center" justifyContent="flex-end">
-          <Typography
-            fontSize={11}
-            color="#aaa"
-            sx={{ userSelect: "none", pb: 0.5, whiteSpace: "nowrap" }}
-          >
-            {timestamp}
-          </Typography>
+          <Typography sx={timestampSelfStyles}>{timestamp}</Typography>
         </Stack>
       )}
       <Stack
@@ -151,41 +142,15 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
         justifyContent={isSelf ? "flex-end" : "flex-start"}
         width="50%"
       >
-        <Paper
-          elevation={2}
-          sx={{
-            maxWidth: "90%",
-            width: "fit-content",
-            p: 1.3,
-            background: "black",
-            border: "1px solid lightblue",
-            color: "white",
-            borderRadius: 3,
-            wordBreak: "break-word",
-            whiteSpace: "pre-wrap",
-            overflowWrap: "anywhere",
-          }}
-        >
+        <Paper elevation={2} sx={paperStyles}>
           {editing ? (
-            <Stack direction="row" spacing={1} alignItems="flex-start">
+            <Stack direction="row" alignItems="flex-start" spacing={1}>
               <TextField
                 multiline
                 maxRows={5}
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
-                sx={{
-                  ...textFieldStyles,
-                  flex: 1,
-                  "& .MuiInputBase-input": {
-                    color: "white",
-                    padding: "8px 10px",
-                    lineHeight: 1.4,
-                  },
-                  "& .MuiOutlinedInput-root": {
-                    background: "#111",
-                    borderRadius: 2,
-                  },
-                }}
+                sx={messageEditTextFieldStyles}
               />
               <IconButton
                 size="small"
@@ -206,26 +171,13 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
               </IconButton>
             </Stack>
           ) : (
-            <Typography
-              fontSize={15}
-              sx={{
-                whiteSpace: "pre-wrap",
-                wordBreak: "break-word",
-              }}
-            >
-              {message.content}
-            </Typography>
+            <Typography sx={messageContentStyles}>{message.content}</Typography>
           )}
         </Paper>
       </Stack>
-
       <Stack
-        direction="row"
-        alignItems="center"
-        mt={0.2}
         sx={{
-          opacity: 0.9,
-          width: "100%",
+          ...bottomRowContainerStyles,
           justifyContent: isSelf ? "flex-end" : "flex-start",
         }}
       >

@@ -7,13 +7,17 @@ import {
   Box,
   Typography,
 } from "@mui/material";
+import { ChatBubble } from "@mui/icons-material";
 import { useAuth } from "../../../../../context";
 import type { CommentCreateDto } from "../../../../../types";
 import { CommentLine } from "./components";
 import { useCommentCreate, useCommentFindByPost } from "../../../../../hooks";
 import { textFieldStyles } from "../../../../../pages/styles";
-import { noCommentsDisplayContainerStyles, paperStyles } from "./styles";
-import { ChatBubble } from "@mui/icons-material";
+import {
+  noCommentsDisplayContainerStyles,
+  paperStyles,
+  sendButtonStyles,
+} from "./styles";
 
 interface Props {
   postId: number;
@@ -57,24 +61,7 @@ export function CommentSection({ postId, setCount }: Props) {
           <Button
             variant="outlined"
             onClick={handleCreate}
-            sx={{
-              height: "35px",
-              backgroundColor: "black",
-              border: "1px solid lightblue",
-              color: "lightblue",
-              "&:hover": {
-                backgroundColor: "black",
-                borderColor: "lightblue",
-              },
-
-              "&.Mui-disabled": {
-                backgroundColor: "black !important",
-                borderColor: "#333 !important",
-                color: "#555 !important",
-                cursor: "not-allowed",
-                opacity: 1,
-              },
-            }}
+            sx={sendButtonStyles}
             disabled={!newComment.trim()}
           >
             Send

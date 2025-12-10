@@ -7,12 +7,12 @@ export const mainContainerStyles = {
 };
 
 export const paperStyles = {
-  maxWidth: "90%",
   width: "fit-content",
+  maxWidth: "90%",
   p: 1.3,
   background: "black",
-  border: "1px solid lightblue",
   color: "white",
+  border: "1px solid lightblue",
   borderRadius: 3,
   wordBreak: "break-word",
   whiteSpace: "pre-wrap",
@@ -23,6 +23,7 @@ export const topRowContainerStyles = {
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
+  gap: "8px",
   marginBottom: "4px",
 };
 
@@ -40,6 +41,20 @@ export const timestampSelfStyles = {
   userSelect: "none",
   pt: 0.25,
   whiteSpace: "nowrap",
+};
+
+export const messageContentStyles = {
+  fontSize: "15px",
+  whiteSpace: "pre-wrap",
+  wordBreak: "break-word",
+};
+
+export const bottomRowContainerStyles = {
+  flexDirection: "row",
+  alignItems: "center",
+  width: "100%",
+  marginTop: "1.6px",
+  opacity: 0.9,
 };
 
 export const messageEditTextFieldStyles = {

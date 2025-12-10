@@ -33,7 +33,6 @@ export function UserRow({
     <Paper
       sx={{
         ...paperStyles,
-        cursor: "pointer",
         backgroundColor: color ?? "black",
         "&:hover": {
           backgroundColor: hoverColor ?? "#101",
@@ -47,10 +46,7 @@ export function UserRow({
           <Typography
             color="white"
             fontSize={message ? "13px" : "14px"}
-            sx={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
+            sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
             noWrap
           >
             {fullName} {showUserName && `(@${user.userName})`}

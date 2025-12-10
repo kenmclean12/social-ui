@@ -1,8 +1,8 @@
 export const mainContainerStyles = {
   p: 1.5,
-  borderRadius: 1,
   backgroundColor: "rgba(255, 255, 255, 0.05)",
   border: "1px solid rgba(107, 182, 255, 0.3)",
+  borderRadius: 1,
 };
 
 export const nonEditableMainContainerStyles = {

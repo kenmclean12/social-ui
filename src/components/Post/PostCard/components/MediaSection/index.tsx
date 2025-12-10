@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import {
-  Box,
-  Typography,
-  Dialog,
-  IconButton
-} from "@mui/material";
+import { Box, Typography, Dialog, IconButton } from "@mui/material";
 import { Close } from "@mui/icons-material";
-import { emptyContainerStyles, mainContainerStyles } from "./styles";
+import {
+  closeIconButtonStyles,
+  dialogPaperStyles,
+  emptyContainerStyles,
+  mainContainerStyles,
+} from "./styles";
 
 type Status = "empty" | "loading" | "valid" | "invalid";
 
@@ -66,19 +66,9 @@ export function MediaSection({ url, height = 200 }: Props) {
         open={open}
         onClose={() => setOpen(false)}
         fullScreen
-        PaperProps={{
-          sx: {
-            backgroundColor: "black",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          },
-        }}
+        PaperProps={{ sx: dialogPaperStyles }}
       >
-        <IconButton
-          onClick={() => setOpen(false)}
-          sx={{ position: "absolute", top: 20, right: 20, color: "white" }}
-        >
+        <IconButton onClick={() => setOpen(false)} sx={closeIconButtonStyles}>
           <Close />
         </IconButton>
         <img

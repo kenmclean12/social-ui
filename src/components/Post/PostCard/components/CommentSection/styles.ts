@@ -15,3 +15,23 @@ export const noCommentsDisplayContainerStyles = {
   p: 11,
   color: "rgba(255, 255, 255, 0.5)",
 };
+
+export const sendButtonStyles = {
+  height: "35px",
+  backgroundColor: "black",
+  border: "1px solid lightblue",
+  color: "lightblue",
+
+  "&:hover": {
+    backgroundColor: "black",
+    borderColor: "lightblue",
+  },
+
+  "&.Mui-disabled": {
+    backgroundColor: "black !important",
+    borderColor: "#333 !important",
+    color: "#555 !important",
+    cursor: "not-allowed",
+    opacity: 1,
+  },
+};

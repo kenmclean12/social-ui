@@ -11,7 +11,7 @@ export default function Header({ title, onClose }: Props) {
   return (
     <DialogTitle sx={dialogTitleStyles}>
       {title}
-      <IconButton onClick={onClose} sx={{ ...closeIconStyles }}>
+      <IconButton onClick={onClose} sx={closeIconStyles}>
         <Close />
       </IconButton>
     </DialogTitle>

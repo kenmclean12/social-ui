@@ -5,6 +5,11 @@ import { usePostCreate } from "../../../hooks";
 import { Add, Close } from "@mui/icons-material";
 import { UniversalDialog } from "../../UniversalDialog";
 import { textFieldStyles } from "../../../pages/styles";
+import {
+  closeIconButtonStyles,
+  submitButtonStyles,
+  uploadPhotoButtonStyles,
+} from "./styles";
 
 export function PostCreate() {
   const { user } = useAuth();
@@ -58,11 +63,7 @@ export function PostCreate() {
             variant="outlined"
             onClick={handleSubmit}
             disabled={isPending}
-            sx={{
-              border: "1px solid #444",
-              color: "lightblue",
-              backgroundColor: "black",
-            }}
+            sx={submitButtonStyles}
           >
             {isPending ? "Posting..." : "Submit"}
           </Button>
@@ -83,12 +84,8 @@ export function PostCreate() {
             <Button
               variant="outlined"
               component="label"
+              sx={uploadPhotoButtonStyles}
               disabled={!!contentUrl}
-              sx={{
-                backgroundColor: "#1e1e1e",
-                border: "1px solid #444",
-                color: "white",
-              }}
               fullWidth
             >
               Upload a Photo
@@ -122,13 +119,7 @@ export function PostCreate() {
               <IconButton
                 onClick={() => setFilePreview("")}
                 size="small"
-                sx={{
-                  position: "absolute",
-                  top: 4,
-                  right: 4,
-                  backgroundColor: "rgba(0,0,0,0.5)",
-                  "&:hover": { backgroundColor: "rgba(0,0,0,0.7)" },
-                }}
+                sx={closeIconButtonStyles}
               >
                 <Close sx={{ color: "white", fontSize: 16 }} />
               </IconButton>

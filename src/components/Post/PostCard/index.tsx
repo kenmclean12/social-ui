@@ -144,7 +144,7 @@ export function PostCard({
                   </Typography>
                   {post.createdAt && (
                     <Typography sx={styles.timestampText}>
-                      {formatDayAndTime(new Date(post.createdAt))}
+                      {post.createdAt ? formatDayAndTime(post.createdAt) : "n/a"}
                     </Typography>
                   )}
                 </Stack>
@@ -316,10 +316,7 @@ export function PostCard({
               </Typography>
             </Stack>
             <Divider sx={{ backgroundColor: "#444", my: 1 }} />
-            <CommentSection
-              postId={post.id}
-              setCount={setCommentCount}
-            />
+            <CommentSection postId={post.id} setCount={setCommentCount} />
           </Stack>
         </Slide>
       </Paper>

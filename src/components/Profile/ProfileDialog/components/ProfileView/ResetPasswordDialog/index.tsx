@@ -3,8 +3,7 @@ import { Stack, Button, Box, TextField } from "@mui/material";
 import { useUserResetPassword } from "../../../../../../hooks";
 import type { PasswordResetDto } from "../../../../../../types";
 import { UniversalDialog } from "../../../../../UniversalDialog";
-import { textFieldStyles } from "../../../../../../pages/styles";
-import { buttonStyles } from "./styles";
+import { buttonStyles, newTextFieldStyles } from "./styles";
 
 interface Props {
   open: boolean;
@@ -57,13 +56,7 @@ export function ResetPasswordDialog({ open, setOpen }: Props) {
           value={oldPassword}
           onChange={(e) => setOldPassword(e.target.value)}
           fullWidth
-          sx={{
-            ...textFieldStyles,
-            "& .MuiInputBase-input": {
-              height: "10px",
-              color: "white",
-            },
-          }}
+          sx={newTextFieldStyles}
         />
         <TextField
           type="password"
@@ -72,13 +65,7 @@ export function ResetPasswordDialog({ open, setOpen }: Props) {
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
           fullWidth
-          sx={{
-            ...textFieldStyles,
-            "& .MuiInputBase-input": {
-              height: "10px",
-              color: "white",
-            },
-          }}
+          sx={newTextFieldStyles}
         />
       </Stack>
     </UniversalDialog>

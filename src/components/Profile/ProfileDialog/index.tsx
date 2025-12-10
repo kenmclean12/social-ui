@@ -64,7 +64,6 @@ export function ProfileDialog({
     return "Following";
   };
 
-  const title = getTitle(top);
   if (!top) return null;
 
   return (
@@ -87,7 +86,7 @@ export function ProfileDialog({
               <ArrowBack />
             </IconButton>
           )}
-          {title}
+          {getTitle(top)}
           <Stack sx={dialogTitleActionsContainerStyles}>
             {isOwnProfile && (
               <PopoverMenu

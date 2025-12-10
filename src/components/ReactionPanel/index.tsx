@@ -5,7 +5,6 @@ import {
   Typography,
   IconButton,
   Popover,
-  List,
   Box,
   Tooltip,
 } from "@mui/material";
@@ -53,13 +52,12 @@ export function ReactionPanel({
   const { mutate: removeReaction } = useReactionDelete();
   const userReaction = reactions.find((r) => r.user.id === user?.id);
 
-  const handleReact = async (emoji: string) => {
+  const handleReact = (emoji: string) => {
     if (isSelf) return;
     if (userReaction) {
       removeReaction(userReaction.id);
       setReactions((prev) => prev.filter((r) => r.id !== userReaction.id));
     }
-
     createReaction(
       {
         userId: user?.id as number,
@@ -67,28 +65,17 @@ export function ReactionPanel({
         reaction: emoji,
       },
       {
-        onSuccess: (newReaction: ReactionResponseDto) => {
-          setReactions((prev) => [...prev, newReaction]);
-        },
+        onSuccess: (newReaction: ReactionResponseDto) =>
+          setReactions((prev) => [...prev, newReaction]),
       }
     );
-
     setAnchorEl(null);
   };
-
-  const groupedReactions = reactions.reduce((acc, reaction) => {
-    const emoji = reaction.reaction;
-    if (!acc[emoji]) {
-      acc[emoji] = [];
-    }
-    acc[emoji].push(reaction);
-    return acc;
-  }, {} as Record<string, ReactionResponseDto[]>);
 
   return (
     <>
       <Stack
-        sx={{ ...triggerContainerStyles, gap: smallIcon ? 0 : .8 }}
+        sx={{ ...triggerContainerStyles, gap: smallIcon ? 0 : 0.8 }}
         onClick={(e) => setAnchorEl(e.currentTarget)}
       >
         <EmojiEmotions
@@ -103,7 +90,7 @@ export function ReactionPanel({
             color: userReaction && !isSelf ? "lightblue" : "white",
           }}
         >
-          {reactions ? reactions.length : 0}
+          {reactions.length}
         </Typography>
       </Stack>
       <Popover
@@ -159,49 +146,39 @@ export function ReactionPanel({
           <Box sx={reactionContainerStyles}>
             {reactions.length > 0 ? (
               <Box sx={{ p: 1 }}>
-                {Object.entries(groupedReactions).map(
-                  ([emoji, emojiReactions]) => (
-                    <Box key={emoji} sx={{ mb: 1 }}>
-                      <List sx={{ p: 0, gap: "0px" }}>
-                        {emojiReactions.map((reaction) => (
-                          <Box key={reaction.id} sx={userListContainerStyles}>
-                            <UserRow
-                              user={reaction.user}
-                              message={
-                                reaction.user.id === user?.id
-                                  ? "You reacted with"
-                                  : `${reaction.user.firstName} reacted with`
-                              }
-                              button={
-                                <Stack
-                                  direction="row"
-                                  alignItems="center"
-                                  spacing={1.5}
-                                >
-                                  <span>{reaction.reaction}</span>
-                                  {reaction.user.id === user?.id && (
-                                    <Close
-                                      onClick={async (e) => {
-                                        e.stopPropagation();
-                                        removeReaction(reaction.id);
-                                        setReactions((prev) =>
-                                          prev.filter(
-                                            (x) => x.id !== reaction.id
-                                          )
-                                        );
-                                      }}
-                                      sx={closeIconStyles}
-                                    />
-                                  )}
-                                </Stack>
-                              }
+                {reactions.map((reaction) => (
+                  <Box key={reaction.id} sx={userListContainerStyles}>
+                    <UserRow
+                      user={reaction.user}
+                      message={
+                        reaction.user.id === user?.id
+                          ? "You reacted with"
+                          : `${reaction.user.firstName} reacted with`
+                      }
+                      button={
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          spacing={1.5}
+                        >
+                          <span>{reaction.reaction}</span>
+                          {reaction.user.id === user?.id && (
+                            <Close
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                removeReaction(reaction.id);
+                                setReactions((prev) =>
+                                  prev.filter((x) => x.id !== reaction.id)
+                                );
+                              }}
+                              sx={closeIconStyles}
                             />
-                          </Box>
-                        ))}
-                      </List>
-                    </Box>
-                  )
-                )}
+                          )}
+                        </Stack>
+                      }
+                    />
+                  </Box>
+                ))}
               </Box>
             ) : (
               <Box sx={noReactionsDisplayContainerStyles}>

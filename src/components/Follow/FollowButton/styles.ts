@@ -1,16 +1,16 @@
 export const buttonStyles = {
+  marginLeft: "auto",
   backgroundColor: "black",
   borderColor: "lightblue",
   color: "lightblue",
-  ml: "auto",
 };
 
 export const noTextButtonStyles = {
-  width: 35,
   height: 35,
-  borderRadius: 1,
+  width: 35,
   backgroundColor: "black",
-  border: "1px solid lightblue",
   color: "lightblue",
+  border: "1px solid lightblue",
+  borderRadius: 1,
   "&:hover": { backgroundColor: "#111" },
 };

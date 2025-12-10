@@ -4,6 +4,7 @@ export const paperStyles = {
   width: "100%",
   p: 1,
   transition: "background-color 0.15s ease",
+  cursor: "pointer",
 };
 
 export const contentContainerStyles = {

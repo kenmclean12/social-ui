@@ -15,6 +15,9 @@ import { Close } from "@mui/icons-material";
 import { UserRow } from "../../../../User";
 import { innerContainerStyles, inputStyles } from "./styles";
 
+const normalize = (val: string) =>
+  (val ?? "").toString().toLowerCase().trim().replace(/\s+/g, "");
+
 interface Props {
   userId: number;
   listType: "followers" | "following" | undefined;
@@ -31,9 +34,6 @@ export function FollowListView({ userId, listType, onClickUser }: Props) {
   });
   const query = listType === "followers" ? followersQuery : followingQuery;
   const { data: list, isLoading } = query;
-
-  const normalize = (val: string) =>
-    (val ?? "").toString().toLowerCase().trim().replace(/\s+/g, "");
 
   const filtered = useMemo(() => {
     if (!list) return [];

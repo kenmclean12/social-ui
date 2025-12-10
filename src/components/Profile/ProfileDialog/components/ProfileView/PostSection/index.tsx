@@ -10,15 +10,9 @@ interface Props {
 }
 
 export function PostSection({ userId }: Props) {
-  const {
-    data,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = usePostFindByUserId(userId, 20);
-
   const loaderRef = useRef<HTMLDivElement | null>(null);
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    usePostFindByUserId(userId, 20);
 
   useEffect(() => {
     if (!loaderRef.current) return;
@@ -36,15 +30,19 @@ export function PostSection({ userId }: Props) {
     return () => observer.disconnect();
   }, [hasNextPage, fetchNextPage]);
 
-  const allPosts =
-    data?.pages.flatMap((page) => page.data) ?? [];
+  const allPosts = data?.pages.flatMap((page) => page.data) ?? [];
 
   return (
     <Stack sx={mainContainerStyles}>
       {allPosts.length ? (
         <Stack sx={gridStyles}>
           {allPosts.map((post) => (
-            <PostCard key={post.id} commentId={null} post={post} height="500px" />
+            <PostCard
+              key={post.id}
+              commentId={null}
+              post={post}
+              height="500px"
+            />
           ))}
           <div ref={loaderRef} style={{ height: "40px" }}>
             {isFetchingNextPage && (
