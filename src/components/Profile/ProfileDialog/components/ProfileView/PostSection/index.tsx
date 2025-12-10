@@ -51,11 +51,11 @@ export function PostSection({ userId }: Props) {
           </div>
         </Stack>
       ) : (
-        <Stack>
+        <Stack pt={2.5}>
           {isLoading ? (
             <CircularProgress size={40} sx={spinnerStyles} />
           ) : (
-            <Typography align="center" color="white">
+            <Typography align="center" color="white" pt={.5}>
               No posts
             </Typography>
           )}

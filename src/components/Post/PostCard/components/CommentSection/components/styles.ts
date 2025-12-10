@@ -12,7 +12,7 @@ export const noRepliesContainerStyles = {
   ...noCommentsDisplayContainerStyles,
   backgroundColor: "black",
   padding: 4,
-  paddingTop: 1,
+  paddingTop: 3,
 };
 
 export const chatBubbleStyles = {

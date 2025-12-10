@@ -12,7 +12,7 @@ export const noCommentsDisplayContainerStyles = {
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  p: 11,
+  p: 10.5,
   color: "rgba(255, 255, 255, 0.5)",
 };
 
