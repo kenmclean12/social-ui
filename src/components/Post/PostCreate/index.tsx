@@ -10,6 +10,7 @@ import {
   submitButtonStyles,
   uploadPhotoButtonStyles,
 } from "./styles";
+import { useMinioPresignUrl } from "../../../hooks/minio";
 
 export function PostCreate() {
   const { user } = useAuth();
@@ -18,6 +19,7 @@ export function PostCreate() {
   const [contentUrl, setContentUrl] = useState<string>("");
   const [filePreview, setFilePreview] = useState<string>("");
   const { mutateAsync: createPost, isPending } = usePostCreate();
+  const { mutateAsync: getPresignedUrl } = useMinioPresignUrl();
 
   const handleClose = () => {
     setOpen(false);
@@ -26,24 +28,34 @@ export function PostCreate() {
     setFilePreview("");
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setContentUrl("");
     const reader = new FileReader();
     reader.onload = () => setFilePreview(reader.result as string);
     reader.readAsDataURL(file);
+
+    try {
+      const { uploadUrl, finalUrl } = await getPresignedUrl({
+        fileName: file.name,
+      });
+
+      await fetch(uploadUrl, { method: "PUT", body: file });
+      setContentUrl(finalUrl);
+    } catch (err) {
+      console.error("File upload failed", err);
+    }
   };
 
   const handleSubmit = async () => {
     if (!user) return;
-    if (!textContent) return;
+    if (!textContent && !contentUrl) return;
 
     await createPost({
       userId: user.id,
       textContent: textContent || undefined,
-      contentUrl: filePreview || contentUrl || undefined,
+      contentUrl: contentUrl || undefined,
     });
 
     handleClose();
@@ -70,44 +82,38 @@ export function PostCreate() {
         }
       >
         <Stack spacing={2}>
-          <Stack spacing={2}>
-            <TextField
-              fullWidth
-              placeholder="Write something..."
-              multiline
-              minRows={3}
-              value={textContent}
-              inputProps={{ maxLength: 100 }}
-              onChange={(e) => setTextContent(e.target.value)}
-              sx={textFieldStyles}
+          <TextField
+            fullWidth
+            placeholder="Write something..."
+            multiline
+            minRows={3}
+            value={textContent}
+            inputProps={{ maxLength: 100 }}
+            onChange={(e) => setTextContent(e.target.value)}
+            sx={textFieldStyles}
+          />
+          <Button
+            variant="outlined"
+            component="label"
+            sx={uploadPhotoButtonStyles}
+            disabled={!!contentUrl}
+            fullWidth
+          >
+            Upload File
+            <input
+              type="file"
+              hidden
+              accept="image/*,video/*"
+              onChange={handleFileChange}
             />
-            <Button
-              variant="outlined"
-              component="label"
-              sx={uploadPhotoButtonStyles}
-              disabled={!!contentUrl}
-              fullWidth
-            >
-              Upload a Photo
-              <input
-                type="file"
-                hidden
-                accept="image/*,video/*"
-                onChange={handleFileChange}
-              />
-            </Button>
-          </Stack>
+          </Button>
           {filePreview && (
             <Stack position="relative">
               {filePreview.startsWith("data:image") ? (
                 <img
                   src={filePreview}
                   alt="Preview"
-                  style={{
-                    width: "100%",
-                    maxHeight: 200,
-                    objectFit: "cover",
-                  }}
+                  style={{ width: "100%", maxHeight: 200, objectFit: "cover" }}
                 />
               ) : (
                 <video
@@ -117,7 +123,10 @@ export function PostCreate() {
                 />
               )}
               <IconButton
-                onClick={() => setFilePreview("")}
+                onClick={() => {
+                  setFilePreview("");
+                  setContentUrl("");
+                }}
                 size="small"
                 sx={closeIconButtonStyles}
               >
