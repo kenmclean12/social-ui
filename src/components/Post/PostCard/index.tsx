@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Stack,
   Paper,
@@ -44,6 +44,7 @@ export function PostCard({
   height = "auto",
 }: Props) {
   const { user } = useAuth();
+  const editScrollRef = useRef<HTMLDivElement | null>(null);
   const [showComments, setShowComments] = useState<boolean>(false);
   const [editing, setEditing] = useState<boolean>(false);
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
@@ -70,6 +71,17 @@ export function PostCard({
     }
     setCommentCount(count);
   }, [post.comments]);
+
+  useEffect(() => {
+    if (editing && editScrollRef.current) {
+      requestAnimationFrame(() => {
+        editScrollRef.current?.scrollTo({
+          top: editScrollRef.current.scrollHeight,
+          behavior: "smooth",
+        });
+      });
+    }
+  }, [editing, editText]);
 
   const hasLiked = useMemo(
     () => post.likes?.some((l) => l.userId === user?.id),
@@ -144,7 +156,9 @@ export function PostCard({
                   </Typography>
                   {post.createdAt && (
                     <Typography sx={styles.timestampText}>
-                      {post.createdAt ? formatDayAndTime(new Date(post.createdAt)) : "n/a"}
+                      {post.createdAt
+                        ? formatDayAndTime(new Date(post.createdAt))
+                        : "n/a"}
                     </Typography>
                   )}
                 </Stack>
@@ -197,6 +211,7 @@ export function PostCard({
             )}
             {((!collapsed && showTextSection) || (collapsed && editing)) && (
               <Stack
+                ref={editScrollRef}
                 sx={{
                   height: editing ? 330 : "50%",
                   maxHeight: editing ? 380 : 200,
@@ -213,14 +228,6 @@ export function PostCard({
                       inputProps={{ maxLength: 500 }}
                       onChange={(e) => setEditText(e.target.value)}
                       sx={textFieldStyles}
-                      slotProps={{
-                        input: {
-                          sx: {
-                            maxHeight: 120,
-                            overflowY: "auto",
-                          },
-                        },
-                      }}
                     />
                     <Stack sx={styles.editActionsStack}>
                       <Button
@@ -262,10 +269,10 @@ export function PostCard({
                 alignItems="center"
                 spacing={1}
                 mr={2}
+                onClick={handleToggleLike}
                 sx={{ cursor: "pointer" }}
               >
                 <ThumbUp
-                  onClick={handleToggleLike}
                   sx={hasLiked ? styles.iconActive : styles.iconInactive}
                 />
                 <Typography
@@ -279,10 +286,10 @@ export function PostCard({
                 alignItems="center"
                 spacing={1}
                 mr={1}
+                onClick={() => setShowComments(true)}
                 sx={{ cursor: "pointer" }}
               >
                 <ChatBubble
-                  onClick={() => setShowComments(true)}
                   sx={hasCommented ? styles.iconActive : styles.iconInactive}
                 />
                 <Typography

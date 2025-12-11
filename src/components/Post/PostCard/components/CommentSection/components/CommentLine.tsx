@@ -144,7 +144,12 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
               sx={{ width: 25, height: 25 }}
             />
             <Stack flex={1} minWidth={0}>
-              <Stack direction="row" alignItems="center" spacing={0.75} minWidth={0}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={0.75}
+                minWidth={0}
+              >
                 <Typography
                   onClick={() => setProfileId(comment.user.id)}
                   sx={userTextStyles}
@@ -177,7 +182,13 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
           {!editing ? (
             <Typography sx={contentTextStyles}>{comment.content}</Typography>
           ) : (
-            <Stack spacing={1} p={1} pt={1} border="1px solid #444" borderRadius={1}>
+            <Stack
+              spacing={1}
+              p={1}
+              pt={1}
+              border="1px solid #444"
+              borderRadius={1}
+            >
               <TextField
                 fullWidth
                 multiline
@@ -186,7 +197,12 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
                 onChange={(e) => setEditValue(e.target.value)}
                 sx={textFieldStyles}
               />
-              <Stack direction="row" justifyContent="flex-end" spacing={1.5} pb={0.5}>
+              <Stack
+                direction="row"
+                justifyContent="flex-end"
+                spacing={1.5}
+                pb={0.5}
+              >
                 <Button
                   size="small"
                   onClick={() => setEditing(false)}
@@ -206,13 +222,17 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
             </Stack>
           )}
           <Stack direction="row" justifyContent="flex-end">
-            <Stack direction="row" alignItems="center" mr={1}>
+            <Stack
+              direction="row"
+              alignItems="center"
+              mr={1}
+              onClick={!isAuthor ? toggleLike : () => {}}
+              sx={{ cursor: "pointer" }}
+            >
               <ThumbUp
-                onClick={!isAuthor ? toggleLike : () => {}}
                 sx={{
                   height: 15,
                   color: hasLiked ? "lightblue" : "white",
-                  cursor: "pointer",
                 }}
               />
               <Typography
@@ -223,13 +243,16 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
               </Typography>
             </Stack>
             {!isReply && (
-              <Stack direction="row" alignItems="center">
+              <Stack
+                direction="row"
+                alignItems="center"
+                onClick={() => setShowReplies((s) => !s)}
+                sx={{ cursor: "pointer" }}
+              >
                 <ChatBubble
-                  onClick={() => setShowReplies((s) => !s)}
                   sx={{
                     height: 15,
                     color: replyCount > 0 ? "lightblue" : "white",
-                    cursor: "pointer",
                   }}
                 />
                 <Typography
@@ -251,8 +274,20 @@ export function CommentLine({ comment, setCount, isReply }: Props) {
         </Stack>
         <Divider sx={{ backgroundColor: "#444" }} />
         {showReplies && (
-          <Stack spacing={1} border="1px solid #444" borderTop="none" mb={4} sx={{ backgroundColor: "#121212" }}>
-            <Stack direction="row" alignItems="center" spacing={1} p={1.5} pb={0.25}>
+          <Stack
+            spacing={1}
+            border="1px solid #444"
+            borderTop="none"
+            mb={4}
+            sx={{ backgroundColor: "#121212" }}
+          >
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={1}
+              p={1.5}
+              pb={0.25}
+            >
               <TextField
                 size="small"
                 value={replyText}

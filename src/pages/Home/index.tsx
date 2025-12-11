@@ -23,6 +23,7 @@ export function HomePage() {
         textColor="inherit"
         variant="fullWidth"
         sx={tabsStyles}
+        TabIndicatorProps={{ style: { display: "none" } }}
       >
         <Tab label="Feed" value="feed" sx={tabStyles} />
         <Tab

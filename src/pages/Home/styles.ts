@@ -7,6 +7,7 @@ export const mainContainerStyles = {
 };
 
 export const tabStyles = {
+  height: "25px",
   flex: 1,
   color: "lightblue",
   fontWeight: 500,

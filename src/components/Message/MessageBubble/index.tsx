@@ -217,8 +217,14 @@ export function MessageBubble({ message, isSelf, dialog = false }: Props) {
           isSelf={isSelf}
           direction="right"
         />
-        <Stack direction="row" alignItems="center" spacing={0.3}>
-          <IconButton size="small" onClick={handleToggleLike} sx={{ p: 0.3 }}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={0.3}
+          onClick={handleToggleLike}
+          sx={{ cursor: "pointer" }}
+        >
+          <IconButton size="small" sx={{ p: 0.3 }}>
             {myLike ? (
               <Favorite sx={{ height: 25, color: "lightblue" }} />
             ) : likes.length > 0 ? (

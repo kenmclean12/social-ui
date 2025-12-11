@@ -76,6 +76,11 @@ export function LoginPage() {
             onChange={(e) =>
               setForm((prev) => ({ ...prev, password: e.target.value }))
             }
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleLogin();
+              }
+            }}
             sx={{
               ...authInputStyles,
               border: errors.password
