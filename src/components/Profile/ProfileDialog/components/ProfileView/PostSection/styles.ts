@@ -8,7 +8,7 @@ export const gridStyles = {
   display: "grid",
   gap: "16px",
   gridTemplateColumns: "repeat(2, 1fr)",
-  "@media (max-width: 1000px)": {
+  "@media (max-width: 1020px)": {
     gridTemplateColumns: "1fr",
   },
 };
